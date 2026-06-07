@@ -1,0 +1,312 @@
+import { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Navbar } from './components/Navbar';
+import { SolarSystemScene } from './components/SolarSystemScene';
+import { PlatformDetail } from './components/PlatformDetail';
+import { Mail, MapPin, ArrowDown } from 'lucide-react';
+
+function App() {
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [detailScrollY, setDetailScrollY] = useState(0);
+  const [activePlatform, setActivePlatform] = useState<string | null>(null);
+  const [zoomingPlatform, setZoomingPlatform] = useState<string | null>(null);
+  const [activeSection, setActiveSection] = useState('overview');
+  
+  const homeScrollPos = useRef(0);
+  const isTransitioning = useRef(false);
+
+  // Compute scroll height targets for the two phases
+  // Spline finishes at TOUR_SPLINE_LIMIT, but spacer is slightly larger to leave interaction padding
+  const getTourLimit = () => window.innerHeight * 3.5;
+  const getSpacerHeight = () => window.innerHeight * 4.2;
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (isTransitioning.current || zoomingPlatform) return;
+
+      const scrollY = window.scrollY;
+      const tourLimit = getTourLimit();
+
+      if (activePlatform) {
+        // In detail view, track vertical scroll on detail page
+        setDetailScrollY(scrollY);
+      } else {
+        // In home view, normalize the scroll progress through the solar system
+        const progress = Math.min(1.0, scrollY / tourLimit);
+        setScrollProgress(progress);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [activePlatform, zoomingPlatform]);
+
+  // Sync URL hash routing
+  useEffect(() => {
+    const handleHashChange = () => {
+      const hash = window.location.hash;
+      const cleanHash = hash.startsWith('#/') ? hash.substring(2) : hash.substring(1);
+      const validPlatforms = ['cogknit', 'sip', 'academia', 'aic'];
+
+      if (validPlatforms.includes(cleanHash)) {
+        if (!activePlatform) {
+          homeScrollPos.current = window.scrollY;
+        }
+        setActivePlatform(cleanHash);
+        window.scrollTo(0, 0);
+        setDetailScrollY(0);
+      } else {
+        if (activePlatform) {
+          setActivePlatform(null);
+          setDetailScrollY(0);
+          // Restore scroll position
+          setTimeout(() => {
+            window.scrollTo({
+              top: homeScrollPos.current,
+              behavior: 'auto'
+            });
+          }, 50);
+        }
+      }
+    };
+
+    window.addEventListener('hashchange', handleHashChange);
+    handleHashChange();
+
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, [activePlatform]);
+
+  const handleSelectPlatform = (platformId: string) => {
+    if (zoomingPlatform || isTransitioning.current) return;
+
+    // Start zoom-in camera transition first
+    setZoomingPlatform(platformId);
+    isTransitioning.current = true;
+
+    // Wait for cinematic zoom before changing route
+    setTimeout(() => {
+      window.location.hash = `#/${platformId}`;
+      setZoomingPlatform(null);
+      isTransitioning.current = false;
+    }, 850);
+  };
+
+  const handleBackToEcosystem = () => {
+    window.location.hash = '#/';
+  };
+
+  const handleNavigate = (target: string) => {
+    if (target === 'ecosystem') {
+      if (activePlatform) {
+        handleBackToEcosystem();
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+      return;
+    }
+
+    const performScroll = () => {
+      const spacerHeight = getSpacerHeight();
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      let targetScroll = 0;
+
+      if (target === 'about') {
+        // Mission is right after the tour spacer
+        targetScroll = spacerHeight + 50;
+      } else if (target === 'partners') {
+        // Hubs list is further down
+        targetScroll = spacerHeight + 650;
+      } else if (target === 'contact') {
+        // Contact/Footer is at the end
+        targetScroll = docHeight;
+      }
+
+      window.scrollTo({
+        top: targetScroll,
+        behavior: 'smooth'
+      });
+    };
+
+    if (activePlatform) {
+      setActivePlatform(null);
+      setDetailScrollY(0);
+      window.location.hash = '#/';
+      
+      setTimeout(() => {
+        performScroll();
+      }, 100);
+    } else {
+      performScroll();
+    }
+  };
+
+  return (
+    <div className="bg-[#040507] text-white relative font-sans selection:bg-brand selection:text-white min-h-[550vh]">
+      
+      {/* PERSISTENT 3D BACKGROUND SCENE */}
+      <SolarSystemScene 
+        scrollProgress={scrollProgress} 
+        activePlatform={activePlatform}
+        zoomingPlatform={zoomingPlatform}
+        detailScrollY={detailScrollY}
+        onSelectPlatform={handleSelectPlatform}
+      />
+
+      {/* Global Navbar */}
+      <Navbar 
+        activePlatform={activePlatform} 
+        onBackToEcosystem={handleBackToEcosystem}
+        onNavigate={handleNavigate}
+      />
+
+      {/* MAIN CONTENT LAYERS */}
+      <div className="relative z-10 w-full pointer-events-none">
+        
+        {/* HOMEPAGE TWO-PHASE CONTAINER */}
+        {!activePlatform && (
+          <div>
+            {/* PHASE 1: SOLAR TOUR EMPTY SPACE SPACER */}
+            <div 
+              className="relative w-full flex flex-col items-center justify-between py-12 px-6"
+              style={{ height: '420vh' }}
+            >
+              
+              {/* Hero Header at top of page */}
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: scrollProgress < 0.2 ? 1 - scrollProgress * 5 : 0 }}
+                className="mt-24 text-center max-w-3xl mx-auto flex flex-col items-center"
+              >
+                <span className="text-[#FD4400] text-xs font-semibold tracking-[0.3em] uppercase mb-3">
+                  SUMS NEPAL
+                </span>
+                <h1 className="font-serif text-5xl md:text-7xl font-medium tracking-tight leading-tight">
+                  A Living Learning Ecosystem
+                </h1>
+                <p className="text-white/50 text-sm md:text-base mt-4 max-w-md">
+                  Scroll down to traverse our connected network of educational, collaborative, and innovation platforms.
+                </p>
+                <div className="flex items-center space-x-2 mt-6 text-white/40 text-xs animate-bounce">
+                  <ArrowDown size={14} />
+                  <span>Scroll to Explore</span>
+                </div>
+              </motion.div>
+
+              {/* Progress Indicator overlay */}
+              <div className="fixed bottom-8 left-1/2 -translate-x-1/2 bg-[#040507]/80 backdrop-blur-md px-4 py-2 rounded-full border border-white/5 text-[10px] tracking-widest uppercase font-semibold text-white/50 flex items-center space-x-3 pointer-events-auto">
+                <span>Ecosystem Progress</span>
+                <div className="w-24 h-1 bg-white/10 rounded-full overflow-hidden">
+                  <div 
+                    className="h-full bg-[#FD4400] transition-all duration-100" 
+                    style={{ width: `${scrollProgress * 100}%` }}
+                  />
+                </div>
+                <span>{Math.round(scrollProgress * 100)}%</span>
+              </div>
+            </div>
+
+            {/* PHASE 2: HTML WEB SECTIONS (Unlocked after 100% progress and spacer padding) */}
+            <div className="w-full relative pointer-events-auto bg-gradient-to-t from-[#040507] via-[#040507]/90 to-transparent pt-12 pb-24">
+              
+              {/* Mission Section */}
+              <div id="about" className="max-w-4xl mx-auto px-6 py-20">
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center bg-[#040507]/80 p-8 rounded-2xl border border-white/5 backdrop-blur-sm">
+                  <div className="md:col-span-5">
+                    <span className="text-[#FD4400] text-xs font-semibold tracking-widest uppercase block mb-2">
+                      01 / The Mission
+                    </span>
+                    <h2 className="font-serif text-3xl font-medium leading-tight">
+                      Bridging Knowledge & Institutional Impact
+                    </h2>
+                  </div>
+                  <div className="md:col-span-7 text-white/60 space-y-4 text-sm leading-relaxed">
+                    <p>
+                      SUMS Nepal empowers academic, vocational, and corporate organizations through custom digital solutions, entrepreneurship incubation, and multidisciplinary alliances.
+                    </p>
+                    <p>
+                      Click on any platform planet above to explore specialized hubs focusing on smart learning, industry collaborations, peer reviews, and startup programs.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Interactive List section */}
+              <div id="partners" className="max-w-4xl mx-auto px-6 py-12">
+                <div className="bg-[#040507]/80 p-8 rounded-2xl border border-white/5 backdrop-blur-sm space-y-6">
+                  <div>
+                    <span className="text-[#FD4400] text-xs font-semibold tracking-widest uppercase block mb-1">
+                      02 / The Hubs
+                    </span>
+                    <h3 className="font-serif text-2xl font-medium text-white">Ecosystem Navigation Hub</h3>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {[
+                      { id: 'cogknit', name: 'Cogknit', desc: 'Knowledge & Learning Management' },
+                      { id: 'sip', name: 'SIP', desc: 'Strategic Partnerships' },
+                      { id: 'academia', name: 'Academia', desc: 'Academic Peer Review & Research' },
+                      { id: 'aic', name: 'AIC', desc: 'Youth Skill Incubation' }
+                    ].map((plat) => (
+                      <button
+                        key={plat.id}
+                        onClick={() => handleSelectPlatform(plat.id)}
+                        className="text-left p-4 rounded-xl border border-white/5 hover:border-[#FD4400]/40 bg-white/[0.01] hover:bg-white/[0.02] transition-all duration-300 group cursor-pointer"
+                      >
+                        <span className="text-sm font-serif font-bold text-white group-hover:text-[#FD4400] block transition-colors duration-300">
+                          {plat.name}
+                        </span>
+                        <span className="text-xs text-white/40 block mt-1">{plat.desc}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Footer / Contact */}
+              <div id="contact" className="max-w-4xl mx-auto px-6 py-20">
+                <div className="text-center space-y-6 bg-[#040507]/80 p-8 rounded-2xl border border-white/5 backdrop-blur-sm">
+                  <span className="text-[#FD4400] text-xs font-semibold tracking-widest uppercase block">
+                    03 / Joint Growth
+                  </span>
+                  <h2 className="font-serif text-3xl font-medium">
+                    Integrate SUMS into your Organization
+                  </h2>
+                  <p className="text-white/50 text-sm max-w-md mx-auto">
+                    Empower students, faculties, and business partners through structured workflows.
+                  </p>
+                  
+                  <div className="flex flex-col md:flex-row justify-center items-center gap-6 text-white/70 text-xs tracking-wider uppercase font-semibold pt-4">
+                    <div className="flex items-center space-x-2">
+                      <MapPin size={14} className="text-[#FD4400]" />
+                      <span>Kathmandu, Nepal</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Mail size={14} className="text-[#FD4400]" />
+                      <span>info@sums.org.np</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* FOCUSED PLATFORM DETAIL VIEW */}
+        {activePlatform && (
+          <div className="w-full relative pointer-events-auto">
+            <div className="relative z-20">
+              <PlatformDetail 
+                platformId={activePlatform} 
+                activeSection={activeSection}
+                onActiveSectionChange={setActiveSection}
+              />
+            </div>
+          </div>
+        )}
+
+      </div>
+    </div>
+  );
+}
+
+export default App;
