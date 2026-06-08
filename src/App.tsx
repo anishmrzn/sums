@@ -7,6 +7,7 @@ import { Mail, MapPin, ArrowDown } from 'lucide-react';
 
 function App() {
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [scrollY, setScrollY] = useState(0);
   const [detailScrollY, setDetailScrollY] = useState(0);
   const [activePlatform, setActivePlatform] = useState<string | null>(null);
   const [zoomingPlatform, setZoomingPlatform] = useState<string | null>(null);
@@ -24,15 +25,16 @@ function App() {
     const handleScroll = () => {
       if (isTransitioning.current || zoomingPlatform) return;
 
-      const scrollY = window.scrollY;
+      const currentScrollY = window.scrollY;
+      setScrollY(currentScrollY);
       const tourLimit = getTourLimit();
 
       if (activePlatform) {
         // In detail view, track vertical scroll on detail page
-        setDetailScrollY(scrollY);
+        setDetailScrollY(currentScrollY);
       } else {
         // In home view, normalize the scroll progress through the solar system
-        const progress = Math.min(1.0, scrollY / tourLimit);
+        const progress = Math.min(1.0, currentScrollY / tourLimit);
         setScrollProgress(progress);
       }
     };
@@ -146,6 +148,7 @@ function App() {
       {/* PERSISTENT 3D BACKGROUND SCENE */}
       <SolarSystemScene 
         scrollProgress={scrollProgress} 
+        scrollY={scrollY}
         activePlatform={activePlatform}
         zoomingPlatform={zoomingPlatform}
         detailScrollY={detailScrollY}
