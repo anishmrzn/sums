@@ -151,7 +151,7 @@ function App() {
   };
 
   return (
-    <div className="bg-[#040507] text-white relative font-sans selection:bg-brand selection:text-white min-h-[550vh]">
+    <div className={`bg-[#040507] text-white relative font-sans selection:bg-brand selection:text-white ${activePlatform ? 'min-h-screen' : 'min-h-[550vh]'}`}>
       
       {/* PERSISTENT 3D BACKGROUND SCENE */}
       <SolarSystemScene 

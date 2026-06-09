@@ -186,12 +186,12 @@ const createLogoTexture = (id: string, name: string, color: string) => {
 // Component for a billboarded planet logo
 const PlanetBillboard: React.FC<{
   texture: THREE.Texture;
-  size: number;
+  scale?: number;
   opacity?: number;
   onClick?: (e: any) => void;
   onPointerOver?: (e: any) => void;
   onPointerOut?: (e: any) => void;
-}> = ({ texture, size, opacity = 1, onClick, onPointerOver, onPointerOut }) => {
+}> = ({ texture, scale = 1, opacity = 1, onClick, onPointerOver, onPointerOut }) => {
   const meshRef = useRef<THREE.Mesh>(null);
   const { camera } = useThree();
 
@@ -204,11 +204,12 @@ const PlanetBillboard: React.FC<{
   return (
     <mesh 
       ref={meshRef}
+      scale={[scale, scale, scale]}
       onClick={onClick}
       onPointerOver={onPointerOver}
       onPointerOut={onPointerOut}
     >
-      <planeGeometry args={[size * 2, size * 2]} />
+      <planeGeometry args={[2, 2]} />
       <meshBasicMaterial map={texture} transparent opacity={opacity} depthWrite={false} />
     </mesh>
   );
@@ -249,8 +250,13 @@ const SceneContent: React.FC<{
 
   const sumsGroupRef = useRef<THREE.Group>(null);
   const planetGroupRefs = useRef<{ [key: string]: THREE.Group | null }>({});
+  const lineRef = useRef<any>(null);
   // Tracks when the detail page was entered, for the zoom-out entrance animation
   const entryTime = useRef<number | null>(null);
+
+  // Smooth transitions
+  const smoothedScrollProgress = useRef(scrollProgress);
+  const smoothedTransitionT = useRef(0);
 
   // Generate procedural textures once
   const textures = useMemo(() => ({
@@ -290,24 +296,37 @@ const SceneContent: React.FC<{
 
   const finalOpacity = globalOpacity * heroVisibility;
 
-  // Calculate alignment progress (transitionT) based on scrollProgress
-  // Scroll from 0.5 to 0.8 is the transition window
-  let transitionT = 0;
-  if (scrollProgress > 0.5) {
-    const rawT = Math.min(1.0, (scrollProgress - 0.5) / 0.3);
-    transitionT = rawT * rawT * (3 - 2 * rawT); // smoothstep
-  }
-
-  useFrame((state) => {
+  useFrame((state, delta) => {
     const elapsedTime = state.clock.getElapsedTime();
     const targetPlatformId = zoomingPlatform || activePlatform;
+
+    // Smooth scrollProgress and transitionT (frame-rate independent)
+    const lerpFactor = 1 - Math.exp(-8 * delta);
+    smoothedScrollProgress.current = THREE.MathUtils.lerp(
+      smoothedScrollProgress.current,
+      scrollProgress,
+      lerpFactor
+    );
+
+    let targetTransitionT = 0;
+    if (smoothedScrollProgress.current > 0.5) {
+      const rawT = Math.min(1.0, (smoothedScrollProgress.current - 0.5) / 0.3);
+      targetTransitionT = rawT * rawT * (3 - 2 * rawT); // smoothstep
+    }
+    smoothedTransitionT.current = THREE.MathUtils.lerp(
+      smoothedTransitionT.current,
+      targetTransitionT,
+      lerpFactor
+    );
 
     // 1. Calculate dynamic positions for all planets and core this frame
     const sumsOrbitPos = new THREE.Vector3(0, 0, 0);
     const sumsTargetPos = linePositions.sums;
-    const sumsPos = new THREE.Vector3().lerpVectors(sumsOrbitPos, sumsTargetPos, transitionT);
+    const sumsPos = new THREE.Vector3().lerpVectors(sumsOrbitPos, sumsTargetPos, smoothedTransitionT.current);
     if (sumsGroupRef.current) {
       sumsGroupRef.current.position.copy(sumsPos);
+      const sumsScale = 1.0 + smoothedTransitionT.current * 1.5;
+      sumsGroupRef.current.scale.setScalar(sumsScale);
     }
 
     const currentPlanetPositions: { [key: string]: THREE.Vector3 } = {};
@@ -323,12 +342,16 @@ const SceneContent: React.FC<{
           .add(plane.v.clone().multiplyScalar(Math.sin(angle) * plane.radius));
           
         const targetPos = linePositions[planet.id];
-        const finalPos = new THREE.Vector3().lerpVectors(orbitPos, targetPos, transitionT);
+        const finalPos = new THREE.Vector3().lerpVectors(orbitPos, targetPos, smoothedTransitionT.current);
         currentPlanetPositions[planet.id] = finalPos;
 
         const ref = planetGroupRefs.current[planet.id];
         if (ref) {
           ref.position.copy(finalPos);
+          if (activePlatform !== planet.id) {
+            const sizeScale = activePlatform ? 1.0 : (1.0 + smoothedTransitionT.current * 4.0);
+            ref.scale.setScalar(sizeScale);
+          }
         }
       }
     });
@@ -345,7 +368,7 @@ const SceneContent: React.FC<{
       // Zoom closely into the dynamic position
       // In straight-line mode planets are at z=0 — lerp to a larger offset so we don't over-zoom
       const scrollOffsetZ = activePlatform ? detailScrollY * 0.012 : 0;
-      const baseZoomOffset = THREE.MathUtils.lerp(3.2, 6.5, transitionT);
+      const baseZoomOffset = THREE.MathUtils.lerp(3.2, 6.5, smoothedTransitionT.current);
       
       const offsetTarget = targetPos.clone();
       if (activePlatform) {
@@ -359,14 +382,14 @@ const SceneContent: React.FC<{
       lookAtTargetPos.current.copy(offsetTarget);
     } else {
       // Camera progress: slower in the first half to capture orbiting
-      let cameraProgress = scrollProgress;
-      if (scrollProgress <= 0.5) {
-        cameraProgress = scrollProgress * 0.5; // goes from 0 to 0.25
-      } else if (scrollProgress <= 0.8) {
-        const t = (scrollProgress - 0.5) / 0.3;
+      let cameraProgress = smoothedScrollProgress.current;
+      if (smoothedScrollProgress.current <= 0.5) {
+        cameraProgress = smoothedScrollProgress.current * 0.5; // goes from 0 to 0.25
+      } else if (smoothedScrollProgress.current <= 0.8) {
+        const t = (smoothedScrollProgress.current - 0.5) / 0.3;
         cameraProgress = 0.25 + t * 0.25; // goes from 0.25 to 0.5
       } else {
-        const t = (scrollProgress - 0.8) / 0.2;
+        const t = (smoothedScrollProgress.current - 0.8) / 0.2;
         cameraProgress = 0.5 + t * 0.2; // goes from 0.5 to 0.7
       }
 
@@ -377,19 +400,19 @@ const SceneContent: React.FC<{
       const lineCameraPos = new THREE.Vector3(0, 0.8, 31);
       const lineLookAt = new THREE.Vector3(0, 0, 0);
 
-      cameraTargetPos.current.lerpVectors(splinePoint, lineCameraPos, transitionT);
-      lookAtTargetPos.current.lerpVectors(splineTarget, lineLookAt, transitionT);
+      cameraTargetPos.current.lerpVectors(splinePoint, lineCameraPos, smoothedTransitionT.current);
+      lookAtTargetPos.current.lerpVectors(splineTarget, lineLookAt, smoothedTransitionT.current);
     }
 
-    const lerpFactor = targetPlatformId ? 0.08 : 0.05;
-    camera.position.lerp(cameraTargetPos.current, lerpFactor);
-    currentTarget.current.lerp(lookAtTargetPos.current, lerpFactor);
+    const cameraLerpFactor = targetPlatformId ? 0.08 : 0.05;
+    camera.position.lerp(cameraTargetPos.current, cameraLerpFactor);
+    currentTarget.current.lerp(lookAtTargetPos.current, cameraLerpFactor);
     camera.lookAt(currentTarget.current);
 
-    let targetFov = targetPlatformId ? 40 : 50 - scrollProgress * 5;
+    let targetFov = targetPlatformId ? 40 : 50 - smoothedScrollProgress.current * 5;
     // Widen field of view slightly in line mode to make sure all platforms fit nicely side-by-side
     if (!targetPlatformId) {
-      targetFov = THREE.MathUtils.lerp(targetFov, 55, transitionT);
+      targetFov = THREE.MathUtils.lerp(targetFov, 55, smoothedTransitionT.current);
     }
 
     if (camera instanceof THREE.PerspectiveCamera) {
@@ -398,11 +421,11 @@ const SceneContent: React.FC<{
     }
 
     // In straight-line mode clear the fog so outer planets at x=±20 aren't obscured.
-    // Lerp fog density toward near-zero as transitionT reaches 1.
+    // Lerp fog density toward near-zero as smoothedTransitionT reaches 1.
     const orbitFog = activePlatform
       ? 0.02 + (detailScrollY * 0.003)
-      : 0.018 + (scrollProgress * 0.02); // softer fog during orbit
-    const targetFog = THREE.MathUtils.lerp(orbitFog, 0.003, transitionT);
+      : 0.018 + (smoothedScrollProgress.current * 0.02); // softer fog during orbit
+    const targetFog = THREE.MathUtils.lerp(orbitFog, 0.003, smoothedTransitionT.current);
     state.scene.fog = new THREE.FogExp2('#040507', targetFog);
 
     // Zoom-out entrance animation on the active planet
@@ -426,6 +449,11 @@ const SceneContent: React.FC<{
           if (ref) ref.scale.setScalar(1.0);
         });
       }
+    }
+
+    // Smoothly update line opacity
+    if (lineRef.current && lineRef.current.material) {
+      lineRef.current.material.opacity = 0.25 * finalOpacity * smoothedTransitionT.current;
     }
   });
 
@@ -453,9 +481,9 @@ const SceneContent: React.FC<{
       <group ref={sumsGroupRef} position={[0, 0, 0]}>
         {finalOpacity > 0.01 && !activePlatform && (
           <>
-            <PlanetBillboard texture={textures.sums} size={2.0 * (1.0 + transitionT * 1.5)} opacity={finalOpacity} />
+            <PlanetBillboard texture={textures.sums} scale={2.0} opacity={finalOpacity} />
             <mesh scale={[1.15, 1.15, 1.15]}>
-              <sphereGeometry args={[2.0 * (1.0 + transitionT * 1.5), 32, 32]} />
+              <sphereGeometry args={[2.0, 32, 32]} />
               <meshBasicMaterial 
                 color="#FD4400" 
                 transparent 
@@ -468,15 +496,16 @@ const SceneContent: React.FC<{
       </group>
 
       {/* Straight line connector that fades in when aligning */}
-      {finalOpacity > 0.01 && !activePlatform && transitionT > 0.01 && (
+      {finalOpacity > 0.01 && !activePlatform && (
         <Line 
+          ref={lineRef}
           points={[
             new THREE.Vector3(-20, 0, 0),
             new THREE.Vector3(20, 0, 0)
           ]} 
           color="#ffffff"
           transparent
-          opacity={0.25 * finalOpacity * transitionT}
+          opacity={0}
           lineWidth={1} 
           dashed 
           dashScale={1.5}
@@ -505,10 +534,6 @@ const SceneContent: React.FC<{
 
         const textureKey = planet.id as keyof typeof textures;
         const isFocussed = zoomingPlatform === planet.id || activePlatform === planet.id;
-        
-        // In detail page: use base size (no scale-up). On homepage: grow in line mode.
-        const sizeScale = activePlatform ? 1.0 : (1.0 + transitionT * 4.0);
-        const currentSize = planet.size * sizeScale;
 
         return (
           <group key={planet.id}>
@@ -518,7 +543,7 @@ const SceneContent: React.FC<{
                 points={points} 
                 color="#ffffff"
                 transparent
-                opacity={0.25 * finalOpacity * (1 - transitionT)}
+                opacity={0.25 * finalOpacity * (1 - smoothedTransitionT.current)}
                 lineWidth={1} 
                 dashed 
                 dashScale={1.5}
@@ -554,7 +579,7 @@ const SceneContent: React.FC<{
                       document.body.style.cursor = 'default';
                     }}
                   >
-                    <sphereGeometry args={[currentSize, 16, 16]} />
+                    <sphereGeometry args={[planet.size, 16, 16]} />
                     <meshBasicMaterial 
                       color="#FD4400" 
                       transparent 
@@ -570,7 +595,7 @@ const SceneContent: React.FC<{
                   {/* Billboard Logo Face */}
                   <PlanetBillboard 
                     texture={textures[textureKey]} 
-                    size={currentSize} 
+                    scale={planet.size} 
                     opacity={
                       activePlatform === planet.id 
                         ? finalOpacity * Math.max(0, 1 - detailScrollY / 350)
@@ -598,7 +623,7 @@ const SceneContent: React.FC<{
 
                   {/* Drei HTML Hover Tooltip — no distanceFactor = fixed pixel size always */}
                   {hoveredPlatform === planet.id && (
-                    <Html position={[0, currentSize + 0.8, 0]} center zIndexRange={[100, 0]}>
+                    <Html position={[0, planet.size + 0.8, 0]} center zIndexRange={[100, 0]}>
                       <div style={{ transform: 'scale(1)', pointerEvents: 'none', userSelect: 'none', textAlign: 'center', background: 'rgba(4,5,7,0.96)', border: '1.5px solid rgba(253,68,0,0.6)', borderRadius: '14px', padding: '14px 24px', minWidth: '240px', boxShadow: '0 0 28px rgba(253,68,0,0.45)', backdropFilter: 'blur(12px)' }}>
                         <h4 style={{ fontSize: '20px', fontWeight: 700, letterSpacing: '0.18em', color: '#FD4400', textTransform: 'uppercase', fontFamily: 'serif', margin: 0 }}>{planet.name}</h4>
                         <p style={{ fontSize: '14px', color: 'rgba(255,255,255,0.72)', marginTop: '6px', whiteSpace: 'nowrap', fontFamily: 'sans-serif' }}>{planet.tagline}</p>

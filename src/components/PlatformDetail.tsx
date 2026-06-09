@@ -25,13 +25,13 @@ const sections: Section[] = [
 ];
 
 const sectionLayout = [
-  { id: 'impact',        label: 'Impact',        angle: 0   },
-  { id: 'testimonials',  label: 'Testimonials',  angle: 45  },
-  { id: 'partners',      label: 'Partners',      angle: 135 },
-  { id: 'overview',      label: 'Overview',      angle: 180 },
-  { id: 'features',      label: 'Features',      angle: 225 },
-  { id: 'contact',       label: 'Contact',       angle: 270 },
-  { id: 'solutions',     label: 'Solutions',     angle: 315 },
+  { id: 'overview',     label: 'Overview',     angle: 270 },
+  { id: 'features',     label: 'Features',     angle: 321 },
+  { id: 'solutions',    label: 'Solutions',    angle: 13  },
+  { id: 'impact',       label: 'Impact',       angle: 64  },
+  { id: 'partners',     label: 'Partners',     angle: 116 },
+  { id: 'testimonials', label: 'Testimonials', angle: 167 },
+  { id: 'contact',      label: 'Contact',      angle: 218 },
 ];
 
 export const PlatformDetail: React.FC<PlatformDetailProps> = ({
@@ -154,7 +154,7 @@ export const PlatformDetail: React.FC<PlatformDetailProps> = ({
       {/* ─── STICKY HEADER AREA WITH CENTERED ORBIT (SLIDES LEFT ON SCROLL) ─────────────────── */}
       <div 
         style={{ left: leftOffsetVal }}
-        className="sticky top-0 h-screen w-0 flex items-center justify-center pointer-events-none z-0 transition-all duration-75 ease-out"
+        className="sticky top-0 h-screen w-0 flex items-center justify-center pointer-events-none z-20 transition-all duration-75 ease-out"
       >
         {/* Orbit ring */}
         <div className="absolute w-[300px] h-[300px] md:w-[380px] md:h-[380px] rounded-full border border-dashed border-white/8" />
