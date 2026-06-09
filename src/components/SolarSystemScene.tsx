@@ -8,12 +8,12 @@ import * as THREE from 'three';
 
 // Predefined spline curve path through the solar system (camera position)
 const cameraSpline = new THREE.CatmullRomCurve3([
-  new THREE.Vector3(0, 6, 28),    // Start (Hero view - wider and higher to see everything)
-  new THREE.Vector3(0, 3, 20),    // Scroll entry (closer)
-  new THREE.Vector3(4, 1.5, 12),  // Cogknit focus milestone
-  new THREE.Vector3(-4, -0.2, 7), // SIP focus milestone
-  new THREE.Vector3(-2, -1.8, 3), // Academia focus milestone
-  new THREE.Vector3(3, -2.8, -1)  // AIC focus milestone
+  new THREE.Vector3(0, 1.5, 24),   // Start (Hero view — perfectly centred)
+  new THREE.Vector3(0, 1, 18),     // Scroll entry (closing in)
+  new THREE.Vector3(4, 0.5, 12),   // Cogknit focus milestone
+  new THREE.Vector3(-4, -0.5, 7),  // SIP focus milestone
+  new THREE.Vector3(-2, -1.8, 3),  // Academia focus milestone
+  new THREE.Vector3(3, -2.8, -1)   // AIC focus milestone
 ]);
 
 // Predefined targets the camera looks at along the journey
@@ -235,19 +235,22 @@ const linePositions: { [key: string]: THREE.Vector3 } = {
 const SceneContent: React.FC<{ 
   scrollProgress: number; 
   scrollY: number;
+  heroFadeProgress: number;
   activePlatform: string | null;
   zoomingPlatform: string | null;
   detailScrollY: number;
   onSelectPlatform: (id: string) => void;
-}> = ({ scrollProgress, scrollY, activePlatform, zoomingPlatform, detailScrollY, onSelectPlatform }) => {
+}> = ({ scrollProgress, scrollY, heroFadeProgress, activePlatform, zoomingPlatform, detailScrollY, onSelectPlatform }) => {
   const { camera } = useThree();
   const currentTarget = useRef(new THREE.Vector3(0, 0, 0));
-  const cameraTargetPos = useRef(new THREE.Vector3(0, 6, 28));
+  const cameraTargetPos = useRef(new THREE.Vector3(0, 1.5, 24));
   const lookAtTargetPos = useRef(new THREE.Vector3(0, 0, 0));
   const [hoveredPlatform, setHoveredPlatform] = useState<string | null>(null);
 
   const sumsGroupRef = useRef<THREE.Group>(null);
   const planetGroupRefs = useRef<{ [key: string]: THREE.Group | null }>({});
+  // Tracks when the detail page was entered, for the zoom-out entrance animation
+  const entryTime = useRef<number | null>(null);
 
   // Generate procedural textures once
   const textures = useMemo(() => ({
@@ -268,25 +271,22 @@ const SceneContent: React.FC<{
     });
   }, []);
 
-  const detailFade = Math.max(0, 1 - detailScrollY / 500);
-  
-  // Full opacity until just after the tour ends (3.5×vh = scrollProgress 100%).
-  // Fades out over the next 0.8 screens — well before the next section text appears.
+  // Full opacity through phases 1–3 (0–3vh). Fade out from 3vh → 3.5vh as HTML sections appear.
   const sectionStart = window.innerHeight * 3.0;
-  const fadeRange  = window.innerHeight * 0.8;
+  const fadeRange  = window.innerHeight * 0.5;
   const scrollFade = activePlatform
     ? 1.0
     : scrollY >= sectionStart
       ? Math.max(0, 1.0 - (scrollY - sectionStart) / fadeRange)
       : 1.0;
 
-  const globalOpacity = detailFade * scrollFade;
+  const globalOpacity = scrollFade;
 
-  // Low opacity when hero text is visible (scrollProgress 0 → 0.2), then ramp to full.
-  // In straight-line and beyond: stay at full (1.0) until scrollFade takes over.
+  // Dim scene while hero text is on screen so text stays readable.
+  // Ramps from 0.25 (text fully visible) → 1.0 (text gone) as heroFadeProgress goes 0→1.
   const heroVisibility = activePlatform
     ? 1.0
-    : Math.min(1.0, 0.15 + (scrollProgress / 0.2) * 0.85);
+    : Math.min(1.0, 0.25 + heroFadeProgress * 0.75);
 
   const finalOpacity = globalOpacity * heroVisibility;
 
@@ -315,8 +315,8 @@ const SceneContent: React.FC<{
       const plane = orbitPlanes.find(p => p.id === planet.id);
       if (plane) {
         const params = orbitParams[planet.id as keyof typeof orbitParams];
-        // Only spin if the page has started scrolling (gives a nicer static start)
-        const speedFactor = scrollProgress > 0 ? 1.0 : 0.0;
+        // Orbit always on homepage; freeze position when inside a detail page
+        const speedFactor = activePlatform ? 0.0 : 1.0;
         const angle = params.baseAngle + elapsedTime * params.speed * speedFactor;
         
         const orbitPos = plane.u.clone().multiplyScalar(Math.cos(angle) * plane.radius)
@@ -343,9 +343,20 @@ const SceneContent: React.FC<{
       }
 
       // Zoom closely into the dynamic position
+      // In straight-line mode planets are at z=0 — lerp to a larger offset so we don't over-zoom
       const scrollOffsetZ = activePlatform ? detailScrollY * 0.012 : 0;
-      cameraTargetPos.current.copy(targetPos).add(new THREE.Vector3(0, 0, 3.2 + scrollOffsetZ));
-      lookAtTargetPos.current.copy(targetPos);
+      const baseZoomOffset = THREE.MathUtils.lerp(3.2, 6.5, transitionT);
+      
+      const offsetTarget = targetPos.clone();
+      if (activePlatform) {
+        // Shift camera target right (moving the planet left relative to the viewport) as user scrolls down,
+        // matching the leftward translation of the moons circles.
+        const shiftProgress = Math.min(1.0, detailScrollY / 300);
+        offsetTarget.x += 0.95 * shiftProgress;
+      }
+      
+      cameraTargetPos.current.copy(offsetTarget).add(new THREE.Vector3(0, 0, baseZoomOffset + scrollOffsetZ));
+      lookAtTargetPos.current.copy(offsetTarget);
     } else {
       // Camera progress: slower in the first half to capture orbiting
       let cameraProgress = scrollProgress;
@@ -393,6 +404,29 @@ const SceneContent: React.FC<{
       : 0.018 + (scrollProgress * 0.02); // softer fog during orbit
     const targetFog = THREE.MathUtils.lerp(orbitFog, 0.003, transitionT);
     state.scene.fog = new THREE.FogExp2('#040507', targetFog);
+
+    // Zoom-out entrance animation on the active planet
+    if (activePlatform) {
+      // Record the moment we entered the detail page
+      if (entryTime.current === null) entryTime.current = elapsedTime;
+      const elapsed = elapsedTime - entryTime.current;
+      const DURATION = 0.8;
+      const t = Math.min(1.0, elapsed / DURATION);
+      // Cubic ease-out: starts fast, decelerates to rest
+      const eased = 1 - Math.pow(1 - t, 3);
+      const entryScale = 1.8 - eased * 0.8; // 1.8 → 1.0
+      const ref = planetGroupRefs.current[activePlatform];
+      if (ref) ref.scale.setScalar(entryScale);
+    } else {
+      // Reset entry timer and scale when leaving detail page
+      if (entryTime.current !== null) {
+        entryTime.current = null;
+        planets.forEach(p => {
+          const ref = planetGroupRefs.current[p.id];
+          if (ref) ref.scale.setScalar(1.0);
+        });
+      }
+    }
   });
 
   return (
@@ -415,9 +449,9 @@ const SceneContent: React.FC<{
       <pointLight position={[10, 10, 10]} intensity={1.8 * finalOpacity} color="#FD4400" />
       <pointLight position={[-10, -10, -10]} intensity={0.6 * finalOpacity} color="#ffffff" />
 
-      {/* SUMS Central Core */}
+      {/* SUMS Central Core — hidden in detail page */}
       <group ref={sumsGroupRef} position={[0, 0, 0]}>
-        {finalOpacity > 0.01 && (
+        {finalOpacity > 0.01 && !activePlatform && (
           <>
             <PlanetBillboard texture={textures.sums} size={2.0 * (1.0 + transitionT * 1.5)} opacity={finalOpacity} />
             <mesh scale={[1.15, 1.15, 1.15]}>
@@ -451,6 +485,9 @@ const SceneContent: React.FC<{
 
       {/* Planets and orbits */}
       {planets.map((planet) => {
+        // In detail view: skip all planets except the active one
+        if (activePlatform && activePlatform !== planet.id) return null;
+
         // Generate a tilted 3D orbit circle that passes exactly through the planet position
         const points = [];
         const radius = planet.position.length();
@@ -469,8 +506,8 @@ const SceneContent: React.FC<{
         const textureKey = planet.id as keyof typeof textures;
         const isFocussed = zoomingPlatform === planet.id || activePlatform === planet.id;
         
-        // Scale up planets when in straight line mode for better visibility
-        const sizeScale = 1.0 + transitionT * 4.0;
+        // In detail page: use base size (no scale-up). On homepage: grow in line mode.
+        const sizeScale = activePlatform ? 1.0 : (1.0 + transitionT * 4.0);
         const currentSize = planet.size * sizeScale;
 
         return (
@@ -521,7 +558,11 @@ const SceneContent: React.FC<{
                     <meshBasicMaterial 
                       color="#FD4400" 
                       transparent 
-                      opacity={isFocussed ? 0.25 : 0.08 * finalOpacity} 
+                      opacity={
+                        isFocussed 
+                          ? 0.25 * Math.max(0, 1 - detailScrollY / 350)
+                          : 0.08 * finalOpacity
+                      } 
                       side={THREE.BackSide} 
                     />
                   </mesh>
@@ -530,7 +571,11 @@ const SceneContent: React.FC<{
                   <PlanetBillboard 
                     texture={textures[textureKey]} 
                     size={currentSize} 
-                    opacity={finalOpacity}
+                    opacity={
+                      activePlatform === planet.id 
+                        ? finalOpacity * Math.max(0, 1 - detailScrollY / 350)
+                        : finalOpacity
+                    }
                     onClick={(e) => {
                       e.stopPropagation();
                       if (!zoomingPlatform && !activePlatform) {
@@ -573,6 +618,7 @@ const SceneContent: React.FC<{
 interface SolarSystemSceneProps {
   scrollProgress: number;
   scrollY: number;
+  heroFadeProgress: number;
   activePlatform: string | null;
   zoomingPlatform: string | null;
   detailScrollY: number;
@@ -582,6 +628,7 @@ interface SolarSystemSceneProps {
 export const SolarSystemScene: React.FC<SolarSystemSceneProps> = ({
   scrollProgress,
   scrollY,
+  heroFadeProgress,
   activePlatform,
   zoomingPlatform,
   detailScrollY,
@@ -590,7 +637,7 @@ export const SolarSystemScene: React.FC<SolarSystemSceneProps> = ({
   return (
     <div className="fixed inset-0 z-0 w-full h-full pointer-events-auto bg-[#040507]">
       <Canvas
-        camera={{ position: [0, 6, 28], fov: 50, near: 0.1, far: 1000 }}
+        camera={{ position: [0, 1.5, 24], fov: 52, near: 0.1, far: 1000 }}
         gl={{ antialias: true, alpha: false }}
         onCreated={({ gl }) => {
           gl.setClearColor(new THREE.Color('#040507'), 1);
@@ -600,6 +647,7 @@ export const SolarSystemScene: React.FC<SolarSystemSceneProps> = ({
         <SceneContent 
           scrollProgress={scrollProgress} 
           scrollY={scrollY}
+          heroFadeProgress={heroFadeProgress}
           activePlatform={activePlatform}
           zoomingPlatform={zoomingPlatform}
           detailScrollY={detailScrollY}

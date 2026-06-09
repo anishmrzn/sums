@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { Navbar } from './components/Navbar';
 import { SolarSystemScene } from './components/SolarSystemScene';
 import { PlatformDetail } from './components/PlatformDetail';
@@ -8,6 +7,7 @@ import { Mail, MapPin, ArrowDown } from 'lucide-react';
 function App() {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [scrollY, setScrollY] = useState(0);
+  const [heroFadeProgress, setHeroFadeProgress] = useState(0);
   const [detailScrollY, setDetailScrollY] = useState(0);
   const [activePlatform, setActivePlatform] = useState<string | null>(null);
   const [zoomingPlatform, setZoomingPlatform] = useState<string | null>(null);
@@ -16,10 +16,12 @@ function App() {
   const homeScrollPos = useRef(0);
   const isTransitioning = useRef(false);
 
-  // Compute scroll height targets for the two phases
-  // Spline finishes at TOUR_SPLINE_LIMIT, but spacer is slightly larger to leave interaction padding
-  const getTourLimit = () => window.innerHeight * 3.5;
-  const getSpacerHeight = () => window.innerHeight * 4.2;
+  // 4-phase scroll architecture:
+  // Phase 1 (0→1vh):  Hero text fades up (in then out)
+  // Phase 2 (1→2vh):  Camera flies to 50% of the spline (zoom)
+  // Phase 3 (2→3vh):  Planets align on straight line
+  // Phase 4 (3.5vh+): HTML content sections
+  const getSpacerHeight = () => window.innerHeight * 3.5;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -27,16 +29,22 @@ function App() {
 
       const currentScrollY = window.scrollY;
       setScrollY(currentScrollY);
-      const tourLimit = getTourLimit();
 
       if (activePlatform) {
-        // In detail view, track vertical scroll on detail page
         setDetailScrollY(currentScrollY);
-      } else {
-        // In home view, normalize the scroll progress through the solar system
-        const progress = Math.min(1.0, currentScrollY / tourLimit);
-        setScrollProgress(progress);
+        return;
       }
+
+      const vh = window.innerHeight;
+
+      // Phase 1 (0→1vh): hero text fade-up progress
+      setHeroFadeProgress(Math.min(1, currentScrollY / vh));
+
+      // Phases 2+3 (1vh→3vh): solar tour, scrollProgress 0→1
+      const solarProgress = currentScrollY <= vh
+        ? 0
+        : Math.min(1.0, (currentScrollY - vh) / (vh * 2));
+      setScrollProgress(solarProgress);
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
@@ -149,6 +157,7 @@ function App() {
       <SolarSystemScene 
         scrollProgress={scrollProgress} 
         scrollY={scrollY}
+        heroFadeProgress={heroFadeProgress}
         activePlatform={activePlatform}
         zoomingPlatform={zoomingPlatform}
         detailScrollY={detailScrollY}
@@ -168,17 +177,22 @@ function App() {
         {/* HOMEPAGE TWO-PHASE CONTAINER */}
         {!activePlatform && (
           <div>
-            {/* PHASE 1: SOLAR TOUR EMPTY SPACE SPACER */}
+            {/* PHASE 1-3: SOLAR TOUR SPACER (3.5 screens) */}
             <div 
               className="relative w-full flex flex-col items-center justify-between py-12 px-6"
-              style={{ height: '420vh' }}
+              style={{ height: '350vh' }}
             >
               
-              {/* Hero Header at top of page */}
-              <motion.div 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: scrollProgress < 0.2 ? 1 - scrollProgress * 5 : 0 }}
+              {/* Hero Header — scroll-scrubbed fade-up effect */}
+              {/* Phase 1: fades IN (up from below) then OUT (up and away) over the first viewport of scroll */}
+              <div 
                 className="mt-24 text-center max-w-3xl mx-auto flex flex-col items-center"
+                style={{
+                  opacity: Math.max(0, 1 - heroFadeProgress * 1.6),  // fully visible at load, fades as you scroll
+                  transform: `translateY(${-heroFadeProgress * 70}px)`, // starts at 0, drifts up on scroll
+                  willChange: 'transform, opacity',
+                  pointerEvents: heroFadeProgress > 0.85 ? 'none' : 'auto',
+                }}
               >
                 <span className="text-[#FD4400] text-xs font-semibold tracking-[0.3em] uppercase mb-3">
                   SUMS NEPAL
@@ -189,14 +203,25 @@ function App() {
                 <p className="text-white/50 text-sm md:text-base mt-4 max-w-md">
                   Scroll down to traverse our connected network of educational, collaborative, and innovation platforms.
                 </p>
-                <div className="flex items-center space-x-2 mt-6 text-white/40 text-xs animate-bounce">
-                  <ArrowDown size={14} />
+                <div 
+                  className="flex items-center space-x-2 mt-6 text-white/40 text-xs"
+                  style={{ opacity: heroFadeProgress < 0.1 ? 1 : Math.max(0, 1 - heroFadeProgress * 5) }}
+                >
+                  <ArrowDown size={14} className="animate-bounce" />
                   <span>Scroll to Explore</span>
                 </div>
-              </motion.div>
+              </div>
 
-              {/* Progress Indicator overlay */}
-              <div className="fixed bottom-8 left-1/2 -translate-x-1/2 bg-[#040507]/80 backdrop-blur-md px-4 py-2 rounded-full border border-white/5 text-[10px] tracking-widest uppercase font-semibold text-white/50 flex items-center space-x-3 pointer-events-auto">
+              {/* Progress Indicator overlay — only shows during phases 2 & 3 */}
+              <div 
+                className="fixed bottom-8 left-1/2 -translate-x-1/2 bg-[#040507]/80 backdrop-blur-md px-4 py-2 rounded-full border border-white/5 text-[10px] tracking-widest uppercase font-semibold text-white/50 flex items-center space-x-3 pointer-events-auto"
+                style={{ 
+                  opacity: heroFadeProgress > 0.8 && scrollProgress < 0.98
+                    ? Math.min(1, (heroFadeProgress - 0.8) * 5)
+                    : heroFadeProgress <= 0.8 ? 0 : Math.max(0, (1 - scrollProgress) / 0.02),
+                  transition: 'opacity 0.3s ease'
+                }}
+              >
                 <span>Ecosystem Progress</span>
                 <div className="w-24 h-1 bg-white/10 rounded-full overflow-hidden">
                   <div 
@@ -302,6 +327,7 @@ function App() {
                 platformId={activePlatform} 
                 activeSection={activeSection}
                 onActiveSectionChange={setActiveSection}
+                detailScrollY={detailScrollY}
               />
             </div>
           </div>
