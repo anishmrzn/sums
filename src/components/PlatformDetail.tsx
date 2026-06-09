@@ -159,16 +159,46 @@ export const PlatformDetail: React.FC<PlatformDetailProps> = ({
         {/* Orbit ring */}
         <div className="absolute w-[300px] h-[300px] md:w-[380px] md:h-[380px] rounded-full border border-dashed border-white/8" />
 
-        {/* Center label (fades out as orbit moves left) */}
-        <div 
-          style={{ opacity: 1 - layoutProgress }}
-          className="absolute text-center select-none pointer-events-none"
-        >
-          <span className="text-[#FD4400] text-[10px] font-semibold tracking-[0.3em] uppercase block mb-1">
-            {details.title}
-          </span>
-          <div className="w-1.5 h-1.5 rounded-full bg-[#FD4400] mx-auto opacity-60" />
-        </div>
+        {/* Dynamic Connector SVG Line */}
+        <svg viewBox="0 0 100 100" className="absolute w-[300px] h-[300px] md:w-[380px] md:h-[380px] pointer-events-none overflow-visible z-30">
+          {(() => {
+            const activeSec = sectionLayout.find(s => s.id === activeSection);
+            if (!activeSec) return null;
+            const radians = (activeSec.angle * Math.PI) / 180;
+            const r = 45.5; // proportional radius
+            const x2 = 50 + Math.cos(radians) * r;
+            const y2 = 50 + Math.sin(radians) * r;
+            
+            return (
+              <g>
+                <line 
+                  x1="50" 
+                  y1="50" 
+                  x2={x2} 
+                  y2={y2} 
+                  stroke="rgba(253, 68, 0, 0.2)" 
+                  strokeWidth="0.5" 
+                  strokeDasharray="1.5 1.5"
+                  style={{ transition: 'all 0.5s cubic-bezier(0.25, 1, 0.5, 1)' }}
+                />
+                <line 
+                  x1="50" 
+                  y1="50" 
+                  x2={x2} 
+                  y2={y2} 
+                  stroke="#FD4400" 
+                  strokeWidth="0.75" 
+                  strokeLinecap="round"
+                  opacity="0.8"
+                  style={{ 
+                    transition: 'all 0.5s cubic-bezier(0.25, 1, 0.5, 1)',
+                    filter: 'drop-shadow(0 0 2px rgba(253, 68, 0, 0.8))'
+                  }}
+                />
+              </g>
+            );
+          })()}
+        </svg>
 
         {/* Circular orbit buttons */}
         <div className="absolute w-[300px] h-[300px] md:w-[380px] md:h-[380px]">
@@ -194,6 +224,9 @@ export const PlatformDetail: React.FC<PlatformDetailProps> = ({
                     : 'bg-[#040507]/90 text-white/50 border border-white/10 hover:border-[#FD4400]/40 hover:text-white'
                 }`}
               >
+                {isActive && (
+                  <span className="absolute inset-0 rounded-full bg-[#FD4400]/45 animate-ping pointer-events-none" style={{ animationDuration: '2s' }} />
+                )}
                 {sec.label}
               </button>
             );
@@ -222,10 +255,10 @@ export const PlatformDetail: React.FC<PlatformDetailProps> = ({
             <motion.section
               id="overview"
               className="scroll-mt-32"
-              initial={{ opacity: 0, y: 24 }}
+              initial={{ opacity: 0, y: 32 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
+              viewport={{ once: true, margin: "-12%" }}
+              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
             >
               <span className="text-[#FD4400] text-[10px] font-semibold tracking-[0.25em] uppercase block mb-3">
                 01 / Platform Overview
@@ -239,7 +272,14 @@ export const PlatformDetail: React.FC<PlatformDetailProps> = ({
             </motion.section>
 
             {/* FEATURES */}
-            <section id="features" className="scroll-mt-32 border-t border-white/5 pt-12">
+            <motion.section 
+              id="features" 
+              className="scroll-mt-32 border-t border-white/5 pt-12"
+              initial={{ opacity: 0, y: 32 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-12%" }}
+              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            >
               <span className="text-[#FD4400] text-[10px] font-semibold tracking-[0.25em] uppercase block mb-3">
                 02 / Platform Capabilities
               </span>
@@ -254,10 +294,17 @@ export const PlatformDetail: React.FC<PlatformDetailProps> = ({
                   </div>
                 ))}
               </div>
-            </section>
+            </motion.section>
 
             {/* SOLUTIONS */}
-            <section id="solutions" className="scroll-mt-32 border-t border-white/5 pt-12">
+            <motion.section 
+              id="solutions" 
+              className="scroll-mt-32 border-t border-white/5 pt-12"
+              initial={{ opacity: 0, y: 32 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-12%" }}
+              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            >
               <span className="text-[#FD4400] text-[10px] font-semibold tracking-[0.25em] uppercase block mb-3">
                 03 / Institutional Solutions
               </span>
@@ -272,10 +319,17 @@ export const PlatformDetail: React.FC<PlatformDetailProps> = ({
                   </div>
                 ))}
               </div>
-            </section>
+            </motion.section>
 
             {/* IMPACT */}
-            <section id="impact" className="scroll-mt-32 border-t border-white/5 pt-12">
+            <motion.section 
+              id="impact" 
+              className="scroll-mt-32 border-t border-white/5 pt-12"
+              initial={{ opacity: 0, y: 32 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-12%" }}
+              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            >
               <span className="text-[#FD4400] text-[10px] font-semibold tracking-[0.25em] uppercase block mb-3">
                 04 / Ecosystem Impact
               </span>
@@ -285,10 +339,17 @@ export const PlatformDetail: React.FC<PlatformDetailProps> = ({
               <p className="text-white/70 text-base md:text-lg font-serif italic leading-relaxed">
                 {details.impact}
               </p>
-            </section>
+            </motion.section>
 
             {/* PARTNERS */}
-            <section id="partners" className="scroll-mt-32 border-t border-white/5 pt-12">
+            <motion.section 
+              id="partners" 
+              className="scroll-mt-32 border-t border-white/5 pt-12"
+              initial={{ opacity: 0, y: 32 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-12%" }}
+              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            >
               <span className="text-[#FD4400] text-[10px] font-semibold tracking-[0.25em] uppercase block mb-3">
                 05 / Network Partners
               </span>
@@ -302,10 +363,17 @@ export const PlatformDetail: React.FC<PlatformDetailProps> = ({
                   </div>
                 ))}
               </div>
-            </section>
+            </motion.section>
 
             {/* TESTIMONIALS */}
-            <section id="testimonials" className="scroll-mt-32 border-t border-white/5 pt-12">
+            <motion.section 
+              id="testimonials" 
+              className="scroll-mt-32 border-t border-white/5 pt-12"
+              initial={{ opacity: 0, y: 32 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-12%" }}
+              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            >
               <span className="text-[#FD4400] text-[10px] font-semibold tracking-[0.25em] uppercase block mb-3">
                 06 / Testimonials
               </span>
@@ -321,10 +389,17 @@ export const PlatformDetail: React.FC<PlatformDetailProps> = ({
                   <span className="block text-white/40 text-[10px] uppercase tracking-wider">Dean of Information Systems, TU</span>
                 </div>
               </div>
-            </section>
+            </motion.section>
 
             {/* CONTACT */}
-            <section id="contact" className="scroll-mt-32 border-t border-white/5 pt-12 pb-12">
+            <motion.section 
+              id="contact" 
+              className="scroll-mt-32 border-t border-white/5 pt-12 pb-12"
+              initial={{ opacity: 0, y: 32 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-12%" }}
+              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            >
               <span className="text-[#FD4400] text-[10px] font-semibold tracking-[0.25em] uppercase block mb-3">
                 07 / Connect
               </span>
@@ -372,7 +447,7 @@ export const PlatformDetail: React.FC<PlatformDetailProps> = ({
                   </button>
                 </form>
               </div>
-            </section>
+            </motion.section>
 
           </div>
         </div>

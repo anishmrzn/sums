@@ -171,6 +171,39 @@ function App() {
         onNavigate={handleNavigate}
       />
 
+      {/* Vertical Flight Progress Trail */}
+      {!activePlatform && (
+        <div 
+          className="fixed left-8 top-1/2 -translate-y-1/2 z-40 hidden md:flex flex-col items-center pointer-events-none"
+          style={{
+            opacity: heroFadeProgress > 0.1 ? Math.min(1, (heroFadeProgress - 0.1) * 3) : 0,
+            transition: 'opacity 0.5s ease'
+          }}
+        >
+          <div className="text-[9px] font-semibold text-white/30 uppercase tracking-[0.2em] mb-4 [writing-mode:vertical-lr] select-none">
+            Ecosystem Tour
+          </div>
+          <div className="h-48 w-[1px] bg-white/10 relative rounded-full">
+            {/* Milestone ticks */}
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-white/20 border border-white/5" title="Start" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-white/20 border border-white/5" title="Alignment" />
+            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-white/20 border border-white/5" title="Unlocked" />
+            
+            {/* Active progress bar */}
+            <div 
+              className="absolute top-0 left-0 w-full bg-[#FD4400] shadow-[0_0_8px_rgba(253,68,0,0.6)] transition-all duration-75"
+              style={{ height: `${scrollProgress * 100}%` }}
+            />
+            
+            {/* Sliding orange dot */}
+            <div 
+              className="absolute left-1/2 -translate-x-1/2 w-2.5 h-2.5 rounded-full bg-[#FD4400] shadow-[0_0_10px_rgba(253,68,0,0.8)] border border-white/20 transition-all duration-75"
+              style={{ top: `calc(${scrollProgress * 100}% - 5px)` }}
+            />
+          </div>
+        </div>
+      )}
+
       {/* MAIN CONTENT LAYERS */}
       <div className="relative z-10 w-full pointer-events-none">
         
@@ -278,12 +311,13 @@ function App() {
                       <button
                         key={plat.id}
                         onClick={() => handleSelectPlatform(plat.id)}
-                        className="text-left p-4 rounded-xl border border-white/5 hover:border-[#FD4400]/40 bg-white/[0.01] hover:bg-white/[0.02] transition-all duration-300 group cursor-pointer"
+                        className="text-left p-5 rounded-xl border border-white/5 hover:border-[#FD4400]/40 bg-white/[0.01] hover:bg-white/[0.02] hover:-translate-y-1 hover:shadow-[0_0_20px_rgba(253,68,0,0.12)] transition-all duration-300 group cursor-pointer relative overflow-hidden"
                       >
-                        <span className="text-sm font-serif font-bold text-white group-hover:text-[#FD4400] block transition-colors duration-300">
+                        <div className="absolute inset-0 bg-gradient-to-r from-[#FD4400]/0 via-[#FD4400]/5 to-[#FD4400]/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                        <span className="text-sm font-serif font-bold text-white group-hover:text-[#FD4400] block transition-colors duration-300 relative z-10">
                           {plat.name}
                         </span>
-                        <span className="text-xs text-white/40 block mt-1">{plat.desc}</span>
+                        <span className="text-xs text-white/40 block mt-1 relative z-10">{plat.desc}</span>
                       </button>
                     ))}
                   </div>

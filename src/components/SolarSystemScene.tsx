@@ -402,6 +402,15 @@ const SceneContent: React.FC<{
 
       cameraTargetPos.current.lerpVectors(splinePoint, lineCameraPos, smoothedTransitionT.current);
       lookAtTargetPos.current.lerpVectors(splineTarget, lineLookAt, smoothedTransitionT.current);
+
+      // Apply subtle mouse hover parallax when on homepage/ecosystem view
+      const targetParallaxX = state.mouse.x * 1.0;
+      const targetParallaxY = state.mouse.y * 0.6;
+      lookAtTargetPos.current.x += targetParallaxX;
+      lookAtTargetPos.current.y += targetParallaxY;
+      
+      cameraTargetPos.current.x -= targetParallaxX * 0.4;
+      cameraTargetPos.current.y -= targetParallaxY * 0.4;
     }
 
     const cameraLerpFactor = targetPlatformId ? 0.08 : 0.05;
@@ -461,15 +470,26 @@ const SceneContent: React.FC<{
     <group>
       {/* Stars Background */}
       {finalOpacity > 0.01 && (
-        <Stars 
-          radius={150} 
-          depth={50} 
-          count={Math.floor(5000 * finalOpacity)} 
-          factor={4} 
-          saturation={0.5} 
-          fade 
-          speed={1.2} 
-        />
+        <>
+          <Stars 
+            radius={150} 
+            depth={50} 
+            count={Math.floor(5000 * finalOpacity)} 
+            factor={4} 
+            saturation={0.5} 
+            fade 
+            speed={1.2} 
+          />
+          <Stars 
+            radius={280} 
+            depth={80} 
+            count={Math.floor(1200 * finalOpacity)} 
+            factor={6} 
+            saturation={0.8} 
+            fade 
+            speed={0.4} 
+          />
+        </>
       )}
 
       {/* Ambient and Point Lights */}
