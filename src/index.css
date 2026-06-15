@@ -45,6 +45,17 @@ body {
   backface-visibility: hidden;
 }
 
+/* Scroll nudge dot animations */
+@keyframes scrollBounce {
+  0%, 100% { transform: translateY(0); opacity: 0.6; }
+  50%       { transform: translateY(4px); opacity: 1; }
+}
+
+@keyframes scrollBounceUp {
+  0%, 100% { transform: translateY(0); opacity: 0.6; }
+  50%       { transform: translateY(-4px); opacity: 1; }
+}
+
 /* Three.js Canvas container styling */
 #canvas-container {
   position: fixed;

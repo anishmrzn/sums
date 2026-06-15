@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Navbar } from './components/Navbar';
 import { SolarSystemScene } from './components/SolarSystemScene';
 import { PlatformDetail } from './components/PlatformDetail';
-import { Mail, MapPin, ArrowDown } from 'lucide-react';
+import { Mail, MapPin } from 'lucide-react';
 
 function App() {
   const [scrollProgress, setScrollProgress] = useState(0);
@@ -12,6 +12,7 @@ function App() {
   const [activePlatform, setActivePlatform] = useState<string | null>(null);
   const [zoomingPlatform, setZoomingPlatform] = useState<string | null>(null);
   const [activeSection, setActiveSection] = useState('overview');
+  const [pastTour, setPastTour] = useState(false);
   
   const homeScrollPos = useRef(0);
   const isTransitioning = useRef(false);
@@ -45,6 +46,10 @@ function App() {
         ? 0
         : Math.min(1.0, (currentScrollY - vh) / (vh * 2));
       setScrollProgress(solarProgress);
+
+      // Track whether user has scrolled past the 3D tour spacer into HTML sections
+      const spacerHeight = vh * 3.5;
+      setPastTour(currentScrollY > spacerHeight + 100);
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
@@ -171,38 +176,7 @@ function App() {
         onNavigate={handleNavigate}
       />
 
-      {/* Vertical Flight Progress Trail */}
-      {!activePlatform && (
-        <div 
-          className="fixed left-8 top-1/2 -translate-y-1/2 z-40 hidden md:flex flex-col items-center pointer-events-none"
-          style={{
-            opacity: heroFadeProgress > 0.1 ? Math.min(1, (heroFadeProgress - 0.1) * 3) : 0,
-            transition: 'opacity 0.5s ease'
-          }}
-        >
-          <div className="text-[9px] font-semibold text-white/30 uppercase tracking-[0.2em] mb-4 [writing-mode:vertical-lr] select-none">
-            Ecosystem Tour
-          </div>
-          <div className="h-48 w-[1px] bg-white/10 relative rounded-full">
-            {/* Milestone ticks */}
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-white/20 border border-white/5" title="Start" />
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-white/20 border border-white/5" title="Alignment" />
-            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-white/20 border border-white/5" title="Unlocked" />
-            
-            {/* Active progress bar */}
-            <div 
-              className="absolute top-0 left-0 w-full bg-[#FD4400] shadow-[0_0_8px_rgba(253,68,0,0.6)] transition-all duration-75"
-              style={{ height: `${scrollProgress * 100}%` }}
-            />
-            
-            {/* Sliding orange dot */}
-            <div 
-              className="absolute left-1/2 -translate-x-1/2 w-2.5 h-2.5 rounded-full bg-[#FD4400] shadow-[0_0_10px_rgba(253,68,0,0.8)] border border-white/20 transition-all duration-75"
-              style={{ top: `calc(${scrollProgress * 100}% - 5px)` }}
-            />
-          </div>
-        </div>
-      )}
+
 
       {/* MAIN CONTENT LAYERS */}
       <div className="relative z-10 w-full pointer-events-none">
@@ -221,8 +195,8 @@ function App() {
               <div 
                 className="mt-24 text-center max-w-3xl mx-auto flex flex-col items-center"
                 style={{
-                  opacity: Math.max(0, 1 - heroFadeProgress * 1.6),  // fully visible at load, fades as you scroll
-                  transform: `translateY(${-heroFadeProgress * 70}px)`, // starts at 0, drifts up on scroll
+                  opacity: Math.max(0, 1 - heroFadeProgress * 1.6),
+                  transform: `translateY(${-heroFadeProgress * 70}px)`,
                   willChange: 'transform, opacity',
                   pointerEvents: heroFadeProgress > 0.85 ? 'none' : 'auto',
                 }}
@@ -236,18 +210,11 @@ function App() {
                 <p className="text-white/50 text-sm md:text-base mt-4 max-w-md">
                   Scroll down to traverse our connected network of educational, collaborative, and innovation platforms.
                 </p>
-                <div 
-                  className="flex items-center space-x-2 mt-6 text-white/40 text-xs"
-                  style={{ opacity: heroFadeProgress < 0.1 ? 1 : Math.max(0, 1 - heroFadeProgress * 5) }}
-                >
-                  <ArrowDown size={14} className="animate-bounce" />
-                  <span>Scroll to Explore</span>
-                </div>
               </div>
 
               {/* Progress Indicator overlay — only shows during phases 2 & 3 */}
               <div 
-                className="fixed bottom-8 left-1/2 -translate-x-1/2 bg-[#040507]/80 backdrop-blur-md px-4 py-2 rounded-full border border-white/5 text-[10px] tracking-widest uppercase font-semibold text-white/50 flex items-center space-x-3 pointer-events-auto"
+                className="fixed bottom-20 left-1/2 -translate-x-1/2 bg-[#040507]/80 backdrop-blur-md px-4 py-2 rounded-full border border-white/5 text-[10px] tracking-widest uppercase font-semibold text-white/50 flex items-center space-x-3 pointer-events-auto"
                 style={{ 
                   opacity: heroFadeProgress > 0.8 && scrollProgress < 0.98
                     ? Math.min(1, (heroFadeProgress - 0.8) * 5)
@@ -263,6 +230,51 @@ function App() {
                   />
                 </div>
                 <span>{Math.round(scrollProgress * 100)}%</span>
+              </div>
+
+              {/* ── Persistent scroll indicator: hero → solar tour → disappears at 100% ── */}
+              <div
+                className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center gap-1.5 pointer-events-none select-none"
+                style={{
+                  opacity: !pastTour && scrollProgress < 0.98 ? 1 : 0,
+                  transform: !pastTour && scrollProgress < 0.98 ? 'translateY(0)' : 'translateY(8px)',
+                  transition: 'opacity 0.5s ease, transform 0.5s ease',
+                }}
+              >
+                <span className="text-[9px] font-semibold tracking-[0.22em] uppercase text-white/30">
+                  Scroll
+                </span>
+                <div className="flex flex-col items-center gap-0">
+                  {/* Double chevron — cascading animation for depth */}
+                  <svg width="10" height="7" viewBox="0 0 10 7" fill="none" className="text-white/20" style={{ animation: 'scrollBounce 1.4s ease-in-out infinite 0s' }}>
+                    <path d="M1 1l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                  <svg width="10" height="7" viewBox="0 0 10 7" fill="none" className="text-[#FD4400]/70" style={{ animation: 'scrollBounce 1.4s ease-in-out infinite 0.2s' }}>
+                    <path d="M1 1l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </div>
+              </div>
+
+              {/* ── Scroll-down nudge: appears when ecosystem tour hits 100% ── */}
+              <div
+                className="fixed bottom-20 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center gap-1.5 pointer-events-none select-none"
+                style={{
+                  opacity: scrollProgress >= 0.98 && !pastTour
+                    ? Math.min(1, (scrollProgress - 0.98) / 0.02)
+                    : 0,
+                  transition: 'opacity 0.6s ease',
+                }}
+              >
+                <span className="text-[10px] font-semibold tracking-[0.25em] uppercase text-white/40">
+                  More below
+                </span>
+                <div className="flex flex-col items-center gap-0.5">
+                  <div className="w-[1px] h-5 bg-gradient-to-b from-transparent to-[#FD4400]/60" />
+                  <div
+                    className="w-1.5 h-1.5 rounded-full bg-[#FD4400]"
+                    style={{ animation: 'scrollBounce 1.4s ease-in-out infinite' }}
+                  />
+                </div>
               </div>
             </div>
 
@@ -349,6 +361,33 @@ function App() {
                   </div>
                 </div>
               </div>
+            </div>
+
+            {/* ── Scroll-up nudge: appears when user is deep in the HTML sections ── */}
+            <div
+              className="fixed bottom-8 right-8 z-50 flex flex-col items-center gap-2 pointer-events-auto"
+              style={{
+                opacity: pastTour ? 1 : 0,
+                transform: pastTour ? 'translateY(0)' : 'translateY(12px)',
+                transition: 'opacity 0.5s ease, transform 0.5s ease',
+              }}
+            >
+              <button
+                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                title="Back to Ecosystem Tour"
+                className="group flex flex-col items-center gap-1.5 bg-[#040507]/80 backdrop-blur-md border border-white/10 hover:border-[#FD4400]/50 rounded-full px-3 py-2.5 transition-all duration-300 hover:shadow-[0_0_16px_rgba(253,68,0,0.25)] cursor-pointer"
+              >
+                <div className="flex flex-col items-center gap-0.5">
+                  <div
+                    className="w-1.5 h-1.5 rounded-full bg-[#FD4400] group-hover:shadow-[0_0_6px_rgba(253,68,0,0.8)] transition-shadow"
+                    style={{ animation: 'scrollBounceUp 1.4s ease-in-out infinite' }}
+                  />
+                  <div className="w-[1px] h-5 bg-gradient-to-t from-transparent to-[#FD4400]/60" />
+                </div>
+                <span className="text-[9px] font-semibold tracking-[0.2em] uppercase text-white/40 group-hover:text-white/70 transition-colors [writing-mode:vertical-lr]">
+                  Ecosystem
+                </span>
+              </button>
             </div>
           </div>
         )}

@@ -226,10 +226,10 @@ const orbitParams = {
 
 const linePositions: { [key: string]: THREE.Vector3 } = {
   sums: new THREE.Vector3(-20, 0, 0),
-  cogknit: new THREE.Vector3(-10, 0, 0),
-  sip: new THREE.Vector3(0, 0, 0),
+  cogknit: new THREE.Vector3(-6, 0, 0),
+  sip: new THREE.Vector3(2, 0, 0),
   academia: new THREE.Vector3(10, 0, 0),
-  aic: new THREE.Vector3(20, 0, 0)
+  aic: new THREE.Vector3(18, 0, 0)
 };
 
 // Inner component to handle frame-by-frame updates in the Three.js canvas
@@ -397,7 +397,9 @@ const SceneContent: React.FC<{
       const splineTarget = targetSpline.getPointAt(cameraProgress);
 
       // Align camera perspective perfectly flat/centered when in line mode
-      const lineCameraPos = new THREE.Vector3(0, 0.8, 31);
+      // Pull back further on mobile so all planets fit in the narrower viewport
+      const isMobileViewport = window.innerWidth < 768;
+      const lineCameraPos = new THREE.Vector3(0, 0.8, isMobileViewport ? 44 : 31);
       const lineLookAt = new THREE.Vector3(0, 0, 0);
 
       cameraTargetPos.current.lerpVectors(splinePoint, lineCameraPos, smoothedTransitionT.current);
@@ -419,9 +421,10 @@ const SceneContent: React.FC<{
     camera.lookAt(currentTarget.current);
 
     let targetFov = targetPlatformId ? 40 : 50 - smoothedScrollProgress.current * 5;
-    // Widen field of view slightly in line mode to make sure all platforms fit nicely side-by-side
+    // Widen field of view in line mode — extra wide on mobile (portrait = narrow horizontal FOV)
     if (!targetPlatformId) {
-      targetFov = THREE.MathUtils.lerp(targetFov, 55, smoothedTransitionT.current);
+      const lineFov = window.innerWidth < 768 ? 78 : 55;
+      targetFov = THREE.MathUtils.lerp(targetFov, lineFov, smoothedTransitionT.current);
     }
 
     if (camera instanceof THREE.PerspectiveCamera) {
