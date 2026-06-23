@@ -41,32 +41,36 @@ function App() {
       const ecosystemSectionEl = document.getElementById('ecosystem-section');
       if (ecosystemSectionEl) {
         const rect = ecosystemSectionEl.getBoundingClientRect();
-        // Phase detection: section is 3×vh tall
-        // Phase 1 (0 to 0.6 vh): planets align horizontally. Text is visible.
-        // Phase 2 (0.6 to 2.0 vh): planets remain aligned. Text remains visible.
-        // Phase 3 (2.0 vh+): planets remain aligned. Text transitions out of the frame.
         const scrolledIntoSection = -rect.top;
-        const phase1End = 0.6 * vh;
-        const phase2End = 2.0 * vh;
+        // Phase 1: planet orbiting ends very early, alignment starts almost immediately
+        const phase1End = 0.2 * vh;
 
-        const isInsideEcosystem = scrolledIntoSection > -0.2 * vh && scrolledIntoSection < 3.0 * vh;
+        const isInsideEcosystem = scrolledIntoSection >= 0 && scrolledIntoSection < 3.0 * vh;
         if (isInsideEcosystem || activePlatform) {
           setEcosystemRevealed(true);
         } else {
           setEcosystemRevealed(false);
         }
 
-        if (scrolledIntoSection <= 0) {
+        // Phase 1 ends at 0.2*vh — planets orbit normally while user reads the text
+        // Phase 2 ends at 0.8*vh — planets align horizontally; completes early so user
+        //   sees them in the horizontal line for a good while before the next section
+        const alignEnd = 0.8 * vh;
+
+        if (scrolledIntoSection < 0) {
           setEcosystemPhase(0);
           setScrollProgress(0);
         } else if (scrolledIntoSection < phase1End) {
+          // Phase 1: Keep orbiting normally (progress = 0)
           setEcosystemPhase(1);
-          const progress = Math.min(1.0, scrolledIntoSection / phase1End);
-          setScrollProgress(progress);
-        } else if (scrolledIntoSection < phase2End) {
+          setScrollProgress(0);
+        } else if (scrolledIntoSection < alignEnd) {
+          // Phase 2: Smoothly align to horizontal line (earlier window)
           setEcosystemPhase(2);
-          setScrollProgress(1.0);
+          const progress = Math.min(1.0, (scrolledIntoSection - phase1End) / (alignEnd - phase1End));
+          setScrollProgress(progress);
         } else {
+          // Phase 3: Hold aligned positions until user scrolls past 3*vh
           setEcosystemPhase(3);
           setScrollProgress(1.0);
         }
@@ -166,14 +170,6 @@ function App() {
     }
   };
 
-  const handleRevealEcosystem = () => {
-    setEcosystemRevealed(true);
-    document.getElementById('ecosystem-section')?.scrollIntoView({ behavior: 'smooth' });
-  };
-
-  const handleScrollToCrisis = () => {
-    document.getElementById('crisis-section')?.scrollIntoView({ behavior: 'smooth' });
-  };
 
   // Headline word splitting for stagger animation
   const headlineLine1 = "Students Are Graduating.";
@@ -207,37 +203,37 @@ function App() {
             
             {/* CHANGE 1: STORY-DRIVEN HERO SECTION */}
             <div className="w-full min-h-screen flex flex-col justify-between pt-24 px-6 relative">
-              <div className="flex-grow flex flex-col items-center justify-center text-center max-w-4xl mx-auto pointer-events-auto">
+              <div className="flex-grow flex flex-col items-center justify-center text-center max-w-7xl mx-auto w-full pointer-events-auto">
                 {/* Eyebrow Label */}
                 <motion.span 
                   initial={{ opacity: 0, y: shouldReduceMotion ? 0 : -15 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, ease: "easeOut" }}
-                  className="text-[#FF5C00] text-[12px] font-extrabold tracking-[0.3em] uppercase mb-6"
+                  className="text-[#FF5C00] text-[13px] font-extrabold tracking-[0.35em] uppercase mb-8"
                 >
                   THE PROBLEM WITH HIGHER EDUCATION
                 </motion.span>
                 
                 {/* Large Bold Headline with word-by-word stagger */}
-                <h1 className="font-[900] tracking-tight leading-[1.1] flex flex-col items-center">
+                <h1 className="font-[900] tracking-tight leading-[1.0] flex flex-col items-center w-full">
                   <motion.span 
-                    className="text-white text-5xl md:text-8xl block overflow-hidden"
+                    className="text-white text-6xl sm:text-7xl md:text-9xl block overflow-hidden w-full"
                     initial="hidden"
                     animate="visible"
                     variants={{
                       hidden: {},
-                      visible: { transition: { staggerChildren: 0.08 } }
+                      visible: { transition: { staggerChildren: 0.1 } }
                     }}
                   >
                     {headlineLine1.split(" ").map((word, idx) => (
                       <motion.span
                         key={idx}
-                        className="inline-block mr-3 md:mr-4"
+                        className="inline-block mr-4 md:mr-6"
                         variants={{
-                          hidden: { opacity: 0, y: shouldReduceMotion ? 0 : 35 },
+                          hidden: { opacity: 0, y: shouldReduceMotion ? 0 : 50 },
                           visible: { opacity: 1, y: 0 }
                         }}
-                        transition={{ duration: 0.5, ease: "easeOut" }}
+                        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
                       >
                         {word}
                       </motion.span>
@@ -245,23 +241,23 @@ function App() {
                   </motion.span>
 
                   <motion.span 
-                    className="text-[#FF5C00] text-3xl md:text-5xl block overflow-hidden mt-4"
+                    className="text-[#FF5C00] text-4xl sm:text-5xl md:text-7xl block overflow-hidden mt-3 w-full"
                     initial="hidden"
                     animate="visible"
                     variants={{
                       hidden: {},
-                      visible: { transition: { staggerChildren: 0.08, delayChildren: 0.3 } }
+                      visible: { transition: { staggerChildren: 0.1, delayChildren: 0.35 } }
                     }}
                   >
                     {headlineLine2.split(" ").map((word, idx) => (
                       <motion.span
                         key={idx}
-                        className="inline-block mr-3 md:mr-4"
+                        className="inline-block mr-4 md:mr-6"
                         variants={{
-                          hidden: { opacity: 0, y: shouldReduceMotion ? 0 : 35 },
+                          hidden: { opacity: 0, y: shouldReduceMotion ? 0 : 50 },
                           visible: { opacity: 1, y: 0 }
                         }}
-                        transition={{ duration: 0.5, ease: "easeOut" }}
+                        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
                       >
                         {word}
                       </motion.span>
@@ -269,33 +265,15 @@ function App() {
                   </motion.span>
                 </h1>
 
-                {/* Subheading */}
+                {/* Subheading — wider, bigger */}
                 <motion.p 
                   initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.8, duration: 0.6, ease: "easeOut" }}
-                  className="text-white/60 text-sm md:text-lg mt-8 max-w-[600px] leading-relaxed"
+                  transition={{ delay: 0.9, duration: 0.7, ease: "easeOut" }}
+                  className="text-white/60 text-base md:text-xl mt-10 max-w-3xl leading-relaxed"
                 >
                   Colleges are producing degrees, not professionals. The gap between what's taught and what's needed has never been wider — and the system keeps rewarding the wrong things.
                 </motion.p>
-
-                {/* Small animated scroll prompt */}
-                <motion.button 
-                  onClick={handleScrollToCrisis}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 1.2, duration: 0.5 }}
-                  className="mt-12 text-[#FF5C00] text-sm font-semibold tracking-wider flex flex-col items-center gap-2 cursor-pointer group"
-                >
-                  <span>See how we fix it</span>
-                  <motion.span 
-                    animate={shouldReduceMotion ? {} : { y: [0, 5, 0] }}
-                    transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
-                    className="text-lg font-bold group-hover:scale-110 transition-transform"
-                  >
-                    ↓
-                  </motion.span>
-                </motion.button>
               </div>
 
               {/* CHANGE 2: LOGO SLIDER - nested inside the hero fold so it is visible on the first page load */}
@@ -310,46 +288,44 @@ function App() {
             </div>
 
             {/* CHANGE 4: SOLUTIONS MISS THE MARK SECTION */}
-            <SolutionsSection onRevealEcosystem={handleRevealEcosystem} />
+            <SolutionsSection />
 
-            {/* CHANGE 5: ECOSYSTEM SECTION — 3×vh tall for 3-phase scroll */}
+            {/* CHANGE 5: ECOSYSTEM SECTION — 2.2×vh tall for 3-phase scroll */}
             <div 
               id="ecosystem-section"
-              className="relative overflow-hidden pointer-events-none"
+              className="relative pointer-events-none"
               style={{ minHeight: '300vh' }}
             >
               {/* Sticky container for viewport elements */}
-              <div className="sticky top-0 h-screen w-full flex flex-col pointer-events-none">
+               <div className="sticky top-0 h-screen w-full flex flex-col pointer-events-none">
 
-                {/* Top text overlay — visible in phases 1 & 2, fades out in phase 3 */}
+                {/* Top text overlay — visible and fixed during active phases */}
                 <motion.div
-                  className="absolute top-12 md:top-20 left-0 right-0 px-6 flex flex-col items-center text-center gap-3 pointer-events-none"
+                  className="absolute top-32 left-0 right-0 px-6 flex flex-col items-center text-center gap-3 pointer-events-none z-30"
                   animate={
-                    ecosystemPhase === 1 || ecosystemPhase === 2
+                    ecosystemPhase >= 1
                       ? { opacity: 1, y: 0, scale: 1 }
-                      : ecosystemPhase === 3
-                      ? { opacity: 0, y: -50, scale: 0.95 }
-                      : { opacity: 0, y: 50, scale: 0.95 }
+                      : { opacity: 0, y: 30, scale: 0.96 }
                   }
-                  transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                  transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
                 >
-                  <span className="text-[#FF5C00] text-xs md:text-sm font-semibold tracking-[0.3em] uppercase bg-[#040507]/60 px-3 py-1 rounded border border-white/5 backdrop-blur-sm">
+                  <span className="text-[#FF5C00] text-xs font-bold tracking-[0.3em] uppercase bg-[#040507]/90 px-3.5 py-1 rounded border border-[#FF5C00]/20 backdrop-blur-md">
                     The Integrated Solution
                   </span>
 
-                  <h2 className="font-serif text-4xl md:text-6xl lg:text-7xl font-[900] leading-tight text-white drop-shadow-[0_4px_24px_rgba(0,0,0,0.8)]">
+                  <h2 className="font-serif text-3xl md:text-5xl lg:text-6xl font-black leading-tight text-white drop-shadow-[0_4px_16px_rgba(0,0,0,0.95)] max-w-4xl">
                     We Built the Ecosystem to Solve These Problems
                   </h2>
 
-                  <p className="text-white/70 text-sm md:text-base max-w-[620px] leading-relaxed">
+                  <p className="text-white/80 text-sm md:text-base max-w-[620px] leading-relaxed drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)] bg-[#040507]/50 px-4 py-2 rounded-lg backdrop-blur-sm">
                     SUMs connects every isolated tool, workshop, and training into a single unified gravitational center.
                   </p>
                 </motion.div>
 
-                {/* Bottom hint — visible in phases 1 & 2 */}
+                {/* Bottom hint — visible and stuck through ecosystem section */}
                 <motion.div
                   className="absolute bottom-8 left-0 right-0 flex justify-center pointer-events-none"
-                  animate={ecosystemPhase >= 1 && ecosystemPhase <= 2 ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
+                  animate={ecosystemPhase >= 1 ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
                   transition={{ duration: 0.5 }}
                 >
                   <p className="text-[10px] md:text-xs text-white/40 uppercase tracking-[0.2em] font-semibold bg-[#040507]/60 px-4 py-1.5 rounded-full border border-white/5 backdrop-blur-sm">

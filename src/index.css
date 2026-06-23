@@ -70,6 +70,18 @@ body {
   animation-play-state: paused;
 }
 
+/* 3D Logo float animation */
+@keyframes logoFloat {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-3px); }
+}
+
+/* Logo glow pulse (used via filter animation) */
+@keyframes logoGlowPulse {
+  0%, 100% { filter: drop-shadow(0 0 6px rgba(255,109,0,0.8)) drop-shadow(0 0 16px rgba(255,60,0,0.5)); }
+  50%       { filter: drop-shadow(0 0 12px rgba(255,140,0,1))  drop-shadow(0 0 30px rgba(255,60,0,0.8)) drop-shadow(0 0 50px rgba(255,109,0,0.4)); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .logo-scroll-track {
     animation: none;
