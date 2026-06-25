@@ -1,30 +1,12 @@
 /* eslint-disable react-hooks/immutability */
+/* eslint-disable react-hooks/refs */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useRef, useMemo, useState } from 'react';
-import { Canvas, useFrame, useThree } from '@react-three/fiber';
+import { Canvas, useFrame, useThree, useLoader } from '@react-three/fiber';
 import { Stars, Line, Html } from '@react-three/drei';
 import * as THREE from 'three';
 
 
-
-// Predefined spline curve path through the solar system (camera position)
-const cameraSpline = new THREE.CatmullRomCurve3([
-  new THREE.Vector3(0, 1.5, 24),   // Start (Hero view — perfectly centred)
-  new THREE.Vector3(0, 1, 18),     // Scroll entry (closing in)
-  new THREE.Vector3(4, 0.5, 12),   // Cogknit focus milestone
-  new THREE.Vector3(-4, -0.5, 7),  // SIP focus milestone
-  new THREE.Vector3(-2, -1.8, 3),  // Academia focus milestone
-  new THREE.Vector3(3, -2.8, -1)   // AIC focus milestone
-]);
-
-// Predefined targets the camera looks at along the journey
-const targetSpline = new THREE.CatmullRomCurve3([
-  new THREE.Vector3(0, 0, 0),     // Hero looks at SUMS Core
-  new THREE.Vector3(0, 0, 0),     // Entering looks at Core
-  new THREE.Vector3(5, 0.5, -2),  // Focus Cogknit
-  new THREE.Vector3(-5, -0.8, -4), // Focus SIP
-  new THREE.Vector3(-3, -2.5, -6), // Focus Academia
-  new THREE.Vector3(4, -4, -8)    // Focus AIC
-]);
 
 interface PlanetData {
   id: string;
@@ -168,13 +150,13 @@ const createLogoTexture = (id: string, name: string, color: string) => {
   }
 
   // Draw Platform Text
-  ctx.font = 'bold 36px Inter, sans-serif';
+  ctx.font = 'bold 36px Poppins, sans-serif';
   ctx.fillStyle = '#ffffff';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillText(name.toUpperCase(), 256, 385);
 
-  ctx.font = 'bold 16px Inter, sans-serif';
+  ctx.font = 'bold 16px Poppins, sans-serif';
   ctx.fillStyle = color;
   ctx.fillText(id === 'sums' ? 'CORE ECOSYSTEM' : 'PLATFORM HUB', 256, 430);
 
@@ -215,7 +197,120 @@ const PlanetBillboard: React.FC<{
   );
 };
 
+/// ── SUMS Sun Core: renders sums_logo.png as a glowing 3D sun ──────────────────
+const SunCore: React.FC = () => {
+  const logoTexture = useLoader(THREE.TextureLoader, '/sums_logo.png');
+  const meshRef = useRef<THREE.Mesh>(null);
+  const halo1Ref = useRef<THREE.Mesh>(null);
+  const halo2Ref = useRef<THREE.Mesh>(null);
+  const halo3Ref = useRef<THREE.Mesh>(null);
+  const { camera } = useThree();
 
+  // Radial gradient glow textures — white/orange center fading to transparent
+  // This makes the halos appear as perfect soft circles, not squares
+  const glowTextures = useMemo(() => {
+    const makeGlow = (size: number, innerRgba: string, midRgba: string) => {
+      const canvas = document.createElement('canvas');
+      canvas.width = size;
+      canvas.height = size;
+      const ctx = canvas.getContext('2d')!;
+      const cx = size / 2;
+      const grad = ctx.createRadialGradient(cx, cx, 0, cx, cx, cx);
+      grad.addColorStop(0,   innerRgba);
+      grad.addColorStop(0.35, midRgba);
+      grad.addColorStop(1,   'rgba(0,0,0,0)');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, size, size);
+      const tex = new THREE.CanvasTexture(canvas);
+      tex.needsUpdate = true;
+      return tex;
+    };
+    return {
+      inner: makeGlow(512, 'rgba(255,150,50,1)',   'rgba(255,80,0,0.55)'),
+      mid:   makeGlow(512, 'rgba(255,100,20,0.75)','rgba(220,50,0,0.25)'),
+      outer: makeGlow(512, 'rgba(255,60,0,0.45)',  'rgba(180,20,0,0.0)'),
+    };
+  }, []);
+
+  useFrame((state) => {
+    const t = state.clock.getElapsedTime();
+    // Billboard — always face the camera
+    if (meshRef.current)  meshRef.current.quaternion.copy(camera.quaternion);
+    if (halo1Ref.current) halo1Ref.current.quaternion.copy(camera.quaternion);
+    if (halo2Ref.current) halo2Ref.current.quaternion.copy(camera.quaternion);
+    if (halo3Ref.current) halo3Ref.current.quaternion.copy(camera.quaternion);
+
+    // Independent breathing pulse on each halo
+    const pulse  = (Math.sin(t * 1.4) + 1) / 2;
+    const pulse2 = (Math.sin(t * 0.9 + 1.0) + 1) / 2;
+    const pulse3 = (Math.sin(t * 0.6 + 2.5) + 1) / 2;
+
+    if (halo1Ref.current) {
+      (halo1Ref.current.material as THREE.MeshBasicMaterial).opacity = 0.55 + pulse  * 0.30;
+    }
+    if (halo2Ref.current) {
+      (halo2Ref.current.material as THREE.MeshBasicMaterial).opacity = 0.35 + pulse2 * 0.20;
+    }
+    if (halo3Ref.current) {
+      (halo3Ref.current.material as THREE.MeshBasicMaterial).opacity = 0.20 + pulse3 * 0.15;
+    }
+  });
+
+  return (
+    <group>
+      {/* Outermost wide corona — large soft circular glow */}
+      <mesh ref={halo3Ref}>
+        <planeGeometry args={[7.0, 7.0]} />
+        <meshBasicMaterial
+          map={glowTextures.outer}
+          transparent
+          opacity={0.20}
+          depthWrite={false}
+          blending={THREE.AdditiveBlending}
+        />
+      </mesh>
+
+      {/* Mid glow halo */}
+      <mesh ref={halo2Ref}>
+        <planeGeometry args={[4.8, 4.8]} />
+        <meshBasicMaterial
+          map={glowTextures.mid}
+          transparent
+          opacity={0.35}
+          depthWrite={false}
+          blending={THREE.AdditiveBlending}
+        />
+      </mesh>
+
+      {/* Inner hot glow — closest to the logo */}
+      <mesh ref={halo1Ref}>
+        <planeGeometry args={[3.2, 3.2]} />
+        <meshBasicMaterial
+          map={glowTextures.inner}
+          transparent
+          opacity={0.55}
+          depthWrite={false}
+          blending={THREE.AdditiveBlending}
+        />
+      </mesh>
+
+      {/* The actual logo — PNG alpha makes it appear as a circle naturally */}
+      <mesh ref={meshRef} scale={[2.4, 2.4, 2.4]}>
+        <planeGeometry args={[1, 1]} />
+        <meshBasicMaterial
+          map={logoTexture}
+          transparent
+          opacity={1.0}
+          depthWrite={false}
+          alphaTest={0.01}
+        />
+      </mesh>
+
+      {/* Point light — casts orange light onto orbiting planets */}
+      <pointLight color="#FF5500" intensity={3.5} distance={18} decay={2} />
+    </group>
+  );
+};
 
 const orbitParams = {
   cogknit: { speed: 0.35, baseAngle: 0 },
@@ -225,23 +320,22 @@ const orbitParams = {
 };
 
 const linePositions: { [key: string]: THREE.Vector3 } = {
-  sums: new THREE.Vector3(-20, 0, 0),
-  cogknit: new THREE.Vector3(-6, 0, 0),
-  sip: new THREE.Vector3(2, 0, 0),
-  academia: new THREE.Vector3(10, 0, 0),
-  aic: new THREE.Vector3(18, 0, 0)
+  sums: new THREE.Vector3(-10, 0, 0),
+  cogknit: new THREE.Vector3(-4, 0, 0),
+  sip: new THREE.Vector3(1, 0, 0),
+  academia: new THREE.Vector3(6, 0, 0),
+  aic: new THREE.Vector3(11, 0, 0)
 };
 
 // Inner component to handle frame-by-frame updates in the Three.js canvas
 const SceneContent: React.FC<{ 
   scrollProgress: number; 
-  scrollY: number;
-  heroFadeProgress: number;
   activePlatform: string | null;
   zoomingPlatform: string | null;
   detailScrollY: number;
   onSelectPlatform: (id: string) => void;
-}> = ({ scrollProgress, scrollY, heroFadeProgress, activePlatform, zoomingPlatform, detailScrollY, onSelectPlatform }) => {
+  ecosystemRevealed: boolean;
+}> = ({ scrollProgress, activePlatform, zoomingPlatform, detailScrollY, onSelectPlatform, ecosystemRevealed }) => {
   const { camera } = useThree();
   const currentTarget = useRef(new THREE.Vector3(0, 0, 0));
   const cameraTargetPos = useRef(new THREE.Vector3(0, 1.5, 24));
@@ -251,16 +345,14 @@ const SceneContent: React.FC<{
   const sumsGroupRef = useRef<THREE.Group>(null);
   const planetGroupRefs = useRef<{ [key: string]: THREE.Group | null }>({});
   const lineRef = useRef<any>(null);
-  // Tracks when the detail page was entered, for the zoom-out entrance animation
   const entryTime = useRef<number | null>(null);
 
-  // Smooth transitions
   const smoothedScrollProgress = useRef(scrollProgress);
   const smoothedTransitionT = useRef(0);
+  const revealProgress = useRef(0);
 
-  // Generate procedural textures once
+  // Generate procedural textures once (planet faces only)
   const textures = useMemo(() => ({
-    sums: createLogoTexture('sums', 'SUMS', '#FD4400'),
     cogknit: createLogoTexture('cogknit', 'Cogknit', '#FD4400'),
     sip: createLogoTexture('sip', 'SIP', '#FD4400'),
     academia: createLogoTexture('academia', 'Academia', '#FD4400'),
@@ -277,24 +369,7 @@ const SceneContent: React.FC<{
     });
   }, []);
 
-  // Full opacity through phases 1–3 (0–3vh). Fade out from 3vh → 3.5vh as HTML sections appear.
-  const sectionStart = window.innerHeight * 3.0;
-  const fadeRange  = window.innerHeight * 0.5;
-  const scrollFade = activePlatform
-    ? 1.0
-    : scrollY >= sectionStart
-      ? Math.max(0, 1.0 - (scrollY - sectionStart) / fadeRange)
-      : 1.0;
-
-  const globalOpacity = scrollFade;
-
-  // Dim scene while hero text is on screen so text stays readable.
-  // Ramps from 0.25 (text fully visible) → 1.0 (text gone) as heroFadeProgress goes 0→1.
-  const heroVisibility = activePlatform
-    ? 1.0
-    : Math.min(1.0, 0.25 + heroFadeProgress * 0.75);
-
-  const finalOpacity = globalOpacity * heroVisibility;
+  const finalOpacity = 1.0; // Handled by outer container CSS opacity to prevent WebGL material glitches
 
   useFrame((state, delta) => {
     const elapsedTime = state.clock.getElapsedTime();
@@ -308,14 +383,16 @@ const SceneContent: React.FC<{
       lerpFactor
     );
 
-    let targetTransitionT = 0;
-    if (smoothedScrollProgress.current > 0.5) {
-      const rawT = Math.min(1.0, (smoothedScrollProgress.current - 0.5) / 0.3);
-      targetTransitionT = rawT * rawT * (3 - 2 * rawT); // smoothstep
-    }
+    // Zoom and reveal transition progress
+    revealProgress.current = THREE.MathUtils.lerp(
+      revealProgress.current,
+      ecosystemRevealed ? 1.0 : 0.0,
+      lerpFactor
+    );
+
     smoothedTransitionT.current = THREE.MathUtils.lerp(
       smoothedTransitionT.current,
-      targetTransitionT,
+      smoothedScrollProgress.current,
       lerpFactor
     );
 
@@ -325,7 +402,7 @@ const SceneContent: React.FC<{
     const sumsPos = new THREE.Vector3().lerpVectors(sumsOrbitPos, sumsTargetPos, smoothedTransitionT.current);
     if (sumsGroupRef.current) {
       sumsGroupRef.current.position.copy(sumsPos);
-      const sumsScale = 1.0 + smoothedTransitionT.current * 1.5;
+      const sumsScale = 1.0 + smoothedTransitionT.current * 0.3;
       sumsGroupRef.current.scale.setScalar(sumsScale);
     }
 
@@ -334,7 +411,6 @@ const SceneContent: React.FC<{
       const plane = orbitPlanes.find(p => p.id === planet.id);
       if (plane) {
         const params = orbitParams[planet.id as keyof typeof orbitParams];
-        // Orbit always on homepage; freeze position when inside a detail page
         const speedFactor = activePlatform ? 0.0 : 1.0;
         const angle = params.baseAngle + elapsedTime * params.speed * speedFactor;
         
@@ -349,7 +425,7 @@ const SceneContent: React.FC<{
         if (ref) {
           ref.position.copy(finalPos);
           if (activePlatform !== planet.id) {
-            const sizeScale = activePlatform ? 1.0 : (1.0 + smoothedTransitionT.current * 4.0);
+            const sizeScale = activePlatform ? 1.0 : (1.0 + smoothedTransitionT.current * 0.8);
             ref.scale.setScalar(sizeScale);
           }
         }
@@ -358,22 +434,18 @@ const SceneContent: React.FC<{
 
     // 2. Camera journey positioning
     if (targetPlatformId) {
-      let targetPos = new THREE.Vector3();
+      const targetPos = new THREE.Vector3();
       if (targetPlatformId === 'sums') {
         targetPos.copy(sumsPos);
       } else {
         targetPos.copy(currentPlanetPositions[targetPlatformId] || new THREE.Vector3());
       }
 
-      // Zoom closely into the dynamic position
-      // In straight-line mode planets are at z=0 — lerp to a larger offset so we don't over-zoom
       const scrollOffsetZ = activePlatform ? detailScrollY * 0.012 : 0;
       const baseZoomOffset = THREE.MathUtils.lerp(3.2, 6.5, smoothedTransitionT.current);
       
       const offsetTarget = targetPos.clone();
       if (activePlatform) {
-        // Shift camera target right (moving the planet left relative to the viewport) as user scrolls down,
-        // matching the leftward translation of the moons circles.
         const shiftProgress = Math.min(1.0, detailScrollY / 300);
         offsetTarget.x += 0.95 * shiftProgress;
       }
@@ -381,38 +453,25 @@ const SceneContent: React.FC<{
       cameraTargetPos.current.copy(offsetTarget).add(new THREE.Vector3(0, 0, baseZoomOffset + scrollOffsetZ));
       lookAtTargetPos.current.copy(offsetTarget);
     } else {
-      // Camera progress: slower in the first half to capture orbiting
-      let cameraProgress = smoothedScrollProgress.current;
-      if (smoothedScrollProgress.current <= 0.5) {
-        cameraProgress = smoothedScrollProgress.current * 0.5; // goes from 0 to 0.25
-      } else if (smoothedScrollProgress.current <= 0.8) {
-        const t = (smoothedScrollProgress.current - 0.5) / 0.3;
-        cameraProgress = 0.25 + t * 0.25; // goes from 0.25 to 0.5
-      } else {
-        const t = (smoothedScrollProgress.current - 0.8) / 0.2;
-        cameraProgress = 0.5 + t * 0.2; // goes from 0.5 to 0.7
-      }
+      // DEFAULT / HOME / ECOSYSTEM REVEAL VIEW
+      const baseCamera = new THREE.Vector3(0, 1.5, 24);
+      const isMobile = window.innerWidth < 768;
+      const zoomedCamera = new THREE.Vector3(0, -2.0, isMobile ? 23 : 17); // Shifted from -1.6 to -2.0
+      
+      const homeCameraPos = new THREE.Vector3().lerpVectors(baseCamera, zoomedCamera, revealProgress.current);
+      const homeLookAt = new THREE.Vector3(0, 1.6, 0); // Shifted from 1.3 to 1.6 to push the scene downward
 
-      const splinePoint = cameraSpline.getPointAt(cameraProgress);
-      const splineTarget = targetSpline.getPointAt(cameraProgress);
-
-      // Align camera perspective perfectly flat/centered when in line mode
-      // Pull back further on mobile so all planets fit in the narrower viewport
-      const isMobileViewport = window.innerWidth < 768;
-      const lineCameraPos = new THREE.Vector3(0, 0.8, isMobileViewport ? 44 : 31);
-      const lineLookAt = new THREE.Vector3(0, 0, 0);
-
-      cameraTargetPos.current.lerpVectors(splinePoint, lineCameraPos, smoothedTransitionT.current);
-      lookAtTargetPos.current.lerpVectors(splineTarget, lineLookAt, smoothedTransitionT.current);
-
-      // Apply subtle mouse hover parallax when on homepage/ecosystem view
+      // Apply subtle mouse hover parallax
       const targetParallaxX = state.mouse.x * 1.0;
       const targetParallaxY = state.mouse.y * 0.6;
-      lookAtTargetPos.current.x += targetParallaxX;
-      lookAtTargetPos.current.y += targetParallaxY;
+      homeLookAt.x += targetParallaxX;
+      homeLookAt.y += targetParallaxY;
       
-      cameraTargetPos.current.x -= targetParallaxX * 0.4;
-      cameraTargetPos.current.y -= targetParallaxY * 0.4;
+      homeCameraPos.x -= targetParallaxX * 0.4;
+      homeCameraPos.y -= targetParallaxY * 0.4;
+
+      cameraTargetPos.current.copy(homeCameraPos);
+      lookAtTargetPos.current.copy(homeLookAt);
     }
 
     const cameraLerpFactor = targetPlatformId ? 0.08 : 0.05;
@@ -420,10 +479,9 @@ const SceneContent: React.FC<{
     currentTarget.current.lerp(lookAtTargetPos.current, cameraLerpFactor);
     camera.lookAt(currentTarget.current);
 
-    let targetFov = targetPlatformId ? 40 : 50 - smoothedScrollProgress.current * 5;
-    // Widen field of view in line mode — extra wide on mobile (portrait = narrow horizontal FOV)
+    let targetFov = targetPlatformId ? 40 : 50;
     if (!targetPlatformId) {
-      const lineFov = window.innerWidth < 768 ? 78 : 55;
+      const lineFov = window.innerWidth < 768 ? 68 : 50;
       targetFov = THREE.MathUtils.lerp(targetFov, lineFov, smoothedTransitionT.current);
     }
 
@@ -432,28 +490,21 @@ const SceneContent: React.FC<{
       camera.updateProjectionMatrix();
     }
 
-    // In straight-line mode clear the fog so outer planets at x=±20 aren't obscured.
-    // Lerp fog density toward near-zero as smoothedTransitionT reaches 1.
-    const orbitFog = activePlatform
-      ? 0.02 + (detailScrollY * 0.003)
-      : 0.018 + (smoothedScrollProgress.current * 0.02); // softer fog during orbit
-    const targetFog = THREE.MathUtils.lerp(orbitFog, 0.003, smoothedTransitionT.current);
+    // Fog Density transitions smoothly based on ecosystem reveal zoom
+    const targetFog = THREE.MathUtils.lerp(0.018, 0.005, revealProgress.current);
     state.scene.fog = new THREE.FogExp2('#040507', targetFog);
 
     // Zoom-out entrance animation on the active planet
     if (activePlatform) {
-      // Record the moment we entered the detail page
       if (entryTime.current === null) entryTime.current = elapsedTime;
       const elapsed = elapsedTime - entryTime.current;
       const DURATION = 0.8;
       const t = Math.min(1.0, elapsed / DURATION);
-      // Cubic ease-out: starts fast, decelerates to rest
       const eased = 1 - Math.pow(1 - t, 3);
       const entryScale = 1.8 - eased * 0.8; // 1.8 → 1.0
       const ref = planetGroupRefs.current[activePlatform];
       if (ref) ref.scale.setScalar(entryScale);
     } else {
-      // Reset entry timer and scale when leaving detail page
       if (entryTime.current !== null) {
         entryTime.current = null;
         planets.forEach(p => {
@@ -472,59 +523,46 @@ const SceneContent: React.FC<{
   return (
     <group>
       {/* Stars Background */}
-      {finalOpacity > 0.01 && (
-        <>
-          <Stars 
-            radius={150} 
-            depth={50} 
-            count={Math.floor(5000 * finalOpacity)} 
-            factor={4} 
-            saturation={0.5} 
-            fade 
-            speed={1.2} 
-          />
-          <Stars 
-            radius={280} 
-            depth={80} 
-            count={Math.floor(1200 * finalOpacity)} 
-            factor={6} 
-            saturation={0.8} 
-            fade 
-            speed={0.4} 
-          />
-        </>
-      )}
+      <Stars 
+        radius={150} 
+        depth={50} 
+        count={5000} 
+        factor={4} 
+        saturation={0.5} 
+        fade 
+        speed={1.2} 
+      />
+      <Stars 
+        radius={280} 
+        depth={80} 
+        count={1200} 
+        factor={6} 
+        saturation={0.8} 
+        fade 
+        speed={0.4} 
+      />
 
       {/* Ambient and Point Lights */}
-      <ambientLight intensity={0.2 * finalOpacity} />
-      <pointLight position={[10, 10, 10]} intensity={1.8 * finalOpacity} color="#FD4400" />
-      <pointLight position={[-10, -10, -10]} intensity={0.6 * finalOpacity} color="#ffffff" />
+      <ambientLight intensity={0.25} />
+      <pointLight position={[10, 10, 10]} intensity={1.8} color="#FD4400" />
+      <pointLight position={[-10, -10, -10]} intensity={0.6} color="#ffffff" />
 
-      {/* SUMS Central Core — hidden in detail page */}
+      {/* SUMS Central Core — real logo as glowing 3D sun */}
       <group ref={sumsGroupRef} position={[0, 0, 0]}>
-        {finalOpacity > 0.01 && !activePlatform && (
-          <>
-            <PlanetBillboard texture={textures.sums} scale={2.0} opacity={finalOpacity} />
-            <mesh scale={[1.15, 1.15, 1.15]}>
-              <sphereGeometry args={[2.0, 32, 32]} />
-              <meshBasicMaterial 
-                color="#FD4400" 
-                transparent 
-                opacity={0.12 * finalOpacity} 
-                side={THREE.BackSide} 
-              />
-            </mesh>
-          </>
+        {!activePlatform && (
+          <React.Suspense fallback={null}>
+            <SunCore />
+          </React.Suspense>
         )}
       </group>
 
-      {/* Straight line connector that fades in when aligning */}
-      {finalOpacity > 0.01 && !activePlatform && (
+      {/* Straight line connector */}
+      {!activePlatform && (
         <Line 
           ref={lineRef}
           points={[
-            new THREE.Vector3(-20, 0, 0),
-            new THREE.Vector3(20, 0, 0)
+            new THREE.Vector3(-12, 0, 0),
+            new THREE.Vector3(12, 0, 0)
           ]} 
           color="#ffffff"
           transparent
@@ -537,15 +575,12 @@ const SceneContent: React.FC<{
 
       {/* Planets and orbits */}
       {planets.map((planet) => {
-        // In detail view: skip all planets except the active one
         if (activePlatform && activePlatform !== planet.id) return null;
 
-        // Generate a tilted 3D orbit circle that passes exactly through the planet position
         const points = [];
         const radius = planet.position.length();
         const u = planet.position.clone().normalize();
         const up = new THREE.Vector3(0, 1, 0);
-        // Find a vector perpendicular to both the planet direction and the up vector
         const v = new THREE.Vector3().crossVectors(u, up).normalize();
         
         for (let i = 0; i <= 64; i++) {
@@ -561,12 +596,12 @@ const SceneContent: React.FC<{
         return (
           <group key={planet.id}>
             {/* Orbit line */}
-            {finalOpacity > 0.01 && !activePlatform && (
+            {!activePlatform && (
               <Line 
                 points={points} 
                 color="#ffffff"
                 transparent
-                opacity={0.25 * finalOpacity * (1 - smoothedTransitionT.current)}
+                opacity={0.25 * (1 - smoothedTransitionT.current)}
                 lineWidth={1} 
                 dashed 
                 dashScale={1.5}
@@ -578,83 +613,81 @@ const SceneContent: React.FC<{
               ref={(el) => { planetGroupRefs.current[planet.id] = el; }}
               position={planet.position}
             >
-              {finalOpacity > 0.01 && (
-                <>
-                  {/* Outer atmosphere halo */}
-                  <mesh 
-                    scale={[1.1, 1.1, 1.1]}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      if (!zoomingPlatform && !activePlatform) {
-                        onSelectPlatform(planet.id);
-                      }
-                    }}
-                    onPointerOver={(e) => {
-                      e.stopPropagation();
-                      if (!zoomingPlatform && !activePlatform) {
-                        setHoveredPlatform(planet.id);
-                        document.body.style.cursor = 'pointer';
-                      }
-                    }}
-                    onPointerOut={(e) => {
-                      e.stopPropagation();
-                      setHoveredPlatform(null);
-                      document.body.style.cursor = 'default';
-                    }}
-                  >
-                    <sphereGeometry args={[planet.size, 16, 16]} />
-                    <meshBasicMaterial 
-                      color="#FD4400" 
-                      transparent 
-                      opacity={
-                        isFocussed 
-                          ? 0.25 * Math.max(0, 1 - detailScrollY / 350)
-                          : 0.08 * finalOpacity
-                      } 
-                      side={THREE.BackSide} 
-                    />
-                  </mesh>
-
-                  {/* Billboard Logo Face */}
-                  <PlanetBillboard 
-                    texture={textures[textureKey]} 
-                    scale={planet.size} 
-                    opacity={
-                      activePlatform === planet.id 
-                        ? finalOpacity * Math.max(0, 1 - detailScrollY / 350)
-                        : finalOpacity
+              <>
+                {/* Outer atmosphere halo */}
+                <mesh 
+                  scale={[1.15, 1.15, 1.15]}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (!zoomingPlatform && !activePlatform) {
+                      onSelectPlatform(planet.id);
                     }
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      if (!zoomingPlatform && !activePlatform) {
-                        onSelectPlatform(planet.id);
-                      }
-                    }}
-                    onPointerOver={(e) => {
-                      e.stopPropagation();
-                      if (!zoomingPlatform && !activePlatform) {
-                        setHoveredPlatform(planet.id);
-                        document.body.style.cursor = 'pointer';
-                      }
-                    }}
-                    onPointerOut={(e) => {
-                      e.stopPropagation();
-                      setHoveredPlatform(null);
-                      document.body.style.cursor = 'default';
-                    }}
+                  }}
+                  onPointerOver={(e) => {
+                    e.stopPropagation();
+                    if (!zoomingPlatform && !activePlatform) {
+                      setHoveredPlatform(planet.id);
+                      document.body.style.cursor = 'pointer';
+                    }
+                  }}
+                  onPointerOut={(e) => {
+                    e.stopPropagation();
+                    setHoveredPlatform(null);
+                    document.body.style.cursor = 'default';
+                  }}
+                >
+                  <sphereGeometry args={[planet.size, 16, 16]} />
+                  <meshBasicMaterial 
+                    color="#FD4400" 
+                    transparent 
+                    opacity={
+                      isFocussed 
+                        ? 0.25 * Math.max(0, 1 - detailScrollY / 350)
+                        : 0.08
+                    } 
+                    side={THREE.BackSide} 
                   />
+                </mesh>
 
-                  {/* Drei HTML Hover Tooltip — no distanceFactor = fixed pixel size always */}
-                  {hoveredPlatform === planet.id && (
-                    <Html position={[0, planet.size + 0.8, 0]} center zIndexRange={[100, 0]}>
-                      <div style={{ transform: 'scale(1)', pointerEvents: 'none', userSelect: 'none', textAlign: 'center', background: 'rgba(4,5,7,0.96)', border: '1.5px solid rgba(253,68,0,0.6)', borderRadius: '14px', padding: '14px 24px', minWidth: '240px', boxShadow: '0 0 28px rgba(253,68,0,0.45)', backdropFilter: 'blur(12px)' }}>
-                        <h4 style={{ fontSize: '20px', fontWeight: 700, letterSpacing: '0.18em', color: '#FD4400', textTransform: 'uppercase', fontFamily: 'serif', margin: 0 }}>{planet.name}</h4>
-                        <p style={{ fontSize: '14px', color: 'rgba(255,255,255,0.72)', marginTop: '6px', whiteSpace: 'nowrap', fontFamily: 'sans-serif' }}>{planet.tagline}</p>
-                      </div>
-                    </Html>
-                  )}
-                </>
-              )}
+                {/* Billboard Logo Face */}
+                <PlanetBillboard 
+                  texture={textures[textureKey]} 
+                  scale={planet.size} 
+                  opacity={
+                    activePlatform === planet.id 
+                      ? Math.max(0, 1 - detailScrollY / 350)
+                      : 1.0
+                  }
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (!zoomingPlatform && !activePlatform) {
+                      onSelectPlatform(planet.id);
+                    }
+                  }}
+                  onPointerOver={(e) => {
+                    e.stopPropagation();
+                    if (!zoomingPlatform && !activePlatform) {
+                      setHoveredPlatform(planet.id);
+                      document.body.style.cursor = 'pointer';
+                    }
+                  }}
+                  onPointerOut={(e) => {
+                    e.stopPropagation();
+                    setHoveredPlatform(null);
+                    document.body.style.cursor = 'default';
+                  }}
+                />
+
+                {/* Tooltip */}
+                {hoveredPlatform === planet.id && (
+                  <Html position={[0, planet.size + 0.8, 0]} center zIndexRange={[100, 0]}>
+                    <div style={{ transform: 'scale(1)', pointerEvents: 'none', userSelect: 'none', textAlign: 'center', background: 'rgba(4,5,7,0.96)', border: '1.5px solid rgba(253,68,0,0.6)', borderRadius: '14px', padding: '14px 24px', minWidth: '240px', boxShadow: '0 0 28px rgba(253,68,0,0.45)', backdropFilter: 'blur(12px)' }}>
+                      <h4 style={{ fontSize: '20px', fontWeight: 700, letterSpacing: '0.18em', color: '#FD4400', textTransform: 'uppercase', fontFamily: 'Poppins, sans-serif', margin: 0 }}>{planet.name}</h4>
+                      <p style={{ fontSize: '14px', color: 'rgba(255,255,255,0.72)', marginTop: '6px', whiteSpace: 'nowrap', fontFamily: 'Poppins, sans-serif' }}>{planet.tagline}</p>
+                    </div>
+                  </Html>
+                )}
+              </>
             </group>
           </group>
         );
@@ -665,43 +698,52 @@ const SceneContent: React.FC<{
 
 interface SolarSystemSceneProps {
   scrollProgress: number;
-  scrollY: number;
-  heroFadeProgress: number;
   activePlatform: string | null;
   zoomingPlatform: string | null;
   detailScrollY: number;
   onSelectPlatform: (id: string) => void;
+  ecosystemRevealed: boolean;
 }
 
 export const SolarSystemScene: React.FC<SolarSystemSceneProps> = ({
   scrollProgress,
-  scrollY,
-  heroFadeProgress,
   activePlatform,
   zoomingPlatform,
   detailScrollY,
   onSelectPlatform,
+  ecosystemRevealed
 }) => {
+  const isDimmed = !ecosystemRevealed && !activePlatform;
+
   return (
-    <div className="fixed inset-0 z-0 w-full h-full pointer-events-auto bg-[#040507]">
-      <Canvas
-        camera={{ position: [0, 1.5, 24], fov: 52, near: 0.1, far: 1000 }}
-        gl={{ antialias: true, alpha: false }}
-        onCreated={({ gl }) => {
-          gl.setClearColor(new THREE.Color('#040507'), 1);
+    <div 
+      className="fixed inset-0 z-0 w-full h-full pointer-events-none bg-[#040507]"
+    >
+      <div 
+        className="w-full h-full pointer-events-auto transition-all duration-1000 ease-in-out"
+        style={{ 
+          opacity: isDimmed ? 0.45 : 1.0,
+          transform: activePlatform ? 'translateY(0)' : 'translateY(70px)'
         }}
       >
-        <fogExp2 attach="fog" args={['#040507', 0.018]} />
-        <SceneContent 
-          scrollProgress={scrollProgress} 
-          scrollY={scrollY}
-          heroFadeProgress={heroFadeProgress}
-          activePlatform={activePlatform}
-          zoomingPlatform={zoomingPlatform}
-          detailScrollY={detailScrollY}
-          onSelectPlatform={onSelectPlatform}
-        />
-      </Canvas>
+        <Canvas
+          camera={{ position: [0, 1.5, 24], fov: 52, near: 0.1, far: 1000 }}
+          gl={{ antialias: true, alpha: false }}
+          onCreated={({ gl }) => {
+            gl.setClearColor(new THREE.Color('#040507'), 1);
+          }}
+        >
+          <fogExp2 attach="fog" args={['#040507', 0.018]} />
+          <SceneContent 
+            scrollProgress={scrollProgress} 
+            activePlatform={activePlatform}
+            zoomingPlatform={zoomingPlatform}
+            detailScrollY={detailScrollY}
+            onSelectPlatform={onSelectPlatform}
+            ecosystemRevealed={ecosystemRevealed}
+          />
+        </Canvas>
+      </div>
     </div>
   );
 };

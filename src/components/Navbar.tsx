@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 
@@ -17,6 +17,28 @@ const NAV_LINKS = [
 
 export const Navbar: React.FC<NavbarProps> = ({ activePlatform, onBackToEcosystem, onNavigate }) => {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [visible, setVisible] = useState(true);
+  const [prevScrollY, setPrevScrollY] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      
+      // Reveal navbar at the very top of the page, otherwise hide on scroll down and show on scroll up
+      if (currentScrollY <= 50) {
+        setVisible(true);
+      } else if (currentScrollY > prevScrollY) {
+        setVisible(false); // scrolling down
+      } else {
+        setVisible(true); // scrolling up
+      }
+      
+      setPrevScrollY(currentScrollY);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [prevScrollY]);
 
   const handleNav = (target: string) => {
     setMobileOpen(false);
@@ -25,19 +47,46 @@ export const Navbar: React.FC<NavbarProps> = ({ activePlatform, onBackToEcosyste
 
   return (
     <>
-      <header className="fixed top-0 left-0 right-0 z-50 px-5 py-4 md:px-12 md:py-6 flex items-center justify-between border-b border-white/[0.03] bg-bg-dark/40 backdrop-blur-md transition-all duration-300">
+      <header 
+        className={`fixed top-0 left-0 right-0 z-50 px-5 py-4 md:px-12 md:py-6 flex items-center justify-between border-b border-white/[0.03] bg-[#040507]/40 backdrop-blur-md transition-all duration-300 ${
+          visible ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0 pointer-events-none'
+        }`}
+      >
 
-        {/* Logo */}
+        {/* Logo — 3D glowing sums_logo.png */}
         <div
           onClick={() => handleNav('ecosystem')}
-          className="cursor-pointer group flex items-center space-x-2"
+          className="cursor-pointer group flex items-center gap-2.5"
         >
-          <div className="w-8 h-8 rounded-full border border-brand/50 flex items-center justify-center relative overflow-hidden group-hover:border-brand transition-colors duration-300">
-            <div className="absolute inset-0 bg-brand/10 opacity-50 group-hover:scale-110 transition-transform duration-300" />
-            <span className="text-brand font-bold text-xs tracking-wider z-10">S</span>
+          <div className="relative flex items-center justify-center">
+            {/* Outer ambient glow layer */}
+            <div
+              className="absolute inset-0 rounded-full blur-xl opacity-60 group-hover:opacity-90 transition-opacity duration-500"
+              style={{
+                background: 'radial-gradient(circle, rgba(255,109,0,0.7) 0%, rgba(255,60,0,0.3) 60%, transparent 100%)',
+                transform: 'scale(1.8)',
+              }}
+            />
+            {/* Inner sharper glow */}
+            <div
+              className="absolute inset-0 rounded-full blur-md opacity-50 group-hover:opacity-80 transition-opacity duration-300"
+              style={{
+                background: 'radial-gradient(circle, rgba(255,140,0,0.9) 0%, rgba(255,60,0,0.4) 50%, transparent 100%)',
+                transform: 'scale(1.3)',
+              }}
+            />
+            {/* Logo image */}
+            <img
+              src="/sums_logo.png"
+              alt="SUMS Nepal"
+              className="relative z-10 w-11 h-11 object-contain transition-transform duration-500 group-hover:scale-110"
+              style={{
+                animation: 'logoFloat 3.5s ease-in-out infinite, logoGlowPulse 2.5s ease-in-out infinite',
+              }}
+            />
           </div>
-          <span className="font-serif font-semibold tracking-wider text-xl text-white group-hover:text-brand transition-colors duration-300">
-            SUMS<span className="text-brand font-sans text-xs align-super ml-0.5">NEPAL</span>
+          <span className="font-serif font-semibold tracking-wider text-base text-white/90 group-hover:text-white transition-colors duration-300 hidden sm:block">
+            SUMS<span className="text-brand font-sans text-[10px] align-super ml-0.5 font-bold">NEPAL</span>
           </span>
         </div>
 
