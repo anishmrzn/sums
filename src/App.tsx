@@ -13,6 +13,7 @@ function App() {
   // scrollProgress 0→1 drives planet line-up transition in phase 2
   const [scrollProgress, setScrollProgress] = useState(0);
   const [hideCanvas, setHideCanvas] = useState(false);
+  const impactHeadingRef = useRef<HTMLHeadingElement>(null);
   const [detailScrollY, setDetailScrollY] = useState(0);
   const [activePlatform, setActivePlatform] = useState<string | null>(null);
   const [zoomingPlatform, setZoomingPlatform] = useState<string | null>(null);
@@ -54,9 +55,6 @@ function App() {
           setEcosystemRevealed(false);
         }
 
-        // Hide canvas permanently once user scrolls past the ecosystem section
-        setHideCanvas(scrolledIntoSection >= 3.0 * vh);
-
         // Phase 1 ends at 0.2*vh — planets orbit normally while user reads the text
         // Phase 2 ends at 0.8*vh — planets align horizontally; completes early so user
         //   sees them in the horizontal line for a good while before the next section
@@ -88,6 +86,18 @@ function App() {
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, [activePlatform, zoomingPlatform]);
+
+  // Fade canvas when OUR IMPACT heading enters the viewport
+  useEffect(() => {
+    const el = impactHeadingRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setHideCanvas(entry.isIntersecting),
+      { threshold: 0.1 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   // Sync URL hash routing
   useEffect(() => {
@@ -207,7 +217,7 @@ function App() {
         {!activePlatform && (
           <div>
 
-            <div className="w-full min-h-screen flex flex-col justify-between pt-36 px-6 relative">
+            <div className="w-full min-h-screen flex flex-col justify-between pt-24 px-6 relative">
               <div className="flex-grow flex flex-col items-center justify-center text-center max-w-7xl mx-auto w-full pointer-events-auto">
                 {/* Eyebrow Label */}
                 <motion.span
@@ -336,7 +346,7 @@ function App() {
               <div id="about" className="max-w-6xl mx-auto px-6 py-20">
                 {/* Big heading */}
                 <div className="text-center mb-16">
-                  <h2 className="font-sans font-black text-5xl md:text-7xl xl:text-8xl tracking-tight text-white leading-none">
+                  <h2 ref={impactHeadingRef} className="font-sans font-black text-5xl md:text-7xl xl:text-8xl tracking-tight text-white leading-none">
                     OUR <span className="text-[#FF5C00]">IMPACT</span>
                   </h2>
                 </div>
@@ -354,7 +364,6 @@ function App() {
                     </div>
                   ))}
                 </div>
-
 
               </div>
 

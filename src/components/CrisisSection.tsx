@@ -301,7 +301,7 @@ export const CrisisSection: React.FC = () => {
               </div>
               {/* Big headline matching hero font weight/style */}
               <h2 className="font-sans font-black text-4xl md:text-5xl xl:text-6xl leading-[0.95] tracking-tight text-white">
-                Higher Education<br />
+                 Education<br />
                 <span
                   className="text-[#FF5C00]"
                   style={{ WebkitTextStroke: '0px', textShadow: '0 0 40px rgba(255,92,0,0.4)' }}
