@@ -47,7 +47,8 @@ function App() {
         // Phase 1: planet orbiting ends very early, alignment starts almost immediately
         const phase1End = 0.2 * vh;
 
-        const isInsideEcosystem = scrolledIntoSection >= 0 && scrolledIntoSection < 3.0 * vh;
+        const hideThreshold = window.innerWidth < 768 ? 2.0 * vh : 3.0 * vh;
+        const isInsideEcosystem = scrolledIntoSection >= 0 && scrolledIntoSection < hideThreshold;
         if (isInsideEcosystem || activePlatform) {
           setEcosystemRevealed(true);
         } else {
@@ -55,7 +56,7 @@ function App() {
         }
 
         // Hide canvas permanently once user scrolls past the ecosystem section
-        setHideCanvas(scrolledIntoSection >= 3.0 * vh);
+        setHideCanvas(scrolledIntoSection >= hideThreshold);
 
         // Phase 1 ends at 0.2*vh — planets orbit normally while user reads the text
         // Phase 2 ends at 0.8*vh — planets align horizontally; completes early so user
@@ -146,8 +147,11 @@ function App() {
     if (target === 'ecosystem') {
       if (activePlatform) {
         handleBackToEcosystem();
+        setTimeout(() => {
+          document.getElementById('ecosystem-section')?.scrollIntoView({ behavior: 'smooth' });
+        }, 150);
       } else {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        document.getElementById('ecosystem-section')?.scrollIntoView({ behavior: 'smooth' });
       }
       return;
     }
@@ -294,8 +298,7 @@ function App() {
 
             <div
               id="ecosystem-section"
-              className="relative pointer-events-none"
-              style={{ minHeight: '300vh' }}
+              className="relative pointer-events-none min-h-[200vh] md:min-h-[300vh]"
             >
               {/* Sticky container for viewport elements */}
               <div className="sticky top-0 h-screen w-full flex flex-col pointer-events-none">
@@ -328,6 +331,35 @@ function App() {
             </div>
 
 
+
+            {/* MOBILE PLATFORM SELECTOR — shown after ecosystem section, mobile only */}
+            <div className="md:hidden relative z-10 pointer-events-auto bg-[#040507] px-4 pt-10 pb-6 border-t border-white/5">
+              <p className="text-center text-white/40 text-[10px] font-bold tracking-[0.3em] uppercase mb-5">
+                Explore Platforms
+              </p>
+              <div className="space-y-3">
+                {[
+                  { id: 'cogknit', name: 'Cogknit', tagline: 'Smart Learning Platform', logo: '/cogknitlogo.png' },
+                  { id: 'sip',     name: 'SIP',     tagline: 'Student Innovators Program', logo: '/siplogo.png' },
+                  { id: 'aic',     name: 'AIC',     tagline: 'Academia Industry Collaboration', logo: '/aiclogo.png' },
+                ].map(platform => (
+                  <button
+                    key={platform.id}
+                    onClick={() => handleSelectPlatform(platform.id)}
+                    className="w-full flex items-center gap-4 p-4 rounded-xl border border-white/5 bg-white/[0.02] active:bg-[#FD4400]/10 active:border-[#FD4400]/30 transition-all duration-150 cursor-pointer"
+                  >
+                    <div className="w-12 h-12 rounded-full border border-[#FD4400]/25 bg-[#FD4400]/5 flex items-center justify-center shrink-0">
+                      <img src={platform.logo} alt={platform.name} className="w-8 h-8 object-contain" style={{ filter: 'drop-shadow(0 0 4px rgba(253,68,0,0.5))' }} />
+                    </div>
+                    <div className="text-left flex-1">
+                      <h3 className="text-white font-bold text-base">{platform.name}</h3>
+                      <p className="text-white/40 text-xs mt-0.5">{platform.tagline}</p>
+                    </div>
+                    <span className="text-[#FD4400] text-base font-light">→</span>
+                  </button>
+                ))}
+              </div>
+            </div>
 
             {/* OUR IMPACT + CONTACT SECTIONS */}
             <div className="w-full relative pointer-events-auto bg-gradient-to-t from-[#040507] via-[#040507]/90 to-transparent pt-12 pb-24 border-t border-white/5">

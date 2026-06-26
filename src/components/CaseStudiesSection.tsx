@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Download, ExternalLink } from 'lucide-react';
+import { Download, ExternalLink, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const caseStudies = [
   {
@@ -73,7 +73,135 @@ const caseStudies = [
   },
 ];
 
-export const CaseStudiesSection: React.FC = () => {
+// ── MOBILE CAROUSEL ─────────────────────────────────────────────────────────
+const MobileCaseStudies: React.FC = () => {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const touchStartX = useRef(0);
+
+  const prev = () => setActiveIndex(i => Math.max(0, i - 1));
+  const next = () => setActiveIndex(i => Math.min(caseStudies.length - 1, i + 1));
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+  const onTouchEnd = (e: React.TouchEvent) => {
+    const diff = touchStartX.current - e.changedTouches[0].clientX;
+    if (diff > 40) next();
+    if (diff < -40) prev();
+  };
+
+  const cs = caseStudies[activeIndex];
+
+  return (
+    <div className="w-full px-4 py-10 bg-[#040507] pointer-events-auto">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-6">
+        <span className="text-white/35 text-[11px] font-bold tracking-[0.35em] uppercase">
+          Case Studies
+        </span>
+        <span className="text-white/30 text-xs font-mono tracking-widest">
+          {activeIndex + 1} / {caseStudies.length}
+        </span>
+      </div>
+
+      {/* Card */}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={activeIndex}
+          initial={{ opacity: 0, x: 30 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: -30 }}
+          transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+          onTouchStart={onTouchStart}
+          onTouchEnd={onTouchEnd}
+        >
+          {/* Visual card */}
+          <div
+            className="w-full rounded-2xl overflow-hidden mb-5 relative"
+            style={{ height: 220, background: cs.gradient }}
+          >
+            <div className="absolute inset-0 bg-black/35" />
+            <div className="absolute inset-0 flex flex-col items-center justify-center gap-2">
+              <div className="absolute rounded-full border border-white/15" style={{ width: '60%', height: '60%' }} />
+              <span className="relative text-white font-black text-3xl tracking-wider z-10">{cs.logoText}</span>
+              <span className="relative text-white/65 text-xs tracking-[0.2em] uppercase z-10">{cs.logoSub}</span>
+            </div>
+            <div className="absolute top-3 left-3">
+              <span className="text-[10px] font-bold tracking-widest uppercase px-2.5 py-1 rounded-full border" style={{ color: cs.accentColor, borderColor: `${cs.accentColor}40`, background: `${cs.accentColor}15` }}>
+                {cs.tag}
+              </span>
+            </div>
+          </div>
+
+          {/* Text */}
+          <h2 className="font-black text-xl text-white leading-tight mb-2">{cs.title}</h2>
+          <p className="text-xs font-bold tracking-widest uppercase mb-4" style={{ color: cs.accentColor }}>
+            {cs.stat}
+          </p>
+          <p className="text-white/50 text-sm leading-relaxed mb-5">{cs.description}</p>
+
+          {/* Links */}
+          <div className="flex flex-wrap gap-3">
+            {cs.links.map(link => (
+              <a
+                key={link.label}
+                href={link.href}
+                className="flex items-center gap-1.5 text-white/55 text-sm font-medium border border-white/10 rounded-full px-3 py-1.5 active:text-white active:border-white/30 transition-all duration-150"
+              >
+                {link.label}
+                <ExternalLink size={10} />
+              </a>
+            ))}
+          </div>
+        </motion.div>
+      </AnimatePresence>
+
+      {/* Navigation */}
+      <div className="flex items-center justify-between mt-8">
+        <button
+          onClick={prev}
+          disabled={activeIndex === 0}
+          className="w-11 h-11 rounded-full border border-white/10 flex items-center justify-center text-white/50 disabled:opacity-25 active:bg-white/5 transition-all"
+        >
+          <ChevronLeft size={18} />
+        </button>
+
+        {/* Dots */}
+        <div className="flex gap-2">
+          {caseStudies.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setActiveIndex(i)}
+              className="w-2 h-2 rounded-full transition-all duration-300"
+              style={{ background: i === activeIndex ? cs.accentColor : 'rgba(255,255,255,0.2)', transform: i === activeIndex ? 'scale(1.4)' : 'scale(1)' }}
+            />
+          ))}
+        </div>
+
+        <button
+          onClick={next}
+          disabled={activeIndex === caseStudies.length - 1}
+          className="w-11 h-11 rounded-full border border-white/10 flex items-center justify-center text-white/50 disabled:opacity-25 active:bg-white/5 transition-all"
+        >
+          <ChevronRight size={18} />
+        </button>
+      </div>
+
+      {/* Progress bar */}
+      <div className="mt-6 w-full h-px bg-white/8">
+        <motion.div
+          className="h-full"
+          style={{ backgroundColor: cs.accentColor }}
+          animate={{ width: `${((activeIndex + 1) / caseStudies.length) * 100}%` }}
+          transition={{ duration: 0.4 }}
+        />
+      </div>
+    </div>
+  );
+};
+
+// ── DESKTOP SCROLL-DRIVEN ────────────────────────────────────────────────────
+const DesktopCaseStudies: React.FC = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [hovering, setHovering] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -82,12 +210,10 @@ export const CaseStudiesSection: React.FC = () => {
 
   const onCardMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    cursorPosRef.current = { x, y };
+    cursorPosRef.current = { x: e.clientX - rect.left, y: e.clientY - rect.top };
     if (downloadBtnRef.current) {
-      downloadBtnRef.current.style.left = `${x}px`;
-      downloadBtnRef.current.style.top = `${y}px`;
+      downloadBtnRef.current.style.left = `${e.clientX - rect.left}px`;
+      downloadBtnRef.current.style.top = `${e.clientY - rect.top}px`;
     }
   };
 
@@ -99,8 +225,7 @@ export const CaseStudiesSection: React.FC = () => {
       const totalScrollable = sectionRef.current.offsetHeight - window.innerHeight;
       if (totalScrollable <= 0) return;
       const progress = Math.max(0, Math.min(0.9999, scrolledIn / totalScrollable));
-      const index = Math.min(caseStudies.length - 1, Math.floor(progress * caseStudies.length));
-      setActiveIndex(index);
+      setActiveIndex(Math.min(caseStudies.length - 1, Math.floor(progress * caseStudies.length)));
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
@@ -112,7 +237,6 @@ export const CaseStudiesSection: React.FC = () => {
     <div ref={sectionRef} style={{ height: `${caseStudies.length * 100}vh` }}>
       <div className="sticky top-0 h-screen w-full flex flex-col px-8 md:px-14 py-10 bg-[#040507] overflow-hidden pointer-events-auto">
 
-        {/* Top row: section label + counter */}
         <div className="flex items-center justify-between mb-6 flex-shrink-0">
           <AnimatePresence mode="wait">
             <motion.span
@@ -131,10 +255,8 @@ export const CaseStudiesSection: React.FC = () => {
           </span>
         </div>
 
-        {/* Main content row */}
         <div className="flex-1 flex items-center gap-8 md:gap-14 min-h-0">
 
-          {/* Left: Big title */}
           <div className="w-[26%] flex-shrink-0">
             <AnimatePresence mode="wait">
               <motion.div
@@ -147,17 +269,13 @@ export const CaseStudiesSection: React.FC = () => {
                 <h2 className="font-black text-3xl md:text-4xl xl:text-5xl text-white leading-[1.1] tracking-tight">
                   {cs.title}
                 </h2>
-                <p
-                  className="mt-4 text-xs font-bold tracking-widest uppercase"
-                  style={{ color: cs.accentColor }}
-                >
+                <p className="mt-4 text-xs font-bold tracking-widest uppercase" style={{ color: cs.accentColor }}>
                   {cs.stat}
                 </p>
               </motion.div>
             </AnimatePresence>
           </div>
 
-          {/* Center: Image card */}
           <div className="flex-1 flex items-center justify-center">
             <AnimatePresence mode="wait">
               <motion.div
@@ -177,40 +295,20 @@ export const CaseStudiesSection: React.FC = () => {
                 onMouseLeave={() => setHovering(false)}
                 onMouseMove={onCardMouseMove}
               >
-                {/* Dark overlay to ensure text readability */}
                 <div className="absolute inset-0" style={{ background: 'rgba(0,0,0,0.38)' }} />
-
-                {/* Noise texture overlay */}
                 <div
                   className="absolute inset-0 opacity-[0.06]"
                   style={{
-                    backgroundImage:
-                      'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'n\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'4\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23n)\'/%3E%3C/svg%3E")',
+                    backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'n\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'4\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23n)\'/%3E%3C/svg%3E")',
                     backgroundSize: 'cover',
                   }}
                 />
-
-                {/* Centered logo content */}
                 <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
-                  {/* Orbit decoration rings */}
-                  <div
-                    className="absolute rounded-full border opacity-20"
-                    style={{ width: '70%', height: '70%', borderColor: 'white' }}
-                  />
-                  <div
-                    className="absolute rounded-full border opacity-10"
-                    style={{ width: '85%', height: '85%', borderColor: 'white', borderStyle: 'dashed' }}
-                  />
-
-                  <span className="relative text-white font-black text-3xl md:text-4xl tracking-wider drop-shadow-lg z-10">
-                    {cs.logoText}
-                  </span>
-                  <span className="relative text-white/70 text-xs tracking-[0.25em] uppercase z-10">
-                    {cs.logoSub}
-                  </span>
+                  <div className="absolute rounded-full border opacity-20" style={{ width: '70%', height: '70%', borderColor: 'white' }} />
+                  <div className="absolute rounded-full border opacity-10" style={{ width: '85%', height: '85%', borderColor: 'white', borderStyle: 'dashed' }} />
+                  <span className="relative text-white font-black text-3xl md:text-4xl tracking-wider drop-shadow-lg z-10">{cs.logoText}</span>
+                  <span className="relative text-white/70 text-xs tracking-[0.25em] uppercase z-10">{cs.logoSub}</span>
                 </div>
-
-                {/* Hover: cursor-following download button */}
                 <AnimatePresence>
                   {hovering && (
                     <motion.div
@@ -221,33 +319,15 @@ export const CaseStudiesSection: React.FC = () => {
                       className="absolute inset-0 pointer-events-none"
                       style={{ background: 'rgba(0,0,0,0.25)', backdropFilter: 'blur(2px)' }}
                     >
-                      {/* Button anchored to cursor position */}
                       <div
                         ref={downloadBtnRef}
                         className="absolute pointer-events-auto"
-                        style={{
-                          left: cursorPosRef.current.x,
-                          top: cursorPosRef.current.y,
-                          transform: 'translate(-50%, -50%)',
-                        }}
+                        style={{ left: cursorPosRef.current.x, top: cursorPosRef.current.y, transform: 'translate(-50%, -50%)' }}
                       >
                         <a
                           href={cs.pdfUrl}
-                          className="flex items-center gap-2.5 px-5 py-2.5 rounded-full text-white font-semibold text-sm tracking-wide whitespace-nowrap transition-all duration-150"
-                          style={{
-                            background: 'rgba(255,255,255,0.12)',
-                            border: '1px solid rgba(255,255,255,0.35)',
-                            backdropFilter: 'blur(8px)',
-                            boxShadow: '0 4px 24px rgba(0,0,0,0.4)',
-                          }}
-                          onMouseEnter={e => {
-                            (e.currentTarget as HTMLAnchorElement).style.background = 'rgba(255,255,255,0.22)';
-                            (e.currentTarget as HTMLAnchorElement).style.borderColor = 'rgba(255,255,255,0.7)';
-                          }}
-                          onMouseLeave={e => {
-                            (e.currentTarget as HTMLAnchorElement).style.background = 'rgba(255,255,255,0.12)';
-                            (e.currentTarget as HTMLAnchorElement).style.borderColor = 'rgba(255,255,255,0.35)';
-                          }}
+                          className="flex items-center gap-2.5 px-5 py-2.5 rounded-full text-white font-semibold text-sm tracking-wide whitespace-nowrap"
+                          style={{ background: 'rgba(255,255,255,0.12)', border: '1px solid rgba(255,255,255,0.35)', backdropFilter: 'blur(8px)', boxShadow: '0 4px 24px rgba(0,0,0,0.4)' }}
                         >
                           <Download size={14} strokeWidth={2} />
                           Download Report
@@ -260,7 +340,6 @@ export const CaseStudiesSection: React.FC = () => {
             </AnimatePresence>
           </div>
 
-          {/* Right: Links + description */}
           <div className="w-[24%] flex-shrink-0">
             <AnimatePresence mode="wait">
               <motion.div
@@ -271,34 +350,25 @@ export const CaseStudiesSection: React.FC = () => {
                 transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
                 className="flex flex-col gap-8"
               >
-                {/* Links */}
                 <div className="flex flex-col gap-3">
-                  {cs.links.map((link) => (
+                  {cs.links.map(link => (
                     <a
                       key={link.label}
                       href={link.href}
                       className="flex items-center gap-2 text-white/55 hover:text-white text-sm font-medium transition-colors duration-200 group"
                     >
                       {link.label}
-                      <ExternalLink
-                        size={11}
-                        className="opacity-0 group-hover:opacity-60 transition-opacity -translate-y-0.5"
-                      />
+                      <ExternalLink size={11} className="opacity-0 group-hover:opacity-60 transition-opacity -translate-y-0.5" />
                     </a>
                   ))}
                 </div>
-
-                {/* Divider */}
                 <div className="h-px w-8 bg-white/10" />
-
-                {/* Description */}
                 <p className="text-white/45 text-sm leading-relaxed">{cs.description}</p>
               </motion.div>
             </AnimatePresence>
           </div>
         </div>
 
-        {/* Bottom: progress bar */}
         <div className="mt-6 flex-shrink-0">
           <div className="w-full h-px bg-white/8 relative overflow-hidden">
             <motion.div
@@ -312,4 +382,17 @@ export const CaseStudiesSection: React.FC = () => {
       </div>
     </div>
   );
+};
+
+// ── EXPORT ───────────────────────────────────────────────────────────────────
+export const CaseStudiesSection: React.FC = () => {
+  const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth < 768);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
+
+  return isMobile ? <MobileCaseStudies /> : <DesktopCaseStudies />;
 };

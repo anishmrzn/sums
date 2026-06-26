@@ -18,167 +18,83 @@ interface PlanetData {
   size: number;
 }
 
-// Planets sized smaller (0.5 to 0.7) so they fit nicely within the hero view
 const planets: PlanetData[] = [
-  { id: 'cogknit', name: 'Cogknit', tagline: 'Smart Learning Platform', position: new THREE.Vector3(5, 0.5, -2), color: '#FE6D00', size: 0.6 },
-  { id: 'sip', name: 'SIP', tagline: 'Strategic Integrations', position: new THREE.Vector3(-5, -0.8, -4), color: '#FE6D00', size: 0.7 },
-  { id: 'aic', name: 'AIC', tagline: 'Youth Skill Incubation', position: new THREE.Vector3(4, -4, -8), color: '#FE6D00', size: 0.55 }
+  { id: 'cogknit', name: 'Cogknit', tagline: 'Smart Learning Platform', position: new THREE.Vector3(5, 0.5, -2), color: '#FE6D00', size: 0.65 },
+  { id: 'sip', name: 'SIP', tagline: 'Strategic Integrations', position: new THREE.Vector3(-5, -0.8, -4), color: '#FE6D00', size: 0.65 },
+  { id: 'aic', name: 'AIC', tagline: 'Youth Skill Incubation', position: new THREE.Vector3(4, -4, -8), color: '#FE6D00', size: 0.65 }
 ];
 
-// Helper to create high-resolution procedural logo textures
-const createLogoTexture = (id: string, name: string, color: string) => {
-  const canvas = document.createElement('canvas');
-  canvas.width = 512;
-  canvas.height = 512;
-  const ctx = canvas.getContext('2d');
-  if (!ctx) return new THREE.Texture();
-
-  ctx.clearRect(0, 0, 512, 512);
-
-  // Draw dark semi-transparent glass background
-  ctx.fillStyle = 'rgba(4, 5, 7, 0.95)';
-  ctx.beginPath();
-  ctx.arc(256, 256, 240, 0, Math.PI * 2);
-  ctx.fill();
-
-  // Draw double outer rings
-  ctx.strokeStyle = color;
-  ctx.lineWidth = 10;
-  ctx.beginPath();
-  ctx.arc(256, 256, 230, 0, Math.PI * 2);
-  ctx.stroke();
-
-  ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
-  ctx.lineWidth = 2;
-  ctx.beginPath();
-  ctx.arc(256, 256, 210, 0, Math.PI * 2);
-  ctx.stroke();
-
-  // Draw central symbols
-  ctx.fillStyle = color;
-  ctx.strokeStyle = color;
-  ctx.lineWidth = 6;
-  ctx.lineCap = 'round';
-  ctx.lineJoin = 'round';
-
-  if (id === 'sums') {
-    ctx.beginPath();
-    ctx.arc(256, 256, 40, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.strokeStyle = 'rgba(254, 109, 0, 0.4)';
-    for (let i = 0; i < 3; i++) {
-      const radius = 90 + i * 30;
-      ctx.beginPath();
-      ctx.arc(256, 256, radius, 0, Math.PI * 2);
-      ctx.stroke();
-      
-      const angle = (i * Math.PI * 2 / 3) + Math.PI / 6;
-      ctx.beginPath();
-      ctx.arc(256 + Math.cos(angle) * radius, 256 + Math.sin(angle) * radius, 12, 0, Math.PI * 2);
-      ctx.fillStyle = color;
-      ctx.fill();
-    }
-  } else if (id === 'cogknit') {
-    const nodes = [
-      { x: 256, y: 160 },
-      { x: 170, y: 220 },
-      { x: 342, y: 220 },
-      { x: 200, y: 310 },
-      { x: 312, y: 310 }
-    ];
-    ctx.strokeStyle = color;
-    ctx.beginPath();
-    for (let i = 0; i < nodes.length; i++) {
-      for (let j = i + 1; j < nodes.length; j++) {
-        ctx.moveTo(nodes[i].x, nodes[i].y);
-        ctx.lineTo(nodes[j].x, nodes[j].y);
-      }
-    }
-    ctx.stroke();
-    for (const node of nodes) {
-      ctx.beginPath();
-      ctx.arc(node.x, node.y, 16, 0, Math.PI * 2);
-      ctx.fillStyle = '#ffffff';
-      ctx.fill();
-      ctx.beginPath();
-      ctx.arc(node.x, node.y, 10, 0, Math.PI * 2);
-      ctx.fillStyle = color;
-      ctx.fill();
-    }
-  } else if (id === 'sip') {
-    ctx.beginPath();
-    ctx.arc(206, 240, 55, 0, Math.PI * 2);
-    ctx.stroke();
-    ctx.beginPath();
-    ctx.arc(306, 240, 55, 0, Math.PI * 2);
-    ctx.stroke();
-    ctx.fillStyle = '#ffffff';
-    ctx.beginPath();
-    ctx.arc(256, 240, 14, 0, Math.PI * 2);
-    ctx.fill();
-  } else if (id === 'aic') {
-    ctx.beginPath();
-    for (let i = 0; i < 8; i++) {
-      const angle = (i * Math.PI / 4);
-      ctx.moveTo(256 + Math.cos(angle) * 30, 240 + Math.sin(angle) * 30);
-      ctx.lineTo(256 + Math.cos(angle) * 80, 240 + Math.sin(angle) * 80);
-    }
-    ctx.stroke();
-    ctx.fillStyle = '#ffffff';
-    ctx.beginPath();
-    ctx.arc(256, 240, 32, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.fillStyle = color;
-    ctx.beginPath();
-    ctx.arc(256, 240, 20, 0, Math.PI * 2);
-    ctx.fill();
-  }
-
-  // Draw Platform Text
-  ctx.font = 'bold 36px Poppins, sans-serif';
-  ctx.fillStyle = '#ffffff';
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillText(name.toUpperCase(), 256, 385);
-
-  ctx.font = 'bold 16px Poppins, sans-serif';
-  ctx.fillStyle = color;
-  ctx.fillText(id === 'sums' ? 'CORE ECOSYSTEM' : 'PLATFORM HUB', 256, 430);
-
-  const texture = new THREE.CanvasTexture(canvas);
-  texture.needsUpdate = true;
-  return texture;
-};
-
-// Component for a billboarded planet logo
-const PlanetBillboard: React.FC<{
-  texture: THREE.Texture;
-  scale?: number;
+// Planet logo component — loads a real PNG and billboards it with a pulsing glow halo
+const PlanetLogo: React.FC<{
+  texturePath: string;
+  size: number;
   opacity?: number;
   onClick?: (e: any) => void;
   onPointerOver?: (e: any) => void;
   onPointerOut?: (e: any) => void;
-}> = ({ texture, scale = 1, opacity = 1, onClick, onPointerOver, onPointerOut }) => {
+}> = ({ texturePath, size, opacity = 1, onClick, onPointerOver, onPointerOut }) => {
+  const texture = useLoader(THREE.TextureLoader, texturePath);
   const meshRef = useRef<THREE.Mesh>(null);
+  const halo1Ref = useRef<THREE.Mesh>(null);
+  const halo2Ref = useRef<THREE.Mesh>(null);
   const { camera } = useThree();
 
-  useFrame(() => {
-    if (meshRef.current) {
-      meshRef.current.quaternion.copy(camera.quaternion);
+  const glowTextures = useMemo(() => {
+    const makeGlow = (innerRgba: string, outerRgba: string) => {
+      const canvas = document.createElement('canvas');
+      canvas.width = 256;
+      canvas.height = 256;
+      const ctx = canvas.getContext('2d')!;
+      const cx = 128;
+      const grad = ctx.createRadialGradient(cx, cx, 0, cx, cx, cx);
+      grad.addColorStop(0, innerRgba);
+      grad.addColorStop(0.45, outerRgba);
+      grad.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, 256, 256);
+      const tex = new THREE.CanvasTexture(canvas);
+      tex.needsUpdate = true;
+      return tex;
+    };
+    return {
+      inner: makeGlow('rgba(254,109,0,0.7)', 'rgba(254,80,0,0.25)'),
+      outer: makeGlow('rgba(254,80,0,0.35)', 'rgba(180,40,0,0.0)'),
+    };
+  }, []);
+
+  useFrame((state) => {
+    const t = state.clock.getElapsedTime();
+    if (meshRef.current) meshRef.current.quaternion.copy(camera.quaternion);
+    if (halo1Ref.current) {
+      halo1Ref.current.quaternion.copy(camera.quaternion);
+      const pulse = (Math.sin(t * 1.3) + 1) / 2;
+      (halo1Ref.current.material as THREE.MeshBasicMaterial).opacity = (0.4 + pulse * 0.25) * opacity;
+    }
+    if (halo2Ref.current) {
+      halo2Ref.current.quaternion.copy(camera.quaternion);
+      const pulse2 = (Math.sin(t * 0.8 + 1.2) + 1) / 2;
+      (halo2Ref.current.material as THREE.MeshBasicMaterial).opacity = (0.2 + pulse2 * 0.15) * opacity;
     }
   });
 
   return (
-    <mesh 
-      ref={meshRef}
-      scale={[scale, scale, scale]}
-      onClick={onClick}
-      onPointerOver={onPointerOver}
-      onPointerOut={onPointerOut}
-    >
-      <planeGeometry args={[2, 2]} />
-      <meshBasicMaterial map={texture} transparent opacity={opacity} depthWrite={false} />
-    </mesh>
+    <group onClick={onClick} onPointerOver={onPointerOver} onPointerOut={onPointerOut}>
+      {/* Outer glow */}
+      <mesh ref={halo2Ref}>
+        <planeGeometry args={[size * 5.0, size * 5.0]} />
+        <meshBasicMaterial map={glowTextures.outer} transparent opacity={0.2} depthWrite={false} blending={THREE.AdditiveBlending} />
+      </mesh>
+      {/* Inner glow */}
+      <mesh ref={halo1Ref}>
+        <planeGeometry args={[size * 3.2, size * 3.2]} />
+        <meshBasicMaterial map={glowTextures.inner} transparent opacity={0.4} depthWrite={false} blending={THREE.AdditiveBlending} />
+      </mesh>
+      {/* Logo */}
+      <mesh ref={meshRef} scale={[size * 2, size * 2, size * 2]}>
+        <planeGeometry args={[1, 1]} />
+        <meshBasicMaterial map={texture} transparent opacity={opacity} depthWrite={false} alphaTest={0.01} />
+      </mesh>
+    </group>
   );
 };
 
@@ -399,12 +315,11 @@ const SceneContent: React.FC<{
   const smoothedTransitionT = useRef(0);
   const revealProgress = useRef(0);
 
-  // Generate procedural textures once (planet faces only)
-  const textures = useMemo(() => ({
-    cogknit: createLogoTexture('cogknit', 'Cogknit', '#FD4400'),
-    sip: createLogoTexture('sip', 'SIP', '#FD4400'),
-    aic: createLogoTexture('aic', 'AIC', '#FD4400'),
-  }), []);
+  const planetLogoPaths: Record<string, string> = {
+    cogknit: '/cogknitlogo.png',
+    sip: '/siplogo.png',
+    aic: '/aiclogo.png',
+  };
 
   const orbitPlanes = useMemo(() => {
     return planets.map((planet) => {
@@ -648,7 +563,6 @@ const SceneContent: React.FC<{
           points.push(p);
         }
 
-        const textureKey = planet.id as keyof typeof textures;
         const isFocussed = zoomingPlatform === planet.id || activePlatform === planet.id;
 
         return (
@@ -700,34 +614,36 @@ const SceneContent: React.FC<{
                   />
                 </mesh>
 
-                {/* Billboard Logo Face */}
-                <PlanetBillboard 
-                  texture={textures[textureKey]} 
-                  scale={planet.size} 
-                  opacity={
-                    activePlatform === planet.id 
-                      ? Math.max(0, 1 - detailScrollY / 350)
-                      : 1.0
-                  }
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    if (!zoomingPlatform && !activePlatform) {
-                      onSelectPlatform(planet.id);
+                {/* Real logo PNG as planet face */}
+                <React.Suspense fallback={null}>
+                  <PlanetLogo
+                    texturePath={planetLogoPaths[planet.id]}
+                    size={planet.size}
+                    opacity={
+                      activePlatform === planet.id
+                        ? Math.max(0, 1 - detailScrollY / 350)
+                        : 1.0
                     }
-                  }}
-                  onPointerOver={(e) => {
-                    e.stopPropagation();
-                    if (!zoomingPlatform && !activePlatform) {
-                      setHoveredPlatform(planet.id);
-                      document.body.style.cursor = 'pointer';
-                    }
-                  }}
-                  onPointerOut={(e) => {
-                    e.stopPropagation();
-                    setHoveredPlatform(null);
-                    document.body.style.cursor = 'default';
-                  }}
-                />
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (!zoomingPlatform && !activePlatform) {
+                        onSelectPlatform(planet.id);
+                      }
+                    }}
+                    onPointerOver={(e) => {
+                      e.stopPropagation();
+                      if (!zoomingPlatform && !activePlatform) {
+                        setHoveredPlatform(planet.id);
+                        document.body.style.cursor = 'pointer';
+                      }
+                    }}
+                    onPointerOut={(e) => {
+                      e.stopPropagation();
+                      setHoveredPlatform(null);
+                      document.body.style.cursor = 'default';
+                    }}
+                  />
+                </React.Suspense>
 
                 {/* Tooltip — shown below planet on hover, closer distance */}
                 {hoveredPlatform === planet.id && (
@@ -777,7 +693,7 @@ export const SolarSystemScene: React.FC<SolarSystemSceneProps> = ({
   hideCanvas,
 }) => {
   const isDimmed = !ecosystemRevealed && !activePlatform;
-  const canvasOpacity = (hideCanvas && !activePlatform) ? 0 : isDimmed ? 0.45 : 1.0;
+  const canvasOpacity = activePlatform ? 0 : hideCanvas ? 0 : isDimmed ? 0.45 : 1.0;
 
   return (
     <div
