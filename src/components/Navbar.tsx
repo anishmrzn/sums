@@ -10,8 +10,7 @@ interface NavbarProps {
 
 const NAV_LINKS = [
   { label: 'Ecosystem', target: 'ecosystem' },
-  { label: 'About', target: 'about' },
-  { label: 'Partnerships', target: 'partners' },
+  { label: 'Impact', target: 'about' },
   { label: 'Connect', target: 'contact' },
 ];
 

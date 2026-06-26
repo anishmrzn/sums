@@ -59,8 +59,8 @@ export const CrisisSection: React.FC = () => {
         {/* Full-width 2-column grid: big wheel left, cards right */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 xl:gap-16 items-center">
 
-          {/* LEFT COLUMN: Premium Rotating Cycle Wheel — bigger, dominates the space */}
-          <div className="lg:col-span-7 flex flex-col items-center justify-center relative">
+          {/* LEFT COLUMN: Premium Rotating Cycle Wheel — hidden on mobile */}
+          <div className="hidden lg:flex lg:col-span-7 flex-col items-center justify-center relative">
             {/* Wheel wrapper — much larger */}
             <div className="relative w-[400px] h-[400px] sm:w-[500px] sm:h-[500px] md:w-[560px] md:h-[560px] xl:w-[620px] xl:h-[620px] flex items-center justify-center">
 
@@ -283,7 +283,7 @@ export const CrisisSection: React.FC = () => {
           </div>
 
           {/* RIGHT COLUMN: Problem Description Cards */}
-          <div className="lg:col-span-5 flex flex-col space-y-4 justify-center">
+          <div className="lg:col-span-5 flex flex-col space-y-4 justify-center col-span-1">
 
             {/* Section heading — big, left-aligned, styled like hero headline */}
             <motion.div

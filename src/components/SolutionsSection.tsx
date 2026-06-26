@@ -43,8 +43,31 @@ export const SolutionsSection: React.FC = () => {
           </div>
         </motion.div>
 
-        {/* ── Full-Width Bridge Scene ──────────────────────────────── */}
-        <div className="-mt-28 relative w-full flex flex-col justify-end" style={{ height: 480 }}>
+        {/* ── Mobile: simple Knowing vs Applying visual ─────────── */}
+        <motion.div
+          className="md:hidden flex flex-col items-center gap-6 py-4"
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.7, delay: 0.2 }}
+        >
+          <div className="w-full grid grid-cols-2 gap-3">
+            <div className="border border-white/5 rounded-xl p-5 bg-white/[0.02] text-center">
+              <p className="text-[#FF5C00] font-black text-lg mb-1">KNOWING</p>
+              <p className="text-white/45 text-xs leading-relaxed">Thousands of tools, workshops, and trainings</p>
+            </div>
+            <div className="border border-white/5 rounded-xl p-5 bg-white/[0.02] text-center">
+              <p className="text-[#FF5C00] font-black text-lg mb-1">APPLYING</p>
+              <p className="text-white/45 text-xs leading-relaxed">Fundamental change in outcomes</p>
+            </div>
+          </div>
+          <div className="border border-[#FF5C00]/20 bg-[#FF5C00]/5 rounded-xl px-5 py-4 w-full text-center">
+            <p className="text-[#FF5C00] text-xs font-bold tracking-widest uppercase mb-1">The Gap</p>
+            <p className="text-white/60 text-sm">Isolated tools and services cannot bridge a structural gap</p>
+          </div>
+        </motion.div>
+
+        {/* ── Full-Width Bridge Scene — desktop only ───────────────── */}
+        <div className="hidden md:block -mt-28 relative w-full flex flex-col justify-end" style={{ height: 480 }}>
 
           {/* ── Tools-pile image — sits on TOP of left cliff edge ── */}
           <motion.div
