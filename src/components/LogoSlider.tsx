@@ -13,7 +13,19 @@ const LOGOS = [
   '/logos/15.png',
   '/logos/16.png',
   '/logos/17.png',
-  '/logos/images (5).png'
+  '/logos/9.png',
+  '/logos/6.png',
+  '/logos/11.png',
+  '/logos/13.png',
+  '/logos/7.png',
+  '/logos/15.png',
+  '/logos/10.png',
+  '/logos/17.png',
+  '/logos/8.png',
+  '/logos/12.png',
+  '/logos/14.png',
+  '/logos/16.png',
+  '/logos/18.png',
 ];
 
 export const LogoSlider: React.FC = () => {
@@ -21,7 +33,7 @@ export const LogoSlider: React.FC = () => {
   const loopedLogos = [...LOGOS, ...LOGOS, ...LOGOS];
 
   return (
-    <div className="w-full bg-[#040507] border-y border-white/5 py-5 overflow-hidden relative pointer-events-auto">
+    <div className="w-full bg-[#040507] border-y border-white/5 py-5 overflow-hidden relative pointer-events-none">
       {/* Row: label on the left + scrolling strip */}
       <div className="flex items-center gap-6">
 
@@ -43,12 +55,13 @@ export const LogoSlider: React.FC = () => {
             {loopedLogos.map((logo, i) => (
               <div
                 key={i}
-                className="flex items-center justify-center h-12 min-w-[100px]"
+                className="flex items-center justify-center h-12 min-w-[100px] pointer-events-none"
               >
                 <img
                   src={logo}
                   alt={`Partner logo ${(i % LOGOS.length) + 1}`}
-                  className="h-[48px] w-auto max-w-[120px] object-contain opacity-60 hover:opacity-100 transition-opacity duration-300"
+                  className="h-[48px] w-auto max-w-[120px] object-contain opacity-100  grayscale"
+                  draggable={false}
                 />
               </div>
             ))}

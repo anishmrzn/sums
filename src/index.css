@@ -27,13 +27,16 @@ body {
 ::-webkit-scrollbar {
   width: 6px;
 }
+
 ::-webkit-scrollbar-track {
   background: #040507;
 }
+
 ::-webkit-scrollbar-thumb {
   background: #12141a;
   border-radius: 3px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
   background: var(--color-brand);
 }
@@ -47,45 +50,83 @@ body {
 
 /* Scroll nudge dot animations */
 @keyframes scrollBounce {
-  0%, 100% { transform: translateY(0); opacity: 0.6; }
-  50%       { transform: translateY(4px); opacity: 1; }
+
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.6;
+  }
+
+  50% {
+    transform: translateY(4px);
+    opacity: 1;
+  }
 }
 
 @keyframes scrollBounceUp {
-  0%, 100% { transform: translateY(0); opacity: 0.6; }
-  50%       { transform: translateY(-4px); opacity: 1; }
+
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.6;
+  }
+
+  50% {
+    transform: translateY(-4px);
+    opacity: 1;
+  }
 }
 
 /* Logo slider animation */
 @keyframes logoScroll {
-  0%   { transform: translateX(0); }
-  100% { transform: translateX(-33.3334%); }
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-33.3334%);
+  }
 }
 
 .logo-scroll-track {
   animation: logoScroll 30s linear infinite;
 }
 
-.logo-scroll-track:hover {
+/* .logo-scroll-track:hover {
   animation-play-state: paused;
-}
+} */
 
 /* 3D Logo float animation */
 @keyframes logoFloat {
-  0%, 100% { transform: translateY(0px); }
-  50%       { transform: translateY(-3px); }
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-3px);
+  }
 }
 
 /* Logo glow pulse (used via filter animation) */
 @keyframes logoGlowPulse {
-  0%, 100% { filter: drop-shadow(0 0 6px rgba(255,109,0,0.8)) drop-shadow(0 0 16px rgba(255,60,0,0.5)); }
-  50%       { filter: drop-shadow(0 0 12px rgba(255,140,0,1))  drop-shadow(0 0 30px rgba(255,60,0,0.8)) drop-shadow(0 0 50px rgba(255,109,0,0.4)); }
+
+  0%,
+  100% {
+    filter: drop-shadow(0 0 6px rgba(255, 109, 0, 0.8)) drop-shadow(0 0 16px rgba(255, 60, 0, 0.5));
+  }
+
+  50% {
+    filter: drop-shadow(0 0 12px rgba(255, 140, 0, 1)) drop-shadow(0 0 30px rgba(255, 60, 0, 0.8)) drop-shadow(0 0 50px rgba(255, 109, 0, 0.4));
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .logo-scroll-track {
     animation: none;
   }
+
   * {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;

@@ -4,7 +4,7 @@ import { motion, useInView, useReducedMotion } from 'framer-motion';
 export const CrisisSection: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   // Use a lower amount threshold so animation triggers earlier while scrolling
-  const isInView = useInView(containerRef, { once: true, amount: 0.15 });
+  const isInView = useInView(containerRef, { once: true, amount: 0.45 });
   const reduced = useReducedMotion() ?? false;
 
   const [activeStep, setActiveStep] = useState(-1);

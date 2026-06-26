@@ -9,10 +9,10 @@ interface NavbarProps {
 }
 
 const NAV_LINKS = [
-  { label: 'Ecosystem',    target: 'ecosystem' },
-  { label: 'About',        target: 'about' },
+  { label: 'Ecosystem', target: 'ecosystem' },
+  { label: 'About', target: 'about' },
   { label: 'Partnerships', target: 'partners' },
-  { label: 'Connect',      target: 'contact' },
+  { label: 'Connect', target: 'contact' },
 ];
 
 export const Navbar: React.FC<NavbarProps> = ({ activePlatform, onBackToEcosystem, onNavigate }) => {
@@ -23,7 +23,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activePlatform, onBackToEcosyste
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-      
+
       // Reveal navbar at the very top of the page, otherwise hide on scroll down and show on scroll up
       if (currentScrollY <= 50) {
         setVisible(true);
@@ -32,7 +32,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activePlatform, onBackToEcosyste
       } else {
         setVisible(true); // scrolling up
       }
-      
+
       setPrevScrollY(currentScrollY);
     };
 
@@ -47,10 +47,9 @@ export const Navbar: React.FC<NavbarProps> = ({ activePlatform, onBackToEcosyste
 
   return (
     <>
-      <header 
-        className={`fixed top-0 left-0 right-0 z-50 px-5 py-4 md:px-12 md:py-6 flex items-center justify-between border-b border-white/[0.03] bg-[#040507]/40 backdrop-blur-md transition-all duration-300 ${
-          visible ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0 pointer-events-none'
-        }`}
+      <header
+        className={`fixed top-0 left-0 right-0 z-50 px-5 py-4 md:px-12 md:py-6 flex items-center justify-between border-b border-white/[0.03] bg-[#040507]/40 backdrop-blur-md transition-all duration-300 ${visible ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0 pointer-events-none'
+          }`}
       >
 
         {/* Logo — 3D glowing sums_logo.png */}
@@ -79,15 +78,15 @@ export const Navbar: React.FC<NavbarProps> = ({ activePlatform, onBackToEcosyste
             <img
               src="/sums_logo.png"
               alt="SUMS Nepal"
-              className="relative z-10 w-11 h-11 object-contain transition-transform duration-500 group-hover:scale-110"
+              className="relative z-10 w-15 h-15 object-contain transition-transform duration-500 group-hover:scale-110"
               style={{
                 animation: 'logoFloat 3.5s ease-in-out infinite, logoGlowPulse 2.5s ease-in-out infinite',
               }}
             />
           </div>
-          <span className="font-serif font-semibold tracking-wider text-base text-white/90 group-hover:text-white transition-colors duration-300 hidden sm:block">
+          {/* <span className="font-serif font-semibold tracking-wider text-base text-white/90 group-hover:text-white transition-colors duration-300 hidden sm:block">
             SUMS<span className="text-brand font-sans text-[10px] align-super ml-0.5 font-bold">NEPAL</span>
-          </span>
+          </span> */}
         </div>
 
         {/* Desktop nav links */}

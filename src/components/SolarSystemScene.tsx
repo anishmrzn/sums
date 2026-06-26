@@ -5,6 +5,7 @@ import React, { useRef, useMemo, useState } from 'react';
 import { Canvas, useFrame, useThree, useLoader } from '@react-three/fiber';
 import { Stars, Line, Html } from '@react-three/drei';
 import * as THREE from 'three';
+import { MousePointerClick } from 'lucide-react';
 
 
 
@@ -21,7 +22,6 @@ interface PlanetData {
 const planets: PlanetData[] = [
   { id: 'cogknit', name: 'Cogknit', tagline: 'Smart Learning Platform', position: new THREE.Vector3(5, 0.5, -2), color: '#FE6D00', size: 0.6 },
   { id: 'sip', name: 'SIP', tagline: 'Strategic Integrations', position: new THREE.Vector3(-5, -0.8, -4), color: '#FE6D00', size: 0.7 },
-  { id: 'academia', name: 'Academia', tagline: 'Research & Peer Review', position: new THREE.Vector3(-3, -2.5, -6), color: '#FE6D00', size: 0.65 },
   { id: 'aic', name: 'AIC', tagline: 'Youth Skill Incubation', position: new THREE.Vector3(4, -4, -8), color: '#FE6D00', size: 0.55 }
 ];
 
@@ -115,21 +115,6 @@ const createLogoTexture = (id: string, name: string, color: string) => {
     ctx.fillStyle = '#ffffff';
     ctx.beginPath();
     ctx.arc(256, 240, 14, 0, Math.PI * 2);
-    ctx.fill();
-  } else if (id === 'academia') {
-    ctx.beginPath();
-    ctx.arc(256, 240, 70, 0, Math.PI * 2);
-    ctx.stroke();
-    ctx.beginPath();
-    ctx.arc(256, 240, 45, 0, Math.PI * 2);
-    ctx.stroke();
-    ctx.fillStyle = color;
-    ctx.beginPath();
-    ctx.moveTo(256, 205);
-    ctx.lineTo(300, 240);
-    ctx.lineTo(256, 275);
-    ctx.lineTo(212, 240);
-    ctx.closePath();
     ctx.fill();
   } else if (id === 'aic') {
     ctx.beginPath();
@@ -315,20 +300,80 @@ const SunCore: React.FC = () => {
 const orbitParams = {
   cogknit: { speed: 0.35, baseAngle: 0 },
   sip: { speed: 0.25, baseAngle: Math.PI / 2 },
-  academia: { speed: 0.18, baseAngle: Math.PI },
   aic: { speed: 0.12, baseAngle: 1.5 * Math.PI }
 };
 
 const linePositions: { [key: string]: THREE.Vector3 } = {
-  sums: new THREE.Vector3(-10, 0, 0),
-  cogknit: new THREE.Vector3(-4, 0, 0),
-  sip: new THREE.Vector3(1, 0, 0),
-  academia: new THREE.Vector3(6, 0, 0),
-  aic: new THREE.Vector3(11, 0, 0)
+  sums: new THREE.Vector3(-8, 0, 0),
+  cogknit: new THREE.Vector3(-3, 0, 0),
+  sip: new THREE.Vector3(2, 0, 0),
+  aic: new THREE.Vector3(7, 0, 0)
+};
+
+// Orbit ring that morphs its geometry every frame from circle → flat line
+const OrbitRing: React.FC<{
+  orbitPlane: { u: THREE.Vector3; v: THREE.Vector3; radius: number };
+  smoothedTransitionT: React.MutableRefObject<number>;
+}> = ({ orbitPlane, smoothedTransitionT }) => {
+  const COUNT = 128;
+
+  const { lineObj, originPositions } = useMemo(() => {
+    const originPositions = new Float32Array(COUNT * 3);
+    for (let i = 0; i < COUNT; i++) {
+      const angle = (i / COUNT) * Math.PI * 2;
+      originPositions[i * 3]     = orbitPlane.u.x * Math.cos(angle) * orbitPlane.radius + orbitPlane.v.x * Math.sin(angle) * orbitPlane.radius;
+      originPositions[i * 3 + 1] = orbitPlane.u.y * Math.cos(angle) * orbitPlane.radius + orbitPlane.v.y * Math.sin(angle) * orbitPlane.radius;
+      originPositions[i * 3 + 2] = orbitPlane.u.z * Math.cos(angle) * orbitPlane.radius + orbitPlane.v.z * Math.sin(angle) * orbitPlane.radius;
+    }
+    // COUNT+1 closes the loop so LineDashedMaterial draws dashes all the way around
+    const TOTAL = COUNT + 1;
+    const allPositions = new Float32Array(TOTAL * 3);
+    for (let i = 0; i < TOTAL; i++) {
+      const angle = (i / COUNT) * Math.PI * 2;
+      allPositions[i * 3]     = orbitPlane.u.x * Math.cos(angle) * orbitPlane.radius + orbitPlane.v.x * Math.sin(angle) * orbitPlane.radius;
+      allPositions[i * 3 + 1] = orbitPlane.u.y * Math.cos(angle) * orbitPlane.radius + orbitPlane.v.y * Math.sin(angle) * orbitPlane.radius;
+      allPositions[i * 3 + 2] = orbitPlane.u.z * Math.cos(angle) * orbitPlane.radius + orbitPlane.v.z * Math.sin(angle) * orbitPlane.radius;
+      // copy back into originPositions (only first COUNT entries needed for morph)
+      if (i < COUNT) {
+        originPositions[i * 3]     = allPositions[i * 3];
+        originPositions[i * 3 + 1] = allPositions[i * 3 + 1];
+        originPositions[i * 3 + 2] = allPositions[i * 3 + 2];
+      }
+    }
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.BufferAttribute(allPositions, 3));
+    const mat = new THREE.LineDashedMaterial({
+      color: 0xffffff, transparent: true, opacity: 0.22,
+      dashSize: 0.35, gapSize: 0.25,
+    });
+    const line = new THREE.Line(geo, mat);
+    line.computeLineDistances();
+    line.renderOrder = -1;
+    return { lineObj: line, originPositions };
+  }, []);
+
+  useFrame(() => {
+    const t = smoothedTransitionT.current;
+    const pos = lineObj.geometry.attributes.position.array as Float32Array;
+    const TOTAL = COUNT + 1;
+    for (let i = 0; i < TOTAL; i++) {
+      const srcIdx = Math.min(i, COUNT - 1);
+      pos[i * 3]     = originPositions[srcIdx * 3];
+      pos[i * 3 + 1] = THREE.MathUtils.lerp(originPositions[srcIdx * 3 + 1], 0, t);
+      pos[i * 3 + 2] = THREE.MathUtils.lerp(originPositions[srcIdx * 3 + 2], 0, t);
+    }
+    lineObj.geometry.attributes.position.needsUpdate = true;
+    lineObj.computeLineDistances();
+    const mat = lineObj.material as THREE.LineDashedMaterial;
+    const targetOpacity = 0.22 * Math.max(0, 1 - Math.max(0, t - 0.8) / 0.2);
+    mat.opacity = THREE.MathUtils.lerp(mat.opacity, targetOpacity, 0.12);
+  });
+
+  return <primitive object={lineObj} />;
 };
 
 // Inner component to handle frame-by-frame updates in the Three.js canvas
-const SceneContent: React.FC<{ 
+const SceneContent: React.FC<{
   scrollProgress: number; 
   activePlatform: string | null;
   zoomingPlatform: string | null;
@@ -347,6 +392,9 @@ const SceneContent: React.FC<{
   const lineRef = useRef<any>(null);
   const entryTime = useRef<number | null>(null);
 
+  const [isAligned, setIsAligned] = useState(false);
+  const isAlignedRef = useRef(false);
+
   const smoothedScrollProgress = useRef(scrollProgress);
   const smoothedTransitionT = useRef(0);
   const revealProgress = useRef(0);
@@ -355,7 +403,6 @@ const SceneContent: React.FC<{
   const textures = useMemo(() => ({
     cogknit: createLogoTexture('cogknit', 'Cogknit', '#FD4400'),
     sip: createLogoTexture('sip', 'SIP', '#FD4400'),
-    academia: createLogoTexture('academia', 'Academia', '#FD4400'),
     aic: createLogoTexture('aic', 'AIC', '#FD4400'),
   }), []);
 
@@ -368,8 +415,6 @@ const SceneContent: React.FC<{
       return { id: planet.id, u, v, radius };
     });
   }, []);
-
-  const finalOpacity = 1.0; // Handled by outer container CSS opacity to prevent WebGL material glitches
 
   useFrame((state, delta) => {
     const elapsedTime = state.clock.getElapsedTime();
@@ -514,9 +559,21 @@ const SceneContent: React.FC<{
       }
     }
 
-    // Smoothly update line opacity
+    // Track when planets are fully aligned so the click hint can appear
+    const nowAligned = smoothedTransitionT.current >= 0.9;
+    if (nowAligned !== isAlignedRef.current) {
+      isAlignedRef.current = nowAligned;
+      setIsAligned(nowAligned);
+    }
+
+    // Straight line only appears once planets are fully aligned
     if (lineRef.current && lineRef.current.material) {
-      lineRef.current.material.opacity = 0.25 * finalOpacity * smoothedTransitionT.current;
+      const targetLineOpacity = smoothedTransitionT.current >= 0.9 ? 0.22 : 0;
+      lineRef.current.material.opacity = THREE.MathUtils.lerp(
+        lineRef.current.material.opacity as number,
+        targetLineOpacity,
+        0.12
+      );
     }
   });
 
@@ -556,20 +613,21 @@ const SceneContent: React.FC<{
         )}
       </group>
 
-      {/* Straight line connector */}
+      {/* Straight line connector — always behind planets */}
       {!activePlatform && (
-        <Line 
+        <Line
           ref={lineRef}
           points={[
             new THREE.Vector3(-12, 0, 0),
             new THREE.Vector3(12, 0, 0)
-          ]} 
+          ]}
           color="#ffffff"
           transparent
           opacity={0}
-          lineWidth={1} 
-          dashed 
+          lineWidth={1}
+          dashed
           dashScale={1.5}
+          renderOrder={-2}
         />
       )}
 
@@ -595,18 +653,11 @@ const SceneContent: React.FC<{
 
         return (
           <group key={planet.id}>
-            {/* Orbit line */}
-            {!activePlatform && (
-              <Line 
-                points={points} 
-                color="#ffffff"
-                transparent
-                opacity={0.25 * (1 - smoothedTransitionT.current)}
-                lineWidth={1} 
-                dashed 
-                dashScale={1.5}
-              />
-            )}
+            {/* Orbit ring — geometry morphs circle → flat line each frame */}
+            {!activePlatform && (() => {
+              const plane = orbitPlanes.find(p => p.id === planet.id);
+              return plane ? <OrbitRing orbitPlane={plane} smoothedTransitionT={smoothedTransitionT} /> : null;
+            })()}
 
             {/* Clickable Planet group */}
             <group 
@@ -678,13 +729,23 @@ const SceneContent: React.FC<{
                   }}
                 />
 
-                {/* Tooltip */}
+                {/* Tooltip — shown below planet on hover, closer distance */}
                 {hoveredPlatform === planet.id && (
-                  <Html position={[0, planet.size + 0.8, 0]} center zIndexRange={[100, 0]}>
-                    <div style={{ transform: 'scale(1)', pointerEvents: 'none', userSelect: 'none', textAlign: 'center', background: 'rgba(4,5,7,0.96)', border: '1.5px solid rgba(253,68,0,0.6)', borderRadius: '14px', padding: '14px 24px', minWidth: '240px', boxShadow: '0 0 28px rgba(253,68,0,0.45)', backdropFilter: 'blur(12px)' }}>
-                      <h4 style={{ fontSize: '20px', fontWeight: 700, letterSpacing: '0.18em', color: '#FD4400', textTransform: 'uppercase', fontFamily: 'Poppins, sans-serif', margin: 0 }}>{planet.name}</h4>
-                      <p style={{ fontSize: '14px', color: 'rgba(255,255,255,0.72)', marginTop: '6px', whiteSpace: 'nowrap', fontFamily: 'Poppins, sans-serif' }}>{planet.tagline}</p>
+                  <Html position={[0, -(planet.size + 0.55), 0]} center zIndexRange={[100, 0]}>
+                    <div style={{ pointerEvents: 'none', userSelect: 'none', textAlign: 'center', background: 'rgba(4,5,7,0.96)', border: '1.5px solid rgba(253,68,0,0.6)', borderRadius: '12px', padding: '10px 20px', minWidth: '200px', boxShadow: '0 0 24px rgba(253,68,0,0.4)', backdropFilter: 'blur(12px)' }}>
+                      <h4 style={{ fontSize: '16px', fontWeight: 700, letterSpacing: '0.15em', color: '#FD4400', textTransform: 'uppercase', fontFamily: 'Poppins, sans-serif', margin: 0 }}>{planet.name}</h4>
+                      <p style={{ fontSize: '12px', color: 'rgba(255,255,255,0.65)', marginTop: '4px', whiteSpace: 'nowrap', fontFamily: 'Poppins, sans-serif' }}>{planet.tagline}</p>
                     </div>
+                  </Html>
+                )}
+
+                {/* Click hint icon — only on Cogknit, only after planets are fully aligned */}
+                {isAligned && ecosystemRevealed && !hoveredPlatform && !activePlatform && planet.id === 'cogknit' && (
+                  <Html position={[0, -(planet.size + 0.38), 0]} center zIndexRange={[50, 0]}>
+                    <div style={{ pointerEvents: 'none', userSelect: 'none', textAlign: 'center', animation: 'clickHintBounce 2s ease-in-out infinite' }}>
+                      <MousePointerClick size={20} color="#FD4400" strokeWidth={1.5} style={{ opacity: 0.85, filter: 'drop-shadow(0 0 6px rgba(253,68,0,0.6))' }} />
+                    </div>
+                    <style>{`@keyframes clickHintBounce { 0%,100%{transform:translateY(0) scale(1);opacity:0.5} 50%{transform:translateY(-5px) scale(1.1);opacity:1} }`}</style>
                   </Html>
                 )}
               </>
@@ -703,6 +764,7 @@ interface SolarSystemSceneProps {
   detailScrollY: number;
   onSelectPlatform: (id: string) => void;
   ecosystemRevealed: boolean;
+  hideCanvas: boolean;
 }
 
 export const SolarSystemScene: React.FC<SolarSystemSceneProps> = ({
@@ -711,19 +773,21 @@ export const SolarSystemScene: React.FC<SolarSystemSceneProps> = ({
   zoomingPlatform,
   detailScrollY,
   onSelectPlatform,
-  ecosystemRevealed
+  ecosystemRevealed,
+  hideCanvas,
 }) => {
   const isDimmed = !ecosystemRevealed && !activePlatform;
+  const canvasOpacity = (hideCanvas && !activePlatform) ? 0 : isDimmed ? 0.45 : 1.0;
 
   return (
-    <div 
+    <div
       className="fixed inset-0 z-0 w-full h-full pointer-events-none bg-[#040507]"
     >
-      <div 
+      <div
         className="w-full h-full pointer-events-auto transition-all duration-1000 ease-in-out"
-        style={{ 
-          opacity: isDimmed ? 0.45 : 1.0,
-          transform: activePlatform ? 'translateY(0)' : 'translateY(70px)'
+        style={{
+          opacity: canvasOpacity,
+          transform: activePlatform ? 'translateY(0)' : 'translateY(70px)',
         }}
       >
         <Canvas

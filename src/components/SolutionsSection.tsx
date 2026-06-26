@@ -1,14 +1,18 @@
 import React, { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 
+const scrollToEcosystem = () => {
+  document.getElementById('ecosystem-section')?.scrollIntoView({ behavior: 'smooth' });
+};
+
 export const SolutionsSection: React.FC = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(sectionRef, { once: true, amount: 0.2 });
+  const isInView = useInView(sectionRef, { once: true, amount: 0.45 });
 
   return (
     <div
       ref={sectionRef}
-      className="w-full bg-transparent flex flex-col justify-center py-12 px-4 md:px-8 relative overflow-hidden pointer-events-auto"
+      className="w-full bg-transparent flex flex-col justify-center py-4 px-4 md:px-8 relative overflow-hidden pointer-events-auto"
     >
       <div className="max-w-[1400px] mx-auto w-full z-10 space-y-12">
 
@@ -40,24 +44,22 @@ export const SolutionsSection: React.FC = () => {
         </motion.div>
 
         {/* ── Full-Width Bridge Scene ──────────────────────────────── */}
-        <div className="relative w-full flex flex-col justify-end" style={{ height: 580 }}>
+        <div className="-mt-28 relative w-full flex flex-col justify-end" style={{ height: 480 }}>
 
           {/* ── Tools-pile image — sits on TOP of left cliff edge ── */}
           <motion.div
             initial={{ opacity: 0, y: 15 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            className="absolute z-20"
-            style={{ left: '0%', bottom: '255px', width: '26%' }}
+            className="absolute z-20 rounded-xl overflow-hidden"
+            style={{ left: '0%', bottom: '210px', width: '26%', background: 'rgba(4,5,7,0.4)', backdropFilter: 'blur(2px)' }}
           >
-            <div className="w-full rounded-xl overflow-hidden border border-white/10 bg-[#0a0b0e]/85 shadow-[0_8px_32px_rgba(0,0,0,0.6)]">
-              <img
-                src="/tools-pile.png"
-                alt="Thousands of tools"
-                className="w-full h-auto object-contain opacity-85"
-                style={{ maxHeight: 150 }}
-              />
-            </div>
+            <img
+              src="/tools-pile-orange.png"
+              alt="Thousands of tools"
+              className="w-full h-auto object-contain"
+              style={{ maxHeight: 145 }}
+            />
           </motion.div>
 
           {/* ── Outcome image — sits on TOP of right cliff edge ── */}
@@ -65,24 +67,22 @@ export const SolutionsSection: React.FC = () => {
             initial={{ opacity: 0, y: 15 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-            className="absolute z-20"
-            style={{ right: '0%', bottom: '255px', width: '26%' }}
+            className="absolute z-20 rounded-xl overflow-hidden"
+            style={{ right: '0%', bottom: '210px', width: '22%', background: 'rgba(4,5,7,0.4)', backdropFilter: 'blur(2px)' }}
           >
-            <div className="w-full rounded-xl overflow-hidden border border-white/10 bg-[#0a0b0e]/85 shadow-[0_8px_32px_rgba(0,0,0,0.6)]">
-              <img
-                src="/target-diagram.png"
-                alt="Fundamental Change in Outcomes"
-                className="w-full h-auto object-contain opacity-85"
-                style={{ maxHeight: 150 }}
-              />
-            </div>
+            <img
+              src="/target-diagram-orange.png"
+              alt="Fundamental Change in Outcomes"
+              className="w-full h-auto object-contain"
+              style={{ maxHeight: 145 }}
+            />
           </motion.div>
 
           {/* ── SVG Bridge — cliffs + towers + cables + broken gap ── */}
           <motion.svg
             viewBox="0 0 1200 340"
             className="absolute inset-x-0 bottom-0 w-full select-none"
-            style={{ height: 400 }}
+            style={{ height: 330 }}
             initial={{ opacity: 0 }}
             animate={isInView ? { opacity: 1 } : {}}
             transition={{ duration: 0.6 }}
@@ -342,7 +342,7 @@ export const SolutionsSection: React.FC = () => {
               <text
                 x="175" y="205"
                 textAnchor="middle"
-                fill="white"
+                fill="#FF5C00"
                 fontSize="26"
                 fontWeight="900"
                 letterSpacing="5"
@@ -351,20 +351,20 @@ export const SolutionsSection: React.FC = () => {
                 KNOWING
               </text>
               <text
-                x="175" y="235"
+                x="175" y="232"
                 textAnchor="middle"
-                fill="rgba(255,255,255,0.45)"
-                fontSize="11"
+                fill="rgba(255,255,255,0.85)"
+                fontSize="14"
                 fontFamily="Poppins, sans-serif"
                 fontWeight="700"
               >
                 Thousands of tools,
               </text>
               <text
-                x="175" y="251"
+                x="175" y="252"
                 textAnchor="middle"
-                fill="rgba(255,255,255,0.45)"
-                fontSize="11"
+                fill="rgba(255,255,255,0.85)"
+                fontSize="14"
                 fontFamily="Poppins, sans-serif"
                 fontWeight="700"
               >
@@ -381,7 +381,7 @@ export const SolutionsSection: React.FC = () => {
               <text
                 x="1025" y="205"
                 textAnchor="middle"
-                fill="white"
+                fill="#FF5C00"
                 fontSize="26"
                 fontWeight="900"
                 letterSpacing="5"
@@ -390,20 +390,20 @@ export const SolutionsSection: React.FC = () => {
                 APPLYING
               </text>
               <text
-                x="1025" y="235"
+                x="1025" y="232"
                 textAnchor="middle"
-                fill="rgba(255,255,255,0.45)"
-                fontSize="11"
+                fill="rgba(255,255,255,0.85)"
+                fontSize="14"
                 fontFamily="Poppins, sans-serif"
                 fontWeight="700"
               >
                 Fundamental Change
               </text>
               <text
-                x="1025" y="251"
+                x="1025" y="252"
                 textAnchor="middle"
-                fill="rgba(255,255,255,0.45)"
-                fontSize="11"
+                fill="rgba(255,255,255,0.85)"
+                fontSize="14"
                 fontFamily="Poppins, sans-serif"
                 fontWeight="700"
               >
@@ -413,28 +413,32 @@ export const SolutionsSection: React.FC = () => {
           </motion.svg>
         </div>
 
-        {/* ── Footer: CTA indicator (non-clickable premium scroll indicator) ── */}
+        {/* ── Footer: CTA indicator ── */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ delay: 1.2, duration: 0.6 }}
-          className="flex flex-col items-center justify-center gap-4 pt-12 pointer-events-auto"
+          className="flex flex-col items-center justify-center gap-4 pt-8 pointer-events-auto"
         >
           <span className="text-white/70 text-sm md:text-base tracking-wide max-w-2xl text-center leading-relaxed font-sans">
             See how <span className="text-[#FF5C00] font-black">1,500+</span> students across{' '}
-            <span className="text-[#FF5C00] font-black">10+</span> colleges are already bridging this gap with SUMs
+            <span className="text-[#FF5C00] font-black">10+</span> colleges are bridging this gap
           </span>
 
-          {/* Premium animated scroll-down chevron indicator */}
-          <div className="flex flex-col items-center justify-center mt-1">
+          {/* Large clickable scroll-down arrow */}
+          <button
+            onClick={scrollToEcosystem}
+            className="flex flex-col items-center justify-center mt-1 cursor-pointer group focus:outline-none"
+            aria-label="See the ecosystem"
+          >
             <motion.div
-              animate={{ y: [0, 8, 0], opacity: [0.4, 1, 0.4] }}
+              animate={{ y: [0, 12, 0], opacity: [0.5, 1, 0.5] }}
               transition={{ repeat: Infinity, duration: 1.8, ease: 'easeInOut' }}
-              className="text-[#FF5C00] text-3xl font-extralight select-none select-none tracking-widest pointer-events-none"
+              className="text-[#FF5C00] text-6xl font-extralight select-none tracking-widest group-hover:text-white transition-colors duration-300"
             >
               ↓
             </motion.div>
-          </div>
+          </button>
         </motion.div>
 
       </div>
