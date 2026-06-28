@@ -5,7 +5,6 @@ import React, { useRef, useMemo, useState } from 'react';
 import { Canvas, useFrame, useThree, useLoader } from '@react-three/fiber';
 import { Stars, Line, Html } from '@react-three/drei';
 import * as THREE from 'three';
-import { MousePointerClick } from 'lucide-react';
 
 
 
@@ -655,13 +654,18 @@ const SceneContent: React.FC<{
                   </Html>
                 )}
 
-                {/* Click hint icon — only on Cogknit, only after planets are fully aligned */}
-                {isAligned && ecosystemRevealed && !hoveredPlatform && !activePlatform && planet.id === 'cogknit' && (
-                  <Html position={[0, -(planet.size + 0.38), 0]} center zIndexRange={[50, 0]}>
-                    <div style={{ pointerEvents: 'none', userSelect: 'none', textAlign: 'center', animation: 'clickHintBounce 2s ease-in-out infinite' }}>
-                      <MousePointerClick size={20} color="#FD4400" strokeWidth={1.5} style={{ opacity: 0.85, filter: 'drop-shadow(0 0 6px rgba(253,68,0,0.6))' }} />
+                {/* Click hint — shown on every planet when aligned, hidden on hover */}
+                {isAligned && ecosystemRevealed && !hoveredPlatform && !activePlatform && (
+                  <Html position={[0, -(planet.size + 0.58), 0]} center zIndexRange={[50, 0]}>
+                    <div style={{ pointerEvents: 'none', userSelect: 'none', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px', animation: 'explorePulse 2s ease-in-out infinite' }}>
+                      <div style={{ background: 'rgba(253,68,0,0.18)', border: '1px solid rgba(253,68,0,0.55)', borderRadius: '999px', padding: '5px 14px', display: 'flex', alignItems: 'center', gap: '6px', backdropFilter: 'blur(8px)', boxShadow: '0 0 12px rgba(253,68,0,0.25)' }}>
+                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#FD4400" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                        <span style={{ fontSize: '10px', fontWeight: 800, color: '#FD4400', letterSpacing: '0.18em', fontFamily: 'Poppins, sans-serif', textTransform: 'uppercase' }}>Explore</span>
+                      </div>
                     </div>
-                    <style>{`@keyframes clickHintBounce { 0%,100%{transform:translateY(0) scale(1);opacity:0.5} 50%{transform:translateY(-5px) scale(1.1);opacity:1} }`}</style>
+                    <style>{`@keyframes explorePulse { 0%,100%{transform:translateY(0);opacity:0.65} 50%{transform:translateY(-5px);opacity:1} }`}</style>
                   </Html>
                 )}
               </>
@@ -700,7 +704,7 @@ export const SolarSystemScene: React.FC<SolarSystemSceneProps> = ({
       className="fixed inset-0 z-0 w-full h-full pointer-events-none bg-[#040507]"
     >
       <div
-        className="w-full h-full pointer-events-auto transition-all duration-1000 ease-in-out"
+        className="w-full h-full pointer-events-auto transition-all duration-500 ease-in-out"
         style={{
           opacity: canvasOpacity,
           transform: activePlatform ? 'translateY(0)' : 'translateY(70px)',

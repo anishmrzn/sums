@@ -59,24 +59,20 @@ function App() {
         setHideCanvas(scrolledIntoSection >= hideThreshold);
 
         // Phase 1 ends at 0.2*vh — planets orbit normally while user reads the text
-        // Phase 2 ends at 0.8*vh — planets align horizontally; completes early so user
-        //   sees them in the horizontal line for a good while before the next section
+        // Phase 2 ends at 0.8*vh — planets align horizontally
         const alignEnd = 0.8 * vh;
 
         if (scrolledIntoSection < 0) {
           setEcosystemPhase(0);
           setScrollProgress(0);
         } else if (scrolledIntoSection < phase1End) {
-          // Phase 1: Keep orbiting normally (progress = 0)
           setEcosystemPhase(1);
           setScrollProgress(0);
         } else if (scrolledIntoSection < alignEnd) {
-          // Phase 2: Smoothly align to horizontal line (earlier window)
           setEcosystemPhase(2);
           const progress = Math.min(1.0, (scrolledIntoSection - phase1End) / (alignEnd - phase1End));
           setScrollProgress(progress);
         } else {
-          // Phase 3: Hold aligned positions until user scrolls past 3*vh
           setEcosystemPhase(3);
           setScrollProgress(1.0);
         }
@@ -303,7 +299,7 @@ function App() {
               {/* Sticky container for viewport elements */}
               <div className="sticky top-0 h-screen w-full flex flex-col pointer-events-none">
 
-                {/* Top text overlay — visible and fixed during active phases */}
+                {/* Top text overlay — fixed to viewport so it appears the moment phase fires */}
                 <motion.div
                   className="absolute top-32 left-0 right-0 px-6 flex flex-col items-center text-center gap-3 pointer-events-none z-30"
                   animate={
@@ -340,8 +336,8 @@ function App() {
               <div className="space-y-3">
                 {[
                   { id: 'cogknit', name: 'Cogknit', tagline: 'Smart Learning Platform', logo: '/cogknitlogo.png' },
-                  { id: 'sip',     name: 'SIP',     tagline: 'Student Innovators Program', logo: '/siplogo.png' },
-                  { id: 'aic',     name: 'AIC',     tagline: 'Academia Industry Collaboration', logo: '/aiclogo.png' },
+                  { id: 'sip', name: 'SIP', tagline: 'Student Innovators Program', logo: '/siplogo.png' },
+                  { id: 'aic', name: 'AIC', tagline: 'Academia Industry Collaboration', logo: '/aiclogo.png' },
                 ].map(platform => (
                   <button
                     key={platform.id}
@@ -362,7 +358,7 @@ function App() {
             </div>
 
             {/* OUR IMPACT + CONTACT SECTIONS */}
-            <div className="w-full relative pointer-events-auto pt-12 pb-24 border-t border-white/5" style={{ background: 'linear-gradient(to top, #040507 0%, #040507 85%, transparent 100%)' }}>
+            <div className="w-full relative pointer-events-auto pt-12 pb-24 border-t border-white/5 bg-[#040507]">
 
               {/* OUR IMPACT Section */}
               <div id="about" className="max-w-6xl mx-auto px-6 py-20">
@@ -389,7 +385,7 @@ function App() {
 
                 {/* Partner logos row */}
                 <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-4 py-8 border-t border-white/5">
-                  {[6,7,8,9,10,11,12,13,14,15,16,17,18].map(n => (
+                  {[6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18].map(n => (
                     <img key={n} src={`/logos/${n}.png`} alt="" className="h-10 w-auto max-w-[100px] object-contain opacity-50 hover:opacity-90 transition-opacity duration-200" />
                   ))}
                   <img src="/siplogo.png" alt="SIP" className="h-10 w-auto max-w-[100px] object-contain opacity-50 hover:opacity-90 transition-opacity duration-200" />
