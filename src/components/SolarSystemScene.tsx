@@ -17,14 +17,13 @@ interface PlanetData {
   size: number;
   logoAspect?: number;
   glowSize?: number;
+  logoScale?: number;
 }
 
 const planets: PlanetData[] = [
-  { id: 'cogknit', name: 'Cogknit', tagline: 'Smart Learning Platform', position: new THREE.Vector3(5, 0.5, -2),  color: '#FE6D00', size: 0.65, logoAspect: 1.0,  glowSize: 0.65 },
-  // sip_logo.png is 213×136 → 1.57:1; glowSize boosted to match cogknit on screen (sits deeper in scene)
-  { id: 'sip',    name: 'SIP',    tagline: 'Strategic Integrations',    position: new THREE.Vector3(-5, -0.8, -4), color: '#FE6D00', size: 0.36, logoAspect: 1.57, glowSize: 1.10 },
-  // aic_logo.png is 241×133 → 1.81:1; furthest away so needs the biggest world-space glow
-  { id: 'aic',    name: 'AIC',    tagline: 'Youth Skill Incubation',    position: new THREE.Vector3(4, -4, -8),   color: '#FE6D00', size: 0.33, logoAspect: 1.81, glowSize: 1.60 }
+  { id: 'cogknit', name: 'Cogknit', tagline: 'Smart Learning Platform', position: new THREE.Vector3(5, 0.5, -2),  color: '#FE6D00', size: 0.65, logoAspect: 1.0,  glowSize: 0.65, logoScale: 1.0  },
+  { id: 'sip',    name: 'SIP',    tagline: 'Strategic Integrations',    position: new THREE.Vector3(-5, -0.8, -4), color: '#FE6D00', size: 0.70, logoAspect: 1.57, glowSize: 0.70, logoScale: 0.52 },
+  { id: 'aic',    name: 'AIC',    tagline: 'Youth Skill Incubation',    position: new THREE.Vector3(4, -4, -8),   color: '#FE6D00', size: 0.80, logoAspect: 1.81, glowSize: 0.80, logoScale: 0.44 }
 ];
 
 // Planet logo component — loads a real PNG and billboards it with a pulsing glow halo
@@ -34,10 +33,11 @@ const PlanetLogo: React.FC<{
   glowSize?: number;
   aspect?: number;
   opacity?: number;
+  logoScale?: number;
   onClick?: (e: any) => void;
   onPointerOver?: (e: any) => void;
   onPointerOut?: (e: any) => void;
-}> = ({ texturePath, size, glowSize, aspect = 1, opacity = 1, onClick, onPointerOver, onPointerOut }) => {
+}> = ({ texturePath, size, glowSize, aspect = 1, opacity = 1, logoScale = 1, onClick, onPointerOver, onPointerOut }) => {
   // glowSize defaults to size so existing callers are unchanged
   const gs = glowSize ?? size;
   const texture = useLoader(THREE.TextureLoader, texturePath);
@@ -123,8 +123,8 @@ const PlanetLogo: React.FC<{
         <planeGeometry args={[gs * 2.8, gs * 2.8]} />
         <meshBasicMaterial map={glowTextures.inner} transparent opacity={0.32} depthWrite={false} blending={THREE.AdditiveBlending} />
       </mesh>
-      {/* Logo — width scaled by aspect ratio so landscape logos aren't squished */}
-      <mesh ref={meshRef} scale={[size * 2 * aspect, size * 2, size * 2]}>
+      {/* Logo — logoScale shrinks the image inside the glow circle without changing the circle size */}
+      <mesh ref={meshRef} scale={[size * 2 * aspect * logoScale, size * 2 * logoScale, size * 2 * logoScale]}>
         <planeGeometry args={[1, 1]} />
         <meshBasicMaterial map={texture} transparent opacity={opacity} depthWrite={false} alphaTest={0.01} />
       </mesh>
@@ -655,6 +655,7 @@ const SceneContent: React.FC<{
                     size={planet.size}
                     glowSize={planet.glowSize ?? planet.size}
                     aspect={planet.logoAspect ?? 1}
+                    logoScale={planet.logoScale ?? 1}
                     opacity={
                       activePlatform === planet.id
                         ? Math.max(0, 1 - detailScrollY / 350)

@@ -89,55 +89,107 @@ const FADE_UP = {
   transition:  { duration: 0.8, ease: [0.16, 1, 0.3, 1] as const },
 };
 
-const ContactForm: React.FC<{ title: string }> = ({ title }) => (
-  <motion.section id="connect" className="scroll-mt-24 border-t border-white/5 pt-12 pb-12" {...FADE_UP}>
-    <span className="text-[#FD4400] text-[10px] font-semibold tracking-[0.25em] uppercase block mb-3">
-      Connect
-    </span>
-    <h2 className="font-serif text-xl md:text-3xl font-medium text-white mb-6">
-      Get Involved with {title}
-    </h2>
-    <div className="space-y-6">
-      <div className="space-y-3 text-white/75 text-sm">
-        <div className="flex items-center space-x-3 text-white/60">
-          <MapPin size={14} className="text-[#FD4400] shrink-0" />
-          <span>Kathmandu, Nepal</span>
+const ContactForm: React.FC<{ title: string }> = ({ title }) => {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [message, setMessage] = useState('');
+  const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setStatus('sending');
+    try {
+      const res = await fetch('https://formsubmit.co/ajax/abemaharjan@gmail.com', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({
+          name,
+          email,
+          message,
+          _subject: `[SUMS ${title}] New contact message`,
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setStatus('sent');
+        setName(''); setEmail(''); setMessage('');
+      } else {
+        setStatus('error');
+      }
+    } catch {
+      setStatus('error');
+    }
+  };
+
+  return (
+    <motion.section id="connect" className="scroll-mt-24 border-t border-white/5 pt-12 pb-12" {...FADE_UP}>
+      <span className="text-[#FD4400] text-[10px] font-semibold tracking-[0.25em] uppercase block mb-3">
+        Connect
+      </span>
+      <h2 className="font-serif text-xl md:text-3xl font-medium text-white mb-6">
+        Get Involved with {title}
+      </h2>
+      <div className="space-y-6">
+        <div className="space-y-3 text-white/75 text-sm">
+          <div className="flex items-center space-x-3 text-white/60">
+            <MapPin size={14} className="text-[#FD4400] shrink-0" />
+            <span>Kathmandu, Nepal</span>
+          </div>
+          <div className="flex items-center space-x-3 text-white/60">
+            <Phone size={14} className="text-[#FD4400] shrink-0" />
+            <span>+977 1-4400000</span>
+          </div>
+          <div className="flex items-center space-x-3 text-white/60">
+            <Mail size={14} className="text-[#FD4400] shrink-0" />
+            <span>info@sums.org.np</span>
+          </div>
         </div>
-        <div className="flex items-center space-x-3 text-white/60">
-          <Phone size={14} className="text-[#FD4400] shrink-0" />
-          <span>+977 1-4400000</span>
-        </div>
-        <div className="flex items-center space-x-3 text-white/60">
-          <Mail size={14} className="text-[#FD4400] shrink-0" />
-          <span>info@sums.org.np</span>
-        </div>
+        {status === 'sent' ? (
+          <div className="p-4 rounded border border-[#FD4400]/30 bg-[#FD4400]/10 text-[#FD4400] text-sm text-center">
+            Message sent! We'll be in touch soon.
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit} className="space-y-3">
+            <input
+              type="text"
+              placeholder="Your Name / Institution"
+              value={name}
+              onChange={e => setName(e.target.value)}
+              required
+              className="w-full bg-white/[0.03] border border-white/10 focus:border-[#FD4400]/70 px-4 py-3 rounded text-sm outline-none transition-all duration-300 text-white placeholder:text-white/30"
+            />
+            <input
+              type="email"
+              placeholder="Official Email Address"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              required
+              className="w-full bg-white/[0.03] border border-white/10 focus:border-[#FD4400]/70 px-4 py-3 rounded text-sm outline-none transition-all duration-300 text-white placeholder:text-white/30"
+            />
+            <textarea
+              rows={3}
+              placeholder="How can we help you?"
+              value={message}
+              onChange={e => setMessage(e.target.value)}
+              required
+              className="w-full bg-white/[0.03] border border-white/10 focus:border-[#FD4400]/70 px-4 py-3 rounded text-sm outline-none transition-all duration-300 text-white placeholder:text-white/30"
+            />
+            {status === 'error' && (
+              <p className="text-red-400 text-xs">Something went wrong. Please try again.</p>
+            )}
+            <button
+              type="submit"
+              disabled={status === 'sending'}
+              className="w-full bg-[#FD4400] hover:bg-[#FD4400]/90 disabled:opacity-60 text-white font-semibold text-xs uppercase tracking-wider py-3 rounded transition-all duration-300 cursor-pointer"
+            >
+              {status === 'sending' ? 'Sending…' : 'Send Message'}
+            </button>
+          </form>
+        )}
       </div>
-      <form onSubmit={e => e.preventDefault()} className="space-y-3">
-        <input
-          type="text"
-          placeholder="Your Name / Institution"
-          className="w-full bg-white/[0.03] border border-white/10 focus:border-[#FD4400]/70 px-4 py-3 rounded text-sm outline-none transition-all duration-300 text-white placeholder:text-white/30"
-        />
-        <input
-          type="email"
-          placeholder="Official Email Address"
-          className="w-full bg-white/[0.03] border border-white/10 focus:border-[#FD4400]/70 px-4 py-3 rounded text-sm outline-none transition-all duration-300 text-white placeholder:text-white/30"
-        />
-        <textarea
-          rows={3}
-          placeholder="How can we help you?"
-          className="w-full bg-white/[0.03] border border-white/10 focus:border-[#FD4400]/70 px-4 py-3 rounded text-sm outline-none transition-all duration-300 text-white placeholder:text-white/30"
-        />
-        <button
-          type="submit"
-          className="w-full bg-[#FD4400] hover:bg-[#FD4400]/90 text-white font-semibold text-xs uppercase tracking-wider py-3 rounded transition-all duration-300 cursor-pointer"
-        >
-          Send Message
-        </button>
-      </form>
-    </div>
-  </motion.section>
-);
+    </motion.section>
+  );
+};
 
 // ── AIC SECTIONS ──────────────────────────────────────────────────────────────
 const AicSections: React.FC = () => {
@@ -469,24 +521,27 @@ export const PlatformDetail: React.FC<PlatformDetailProps> = ({
     platformId === 'sip'     ? 'SIP' :
     'Cogknit';
 
+  const [validActiveSection, setValidActiveSection] = useState<string>(sections[0]?.id ?? 'overview');
+
+  // Reset to first section when switching platforms
   useEffect(() => {
-    const handleScroll = () => {
-      const scrollPos = window.scrollY + window.innerHeight * 0.4;
-      for (const section of sections) {
-        const el = document.getElementById(section.id);
-        if (el) {
-          const top = el.offsetTop;
-          const height = el.offsetHeight;
-          if (scrollPos >= top && scrollPos < top + height) {
-            onActiveSectionChange(section.id);
-            break;
-          }
-        }
+    setValidActiveSection(sections[0]?.id ?? 'overview');
+  }, [platformId]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Update active section based on scroll position
+  useEffect(() => {
+    const threshold = window.innerHeight * 0.4;
+    const ids = sectionLayout.map(s => s.id);
+    let current = ids[0];
+    for (const id of ids) {
+      const el = document.getElementById(id);
+      if (!el) continue;
+      if (el.getBoundingClientRect().top <= threshold) {
+        current = id;
       }
-    };
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [onActiveSectionChange, sections]);
+    }
+    setValidActiveSection(current);
+  }, [detailScrollY, platformId, sectionLayout]);
 
   const scrollToSection = (id: string) => {
     const el = document.getElementById(id);
@@ -520,7 +575,7 @@ export const PlatformDetail: React.FC<PlatformDetailProps> = ({
           style={{ scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' }}
         >
           {sections.map(sec => {
-            const isActive = activeSection === sec.id;
+            const isActive = validActiveSection === sec.id;
             return (
               <button
                 key={sec.id}
@@ -558,12 +613,11 @@ export const PlatformDetail: React.FC<PlatformDetailProps> = ({
         style={{ left: leftOffsetVal }}
         className="sticky top-0 h-screen w-0 flex items-center justify-center pointer-events-none z-20 transition-all duration-75 ease-out"
       >
-        {/* Dashed orbit ring */}
-        <div className="absolute w-[300px] h-[300px] md:w-[380px] md:h-[380px] rounded-full border border-dashed border-white/8" />
-
         {/* Center logo */}
-        <div className="absolute w-28 h-28 md:w-32 md:h-32 rounded-full border border-[#FD4400]/20 bg-[#040507]/90 flex items-center justify-center"
-          style={{ boxShadow: '0 0 32px rgba(253,68,0,0.12), inset 0 0 20px rgba(253,68,0,0.05)' }}>
+        <div
+          className="absolute w-28 h-28 md:w-32 md:h-32 rounded-full border border-[#FD4400]/20 bg-[#040507]/90 flex items-center justify-center z-10"
+          style={{ boxShadow: '0 0 32px rgba(253,68,0,0.12), inset 0 0 20px rgba(253,68,0,0.05)' }}
+        >
           <img
             src={logoPath}
             alt={platformTitle}
@@ -572,41 +626,90 @@ export const PlatformDetail: React.FC<PlatformDetailProps> = ({
           />
         </div>
 
-        {/* Circular orbit nav buttons */}
-        <div className="absolute w-[300px] h-[300px] md:w-[380px] md:h-[380px]">
+        {/* Solar system SVG nav — lines radiating from center logo to section dots */}
+        <svg
+          className="absolute w-[300px] h-[300px] md:w-[380px] md:h-[380px]"
+          viewBox="-190 -190 380 380"
+          style={{ pointerEvents: 'none', overflow: 'visible' }}
+        >
           {sectionLayout.map(sec => {
-            const radians = (sec.angle * Math.PI) / 180;
-            const radius = 175;
-            const x = Math.cos(radians) * radius;
-            const y = Math.sin(radians) * radius;
-            const isActive = activeSection === sec.id;
+            const isActive = validActiveSection === sec.id;
+            const rad = (sec.angle * Math.PI) / 180;
+            const r = 175;
+            const dotX = r * Math.cos(rad);
+            const dotY = r * Math.sin(rad);
+            const ux = Math.cos(rad);
+            const uy = Math.sin(rad);
+            const centerEdge = 66;
+            const dotR = 4;
+
+            const x1 = ux * centerEdge;
+            const y1 = uy * centerEdge;
+            const x2 = dotX - ux * (dotR + 2);
+            const y2 = dotY - uy * (dotR + 2);
+
+            const labelR = r + 18;
+            const lx = Math.cos(rad) * labelR;
+            const ly = Math.sin(rad) * labelR;
+
+            const ta =
+              sec.angle >= 315 || sec.angle <= 45 ? 'start' :
+              sec.angle > 135 && sec.angle < 225  ? 'end'   : 'middle';
+
+            const db =
+              sec.angle > 225 && sec.angle < 315 ? 'auto'    :
+              sec.angle > 45  && sec.angle < 135 ? 'hanging' : 'central';
+
+            const glow = 'drop-shadow(0 0 4px #FE6D00) drop-shadow(0 0 8px rgba(254,109,0,0.6))';
 
             return (
-              <button
+              <g
                 key={sec.id}
                 onClick={() => scrollToSection(sec.id)}
-                style={{
-                  left: `calc(50% + ${x}px)`,
-                  top:  `calc(50% + ${y}px)`,
-                  transform: 'translate(-50%, -50%)',
-                }}
-                className={`absolute pointer-events-auto z-40 px-3 py-1.5 rounded-full text-[10px] font-semibold uppercase tracking-wider transition-all duration-300 cursor-pointer whitespace-nowrap ${
-                  isActive
-                    ? 'bg-[#FD4400] text-white border border-[#FD4400] scale-110 shadow-[0_0_12px_rgba(253,68,0,0.5)]'
-                    : 'bg-[#040507]/90 text-white/50 border border-white/10 hover:border-[#FD4400]/40 hover:text-white'
-                }`}
+                style={{ cursor: 'pointer', pointerEvents: 'all' }}
               >
-                {isActive && (
-                  <span
-                    className="absolute inset-0 rounded-full bg-[#FD4400]/45 animate-ping pointer-events-none"
-                    style={{ animationDuration: '2s' }}
-                  />
-                )}
-                {sec.label}
-              </button>
+                {/* Connecting line */}
+                <line
+                  x1={x1} y1={y1} x2={x2} y2={y2}
+                  stroke={isActive ? '#FE6D00' : 'rgba(255,255,255,0.12)'}
+                  strokeWidth={isActive ? 2 : 1}
+                  style={{
+                    transition: 'stroke 0.5s ease, stroke-width 0.5s ease, filter 0.5s ease',
+                    filter: isActive ? glow : 'none',
+                  }}
+                />
+                {/* Section dot */}
+                <circle
+                  cx={dotX} cy={dotY} r={dotR}
+                  fill={isActive ? '#FE6D00' : 'rgba(255,120,0,0.45)'}
+                  style={{
+                    transition: 'fill 0.5s ease, filter 0.5s ease',
+                    filter: isActive ? glow : 'none',
+                  }}
+                />
+                {/* Label */}
+                <text
+                  x={lx} y={ly}
+                  textAnchor={ta}
+                  dominantBaseline={db}
+                  fontSize="9.5"
+                  fontFamily="'Space Grotesk', sans-serif"
+                  fontWeight="600"
+                  fill={isActive ? '#FE6D00' : 'rgba(255,255,255,0.35)'}
+                  style={{
+                    letterSpacing: '0.14em',
+                    textTransform: 'uppercase',
+                    transition: 'fill 0.5s ease',
+                  }}
+                >
+                  {sec.label}
+                </text>
+                {/* Transparent hit area around dot */}
+                <circle cx={dotX} cy={dotY} r={24} fill="transparent" style={{ pointerEvents: 'all' }} />
+              </g>
             );
           })}
-        </div>
+        </svg>
       </div>
 
       {/* Scrollable content panel */}
