@@ -69,13 +69,13 @@ export const SolutionsSection: React.FC = () => {
         {/* ── Full-Width Bridge Scene — desktop only ───────────────── */}
         <div className="hidden md:block -mt-28 relative w-full flex flex-col justify-end" style={{ height: 480 }}>
 
-          {/* ── Tools-pile image — sits on TOP of left cliff edge ── */}
+          {/* ── Tools-pile image — sits flush on LEFT cliff surface ── */}
           <motion.div
             initial={{ opacity: 0, y: 15 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
             className="absolute z-20 rounded-xl overflow-hidden"
-            style={{ left: '0%', bottom: '210px', width: '26%', background: 'rgba(4,5,7,0.4)', backdropFilter: 'blur(2px)' }}
+            style={{ left: '0%', bottom: '223px', width: '26%', background: 'rgba(10,11,14,0.6)' }}
           >
             <img
               src="/tools-pile-orange-2.png"
@@ -85,13 +85,13 @@ export const SolutionsSection: React.FC = () => {
             />
           </motion.div>
 
-          {/* ── Outcome image — sits on TOP of right cliff edge ── */}
+          {/* ── Outcome image — sits flush on RIGHT cliff surface ── */}
           <motion.div
             initial={{ opacity: 0, y: 15 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
             className="absolute z-20 rounded-xl overflow-hidden"
-            style={{ right: '0%', bottom: '210px', width: '22%', background: 'rgba(4,5,7,0.4)', backdropFilter: 'blur(2px)' }}
+            style={{ right: '0%', bottom: '223px', width: '22%', background: 'rgba(10,11,14,0.6)' }}
           >
             <img
               src="/target-diagram-orange.png"
@@ -101,7 +101,7 @@ export const SolutionsSection: React.FC = () => {
             />
           </motion.div>
 
-          {/* ── SVG Bridge — cliffs + towers + cables + broken gap ── */}
+          {/* ── SVG Bridge — flat cliffs + towers + cables + broken gap ── */}
           <motion.svg
             viewBox="0 0 1200 340"
             className="absolute inset-x-0 bottom-0 w-full select-none"
@@ -112,60 +112,69 @@ export const SolutionsSection: React.FC = () => {
             preserveAspectRatio="none"
           >
             <defs>
-              {/* Orange cable glow filter */}
               <filter id="cable-glow" x="-20%" y="-20%" width="140%" height="140%">
-                <feGaussianBlur stdDeviation="4" result="blur" />
+                <feGaussianBlur stdDeviation="3.5" result="blur" />
                 <feMerge>
                   <feMergeNode in="blur" />
                   <feMergeNode in="SourceGraphic" />
                 </feMerge>
               </filter>
-              {/* Cliff gradient: darker at bottom */}
               <linearGradient id="cliff-grad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#14161f" />
+                <stop offset="0%" stopColor="#16182480" />
+                <stop offset="30%" stopColor="#13151e" />
                 <stop offset="100%" stopColor="#0a0b0e" />
               </linearGradient>
+              <linearGradient id="abyss-grad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#000000" stopOpacity="0" />
+                <stop offset="100%" stopColor="#040507" stopOpacity="1" />
+              </linearGradient>
+              <radialGradient id="gap-glow" cx="50%" cy="5%" r="65%">
+                <stop offset="0%" stopColor="rgba(255,92,0,0.10)" />
+                <stop offset="100%" stopColor="rgba(0,0,0,0)" />
+              </radialGradient>
             </defs>
 
-            {/* ── LEFT CLIFF body (wider, from edge to ~420) ── */}
+            {/* ── LEFT CLIFF — flat top at y=110 ── */}
             <motion.path
-              d="M -10,140 L 400,110 L 360,340 L -10,340 Z"
+              d="M -10,110 L 422,110 L 380,340 L -10,340 Z"
               fill="url(#cliff-grad)"
-              stroke="rgba(255,255,255,0.07)"
-              strokeWidth="1.5"
+              stroke="none"
               initial={{ x: -80, opacity: 0 }}
               animate={isInView ? { x: 0, opacity: 1 } : {}}
               transition={{ duration: 0.9, ease: 'easeOut' }}
             />
 
-            {/* ── RIGHT CLIFF body (wider, from ~800 to edge) ── */}
+            {/* ── RIGHT CLIFF — flat top at y=110 ── */}
             <motion.path
-              d="M 1210,140 L 800,110 L 840,340 L 1210,340 Z"
+              d="M 1210,110 L 778,110 L 820,340 L 1210,340 Z"
               fill="url(#cliff-grad)"
-              stroke="rgba(255,255,255,0.07)"
-              strokeWidth="1.5"
+              stroke="none"
               initial={{ x: 80, opacity: 0 }}
               animate={isInView ? { x: 0, opacity: 1 } : {}}
               transition={{ duration: 0.9, ease: 'easeOut' }}
             />
 
-            {/* ── Left cliff top surface ── */}
+            {/* ── Left cliff top edge line ── */}
             <motion.line
-              x1="-10" y1="110" x2="400" y2="110"
-              stroke="rgba(255,255,255,0.18)" strokeWidth="3"
+              x1="-10" y1="110" x2="422" y2="110"
+              stroke="rgba(255,255,255,0.22)" strokeWidth="2"
               initial={{ pathLength: 0, opacity: 0 }}
               animate={isInView ? { pathLength: 1, opacity: 1 } : {}}
               transition={{ delay: 0.5, duration: 0.6 }}
             />
 
-            {/* ── Right cliff top surface ── */}
+            {/* ── Right cliff top edge line ── */}
             <motion.line
-              x1="800" y1="110" x2="1210" y2="110"
-              stroke="rgba(255,255,255,0.18)" strokeWidth="3"
+              x1="778" y1="110" x2="1210" y2="110"
+              stroke="rgba(255,255,255,0.22)" strokeWidth="2"
               initial={{ pathLength: 0, opacity: 0 }}
               animate={isInView ? { pathLength: 1, opacity: 1 } : {}}
               transition={{ delay: 0.5, duration: 0.6 }}
             />
+
+            {/* ── Abyss / gap darkness ── */}
+            <rect x="422" y="90" width="356" height="250" fill="url(#abyss-grad)" />
+            <rect x="422" y="100" width="356" height="200" fill="url(#gap-glow)" />
 
             {/* ── Left Tower ── */}
             <motion.g
@@ -173,13 +182,12 @@ export const SolutionsSection: React.FC = () => {
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: 0.3, duration: 0.7 }}
             >
-              <rect x="386" y="20" width="20" height="90" fill="#0d0e14" stroke="rgba(255,255,255,0.35)" strokeWidth="2" />
-              {/* Cross-beams */}
-              <line x1="386" y1="44" x2="406" y2="44" stroke="rgba(255,255,255,0.25)" strokeWidth="2" />
-              <line x1="386" y1="64" x2="406" y2="64" stroke="rgba(255,255,255,0.25)" strokeWidth="2" />
-              <line x1="386" y1="84" x2="406" y2="84" stroke="rgba(255,255,255,0.25)" strokeWidth="2" />
-              {/* Tower cap */}
-              <rect x="382" y="16" width="28" height="6" fill="rgba(255,92,0,0.6)" rx="1" />
+              <rect x="400" y="12" width="22" height="98" fill="#0d0f18" stroke="rgba(255,255,255,0.32)" strokeWidth="1.5" />
+              <line x1="400" y1="36" x2="422" y2="36" stroke="rgba(255,255,255,0.22)" strokeWidth="1.5" />
+              <line x1="400" y1="56" x2="422" y2="56" stroke="rgba(255,255,255,0.22)" strokeWidth="1.5" />
+              <line x1="400" y1="76" x2="422" y2="76" stroke="rgba(255,255,255,0.22)" strokeWidth="1.5" />
+              <rect x="395" y="7" width="32" height="7" fill="rgba(255,92,0,0.65)" rx="1" />
+              <rect x="402" y="3" width="18" height="6" fill="rgba(255,92,0,0.40)" rx="1" />
             </motion.g>
 
             {/* ── Right Tower ── */}
@@ -188,181 +196,132 @@ export const SolutionsSection: React.FC = () => {
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: 0.3, duration: 0.7 }}
             >
-              <rect x="794" y="20" width="20" height="90" fill="#0d0e14" stroke="rgba(255,255,255,0.35)" strokeWidth="2" />
-              <line x1="794" y1="44" x2="814" y2="44" stroke="rgba(255,255,255,0.25)" strokeWidth="2" />
-              <line x1="794" y1="64" x2="814" y2="64" stroke="rgba(255,255,255,0.25)" strokeWidth="2" />
-              <line x1="794" y1="84" x2="814" y2="84" stroke="rgba(255,255,255,0.25)" strokeWidth="2" />
-              <rect x="790" y="16" width="28" height="6" fill="rgba(255,92,0,0.6)" rx="1" />
+              <rect x="778" y="12" width="22" height="98" fill="#0d0f18" stroke="rgba(255,255,255,0.32)" strokeWidth="1.5" />
+              <line x1="778" y1="36" x2="800" y2="36" stroke="rgba(255,255,255,0.22)" strokeWidth="1.5" />
+              <line x1="778" y1="56" x2="800" y2="56" stroke="rgba(255,255,255,0.22)" strokeWidth="1.5" />
+              <line x1="778" y1="76" x2="800" y2="76" stroke="rgba(255,255,255,0.22)" strokeWidth="1.5" />
+              <rect x="773" y="7" width="32" height="7" fill="rgba(255,92,0,0.65)" rx="1" />
+              <rect x="780" y="3" width="18" height="6" fill="rgba(255,92,0,0.40)" rx="1" />
             </motion.g>
 
-            {/* ── Left Diagonal Support Pillar (under the deck) ── */}
+            {/* ── Left Diagonal Support Pillar ── */}
             <motion.path
-              d="M 382,240 L 460,140 L 472,146 L 392,246 Z"
-              fill="#161822" stroke="rgba(255,255,255,0.1)" strokeWidth="1"
+              d="M 393,242 L 468,132 L 480,138 L 403,248 Z"
+              fill="#161822" stroke="rgba(255,255,255,0.08)" strokeWidth="1"
               initial={{ opacity: 0 }}
               animate={isInView ? { opacity: 1 } : {}}
               transition={{ delay: 0.5, duration: 0.7 }}
             />
-            <line x1="460" y1="140" x2="382" y2="240" stroke="#FF5C00" strokeWidth="1.5" opacity="0.4" />
+            <line x1="468" y1="132" x2="393" y2="242" stroke="#FF5C00" strokeWidth="1.2" opacity="0.30" />
 
-            {/* ── Right Diagonal Support Pillar (under the deck) ── */}
+            {/* ── Right Diagonal Support Pillar ── */}
             <motion.path
-              d="M 818,240 L 740,140 L 728,146 L 808,246 Z"
-              fill="#161822" stroke="rgba(255,255,255,0.1)" strokeWidth="1"
+              d="M 807,242 L 732,132 L 720,138 L 797,248 Z"
+              fill="#161822" stroke="rgba(255,255,255,0.08)" strokeWidth="1"
               initial={{ opacity: 0 }}
               animate={isInView ? { opacity: 1 } : {}}
               transition={{ delay: 0.5, duration: 0.7 }}
             />
-            <line x1="740" y1="140" x2="818" y2="240" stroke="#FF5C00" strokeWidth="1.5" opacity="0.4" />
+            <line x1="732" y1="132" x2="807" y2="242" stroke="#FF5C00" strokeWidth="1.2" opacity="0.30" />
 
-            {/* ── Left Thick Tilted Deck (broken concrete) ── */}
+            {/* ── Left Deck — from cliff edge into gap ── */}
             <motion.path
-              d="M 400,110 L 550,168 L 546,188 L 400,128 Z"
-              fill="#1c1e27" stroke="rgba(255,255,255,0.15)" strokeWidth="1.5"
+              d="M 422,110 L 572,166 L 568,188 L 422,130 Z"
+              fill="#1c1e27" stroke="rgba(255,255,255,0.13)" strokeWidth="1.2"
               initial={{ pathLength: 0 }}
               animate={isInView ? { pathLength: 1 } : {}}
               transition={{ delay: 0.6, duration: 0.8 }}
             />
-            {/* Highlight orange top road line */}
-            <line x1="400" y1="110" x2="550" y2="168" stroke="#FF5C00" strokeWidth="3.5" />
+            <line x1="422" y1="110" x2="572" y2="166" stroke="#FF5C00" strokeWidth="3.5" />
 
-            {/* ── Right Thick Tilted Deck (broken concrete) ── */}
+            {/* ── Right Deck — from cliff edge into gap ── */}
             <motion.path
-              d="M 800,110 L 650,168 L 654,188 L 800,128 Z"
-              fill="#1c1e27" stroke="rgba(255,255,255,0.15)" strokeWidth="1.5"
+              d="M 778,110 L 628,166 L 632,188 L 778,130 Z"
+              fill="#1c1e27" stroke="rgba(255,255,255,0.13)" strokeWidth="1.2"
               initial={{ pathLength: 0 }}
               animate={isInView ? { pathLength: 1 } : {}}
               transition={{ delay: 0.6, duration: 0.8 }}
             />
-            {/* Highlight orange top road line */}
-            <line x1="800" y1="110" x2="650" y2="168" stroke="#FF5C00" strokeWidth="3.5" />
+            <line x1="778" y1="110" x2="628" y2="166" stroke="#FF5C00" strokeWidth="3.5" />
 
-            {/* Falling concrete chunks / cracking elements */}
+            {/* ── Falling concrete debris at broken ends ── */}
             <motion.g
               initial={{ opacity: 0, y: -10 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: 1.1, duration: 0.6 }}
             >
-              {/* Chunk 1 */}
-              <polygon points="572,182 582,177 586,187 576,191" fill="#1c1e27" stroke="#FF5C00" strokeWidth="0.8" />
-              {/* Chunk 2 */}
-              <polygon points="614,192 622,184 626,196 618,201" fill="#1c1e27" stroke="rgba(255,255,255,0.2)" strokeWidth="0.8" />
-              {/* Chunk 3 */}
-              <polygon points="598,212 607,208 605,218 596,217" fill="#1c1e27" stroke="#FF5C00" strokeWidth="0.8" />
+              <polygon points="574,178 586,172 590,184 578,190" fill="#1c1e27" stroke="#FF5C00" strokeWidth="0.8" />
+              <polygon points="618,190 628,182 632,196 622,200" fill="#1c1e27" stroke="rgba(255,255,255,0.2)" strokeWidth="0.8" />
+              <polygon points="600,212 610,206 608,218 598,218" fill="#1c1e27" stroke="#FF5C00" strokeWidth="0.8" />
+              <polygon points="588,204 595,198 598,208 591,212" fill="#1a1c26" stroke="rgba(255,92,0,0.35)" strokeWidth="0.6" />
             </motion.g>
 
-            {/* ── Main suspension cables (outer, from edges to tower tops) ── */}
+            {/* ── Left snapped cable (tower top → broken end) ── */}
             <motion.path
-              d="M -10,70 Q 200,40 396,22"
-              fill="none" stroke="#FF5C00" strokeWidth="3"
-              filter="url(#cable-glow)"
-              initial={{ pathLength: 0 }} animate={isInView ? { pathLength: 1 } : {}}
-              transition={{ delay: 0.5, duration: 0.8 }}
-            />
-            <motion.path
-              d="M 1210,70 Q 1010,40 804,22"
-              fill="none" stroke="#FF5C00" strokeWidth="3"
-              filter="url(#cable-glow)"
-              initial={{ pathLength: 0 }} animate={isInView ? { pathLength: 1 } : {}}
-              transition={{ delay: 0.5, duration: 0.8 }}
-            />
-
-            {/* ── Snapped/Frayed cables dangling in the gap ── */}
-            {/* Left snapped piece */}
-            <motion.path
-              d="M 396,22 Q 490,120 540,168"
+              d="M 411,14 Q 506,116 564,166"
               fill="none" stroke="#FF5C00" strokeWidth="2.5" strokeDasharray="5 3"
               filter="url(#cable-glow)"
               initial={{ pathLength: 0 }} animate={isInView ? { pathLength: 1 } : {}}
               transition={{ delay: 0.8, duration: 0.7 }}
             />
-            {/* Frayed wire strands at the end of left snapped cable */}
             <motion.path
-              d="M 540,168 Q 546,178 550,188 M 540,168 Q 537,180 538,192"
+              d="M 564,166 Q 570,178 574,190 M 564,166 Q 560,180 558,192"
               fill="none" stroke="#FF5C00" strokeWidth="1.2"
               initial={{ opacity: 0 }} animate={isInView ? { opacity: 0.75 } : {}}
               transition={{ delay: 1.1, duration: 0.4 }}
             />
 
-            {/* Right snapped piece */}
+            {/* ── Right snapped cable (tower top → broken end) ── */}
             <motion.path
-              d="M 804,22 Q 710,120 660,168"
+              d="M 789,14 Q 694,116 636,166"
               fill="none" stroke="#FF5C00" strokeWidth="2.5" strokeDasharray="5 3"
               filter="url(#cable-glow)"
               initial={{ pathLength: 0 }} animate={isInView ? { pathLength: 1 } : {}}
               transition={{ delay: 0.8, duration: 0.7 }}
             />
-            {/* Frayed wire strands at the end of right snapped cable */}
             <motion.path
-              d="M 660,168 Q 654,178 650,188 M 660,168 Q 663,180 662,192"
+              d="M 636,166 Q 630,178 626,190 M 636,166 Q 640,180 642,192"
               fill="none" stroke="#FF5C00" strokeWidth="1.2"
               initial={{ opacity: 0 }} animate={isInView ? { opacity: 0.75 } : {}}
               transition={{ delay: 1.1, duration: 0.4 }}
             />
 
-            {/* ── Left suspenders (vertical hangers from left cable to tilted road) ── */}
+            {/* ── Left suspenders ── */}
             <motion.g
               initial={{ opacity: 0 }} animate={isInView ? { opacity: 1 } : {}}
               transition={{ delay: 0.95 }}
-              stroke="rgba(255,255,255,0.13)" strokeWidth="1.2"
+              stroke="rgba(255,255,255,0.12)" strokeWidth="1.1"
             >
-              <line x1="410" y1="28" x2="410" y2="114" />
-              <line x1="430" y1="42" x2="430" y2="122" />
-              <line x1="450" y1="56" x2="450" y2="130" />
-              <line x1="470" y1="70" x2="470" y2="138" />
-              <line x1="490" y1="84" x2="490" y2="146" />
-              <line x1="510" y1="98" x2="510" y2="154" />
+              <line x1="420" y1="18" x2="420" y2="112" />
+              <line x1="440" y1="32" x2="440" y2="120" />
+              <line x1="460" y1="48" x2="460" y2="128" />
+              <line x1="480" y1="64" x2="480" y2="136" />
+              <line x1="500" y1="82" x2="500" y2="144" />
+              <line x1="520" y1="100" x2="520" y2="152" />
             </motion.g>
 
             {/* ── Right suspenders ── */}
             <motion.g
               initial={{ opacity: 0 }} animate={isInView ? { opacity: 1 } : {}}
               transition={{ delay: 0.95 }}
-              stroke="rgba(255,255,255,0.13)" strokeWidth="1.2"
+              stroke="rgba(255,255,255,0.12)" strokeWidth="1.1"
             >
-              <line x1="790" y1="28" x2="790" y2="114" />
-              <line x1="770" y1="42" x2="770" y2="122" />
-              <line x1="750" y1="56" x2="750" y2="130" />
-              <line x1="730" y1="70" x2="730" y2="138" />
-              <line x1="710" y1="84" x2="710" y2="146" />
-              <line x1="690" y1="98" x2="690" y2="154" />
+              <line x1="780" y1="18" x2="780" y2="112" />
+              <line x1="760" y1="32" x2="760" y2="120" />
+              <line x1="740" y1="48" x2="740" y2="128" />
+              <line x1="720" y1="64" x2="720" y2="136" />
+              <line x1="700" y1="82" x2="700" y2="144" />
+              <line x1="680" y1="100" x2="680" y2="152" />
             </motion.g>
 
-            {/* ── Systems are not connected text banner inside the broken gap ── */}
-            {/* <motion.g
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={isInView ? { opacity: 1, scale: 1 } : {}}
-              transition={{ delay: 1.0, duration: 0.6 }}
-            >
-              <rect
-                x="460" y="128" width="280" height="28"
-                rx="6"
-                fill="#040507"
-                stroke="rgba(255,92,0,0.3)"
-                strokeWidth="1"
-              />
-              <text
-                x="600" y="147"
-                textAnchor="middle"
-                fill="#FF5C00"
-                fontSize="10"
-                fontWeight="900"
-                letterSpacing="2"
-                fontFamily="Poppins, sans-serif"
-                style={{ textShadow: '0 0 10px rgba(255,92,0,0.35)' }}
-              >
-                SYSTEMS ARE NOT CONNECTED
-              </text>
-            </motion.g> */}
-
-            {/* ── KNOWING heading + subtext inside LEFT cliff ── */}
+            {/* ── KNOWING — inside LEFT cliff ── */}
             <motion.g
               initial={{ opacity: 0 }}
               animate={isInView ? { opacity: 1 } : {}}
               transition={{ delay: 0.6, duration: 0.7 }}
             >
               <text
-                x="175" y="205"
+                x="185" y="200"
                 textAnchor="middle"
                 fill="#FF5C00"
                 fontSize="26"
@@ -373,35 +332,35 @@ export const SolutionsSection: React.FC = () => {
                 KNOWING
               </text>
               <text
-                x="175" y="232"
+                x="185" y="226"
                 textAnchor="middle"
-                fill="rgba(255,255,255,0.85)"
-                fontSize="14"
+                fill="rgba(255,255,255,0.82)"
+                fontSize="13"
                 fontFamily="Poppins, sans-serif"
-                fontWeight="700"
+                fontWeight="600"
               >
                 Thousands of tools,
               </text>
               <text
-                x="175" y="252"
+                x="185" y="245"
                 textAnchor="middle"
-                fill="rgba(255,255,255,0.85)"
-                fontSize="14"
+                fill="rgba(255,255,255,0.82)"
+                fontSize="13"
                 fontFamily="Poppins, sans-serif"
-                fontWeight="700"
+                fontWeight="600"
               >
                 workshops, and trainings
               </text>
             </motion.g>
 
-            {/* ── APPLYING heading + subtext inside RIGHT cliff ── */}
+            {/* ── APPLYING — inside RIGHT cliff ── */}
             <motion.g
               initial={{ opacity: 0 }}
               animate={isInView ? { opacity: 1 } : {}}
               transition={{ delay: 0.6, duration: 0.7 }}
             >
               <text
-                x="1025" y="205"
+                x="1015" y="200"
                 textAnchor="middle"
                 fill="#FF5C00"
                 fontSize="26"
@@ -412,22 +371,22 @@ export const SolutionsSection: React.FC = () => {
                 APPLYING
               </text>
               <text
-                x="1025" y="232"
+                x="1015" y="226"
                 textAnchor="middle"
-                fill="rgba(255,255,255,0.85)"
-                fontSize="14"
+                fill="rgba(255,255,255,0.82)"
+                fontSize="13"
                 fontFamily="Poppins, sans-serif"
-                fontWeight="700"
+                fontWeight="600"
               >
                 Fundamental Change
               </text>
               <text
-                x="1025" y="252"
+                x="1015" y="245"
                 textAnchor="middle"
-                fill="rgba(255,255,255,0.85)"
-                fontSize="14"
+                fill="rgba(255,255,255,0.82)"
+                fontSize="13"
                 fontFamily="Poppins, sans-serif"
-                fontWeight="700"
+                fontWeight="600"
               >
                 in Outcomes
               </text>

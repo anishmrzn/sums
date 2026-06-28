@@ -5,7 +5,7 @@ import { Download, X, ChevronLeft, ChevronRight } from 'lucide-react';
 const caseStudies = [
   {
     tag: 'PRE-INCUBATION',
-    title: 'Saransa Catalyst Program',
+    title: 'Texas Academia Industry Collaboration',
     description:
       'A structured pre-incubation catalyst program designed to accelerate early-stage student ventures through mentorship, market validation, and institutional support.',
     gradient: 'linear-gradient(145deg, #1a0400 0%, #7c2400 45%, #FF5C00 100%)',
