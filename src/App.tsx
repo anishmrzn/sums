@@ -383,6 +383,30 @@ function App() {
                   ))}
                 </div>
 
+                {/* Flags strip — spans full width above both columns */}
+                <div className="border-t border-white/5 pt-10 mb-10">
+                  <p className="text-center text-white/30 text-[10px] font-bold tracking-[0.35em] uppercase mb-5">Countries</p>
+                  <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3">
+                    {[
+                      { flag: '🇫🇮', name: 'Finland' },
+                      { flag: '🇵🇹', name: 'Portugal' },
+                      { flag: '🇫🇷', name: 'France' },
+                      { flag: '🇬🇧', name: 'UK' },
+                      { flag: '🇸🇪', name: 'Sweden' },
+                      { flag: '🇳🇵', name: 'Nepal' },
+                      { flag: '🇮🇳', name: 'India' },
+                      { flag: '🇧🇹', name: 'Bhutan' },
+                      { flag: '🇱🇹', name: 'Lithuania' },
+                      { flag: '🇳🇱', name: 'Netherlands' },
+                    ].map(({ flag, name }) => (
+                      <div key={name} className="flex flex-col items-center gap-1 group">
+                        <span className="text-3xl leading-none">{flag}</span>
+                        <span className="text-white/35 text-[9px] font-semibold tracking-widest uppercase group-hover:text-white/70 transition-colors duration-200">{name}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
                 {/* National | International — side by side */}
                 <div className="border-t border-white/5 pt-10 grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-0 md:divide-x md:divide-white/5">
 
@@ -390,7 +414,7 @@ function App() {
                   <div className="flex flex-col items-center gap-6 md:pr-10">
                     <p className="text-white/30 text-[10px] font-bold tracking-[0.35em] uppercase">National Partners</p>
                     <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-4">
-                      {[6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18].map(n => (
+                      {[6, 7, 8, 9, 11, 13, 14, 15, 16, 17, 18].map(n => (
                         <img key={n} src={`/logos/${n}.png`} alt="" className="h-9 w-auto max-w-[90px] object-contain opacity-50 hover:opacity-90 transition-opacity duration-200" />
                       ))}
                       <img src="/siplogo.png" alt="SIP" className="h-9 w-auto max-w-[90px] object-contain opacity-50 hover:opacity-90 transition-opacity duration-200" />
@@ -399,27 +423,13 @@ function App() {
                     </div>
                   </div>
 
-                  {/* Right — International Presence */}
+                  {/* Right — International Partners */}
                   <div className="flex flex-col items-center gap-6 md:pl-10">
-                    <p className="text-white/30 text-[10px] font-bold tracking-[0.35em] uppercase">International Presence</p>
-                    <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-4">
-                      {[
-                        { flag: '🇫🇮', name: 'Finland' },
-                        { flag: '🇵🇹', name: 'Portugal' },
-                        { flag: '🇫🇷', name: 'France' },
-                        { flag: '🇬🇧', name: 'UK' },
-                        { flag: '🇸🇪', name: 'Sweden' },
-                        { flag: '🇳🇵', name: 'Nepal' },
-                        { flag: '🇮🇳', name: 'India' },
-                        { flag: '🇧🇹', name: 'Bhutan' },
-                        { flag: '🇱🇹', name: 'Lithuania' },
-                        { flag: '🇳🇱', name: 'Netherlands' },
-                      ].map(({ flag, name }) => (
-                        <div key={name} className="flex flex-col items-center gap-1 group">
-                          <span className="text-3xl leading-none">{flag}</span>
-                          <span className="text-white/40 text-[9px] font-semibold tracking-widest uppercase group-hover:text-white/70 transition-colors duration-200">{name}</span>
-                        </div>
-                      ))}
+                    <p className="text-white/30 text-[10px] font-bold tracking-[0.35em] uppercase">International Partners</p>
+                    <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-4">
+                      <img src="/int'l/cogknitlogo.png" alt="Cogknit" className="h-9 w-auto max-w-[100px] object-contain opacity-50 hover:opacity-90 transition-opacity duration-200" />
+                      <img src="/int'l/10.png" alt="Rihimaki" className="h-9 w-auto max-w-[100px] object-contain opacity-50 hover:opacity-90 transition-opacity duration-200" />
+                      <img src="/int'l/12.png" alt="Xvector" className="h-9 w-auto max-w-[100px] object-contain opacity-50 hover:opacity-90 transition-opacity duration-200" />
                     </div>
                   </div>
 
@@ -431,114 +441,114 @@ function App() {
               <CaseStudiesSection />
 
               {/* Contact Section */}
-              <div id="contact" className="max-w-6xl mx-auto px-6 py-16">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-12 bg-[#040507]/80 p-10 rounded-2xl border border-white/5 backdrop-blur-sm">
+              <div id="contact" className="mmx-auto px-20 md:px-28 py-20">
+                <div className="grid grid-cols-1 md:grid-cols-[1fr_1.3fr_2.7fr] gap-6 items-start">
 
-                  {/* Left: Info */}
-                  <div className="flex flex-col justify-between">
-                    <div>
-                      <span className="text-[#FF5C00] text-xs font-semibold tracking-widest uppercase block mb-4">
-                        Get In Touch
-                      </span>
-                      <h2 className="font-sans font-black text-4xl md:text-5xl text-white leading-tight mb-6">
-                        Integrate SUMS<br />into your<br />Organization
-                      </h2>
-                      <p className="text-white/50 text-sm leading-relaxed mb-8">
-                        Empower students, faculties, and business partners through structured workflows.
-                      </p>
-                    </div>
-
-                    <div className="space-y-4">
-                      <div className="flex items-center gap-3 text-white/70 text-sm">
-                        <MapPin size={16} className="text-[#FF5C00] flex-shrink-0" />
-                        <span>Kathmandu, Nepal</span>
+                  {/* Card 1 — Organizing Committee */}
+                  <div className="rounded-2xl border border-white/8 bg-white/[0.03] p-9 flex flex-col gap-8">
+                    <h3 className="font-bold text-white text-2xl tracking-tight">Organizing Committee</h3>
+                    <div className="flex flex-col gap-6">
+                      <div className="flex items-start gap-4 text-white/70">
+                        <MapPin size={20} className="text-[#FF5C00] flex-shrink-0 mt-0.5" />
+                        <span className="text-base">Kathmandu, Nepal</span>
                       </div>
-                      <div className="flex items-center gap-3 text-white/70 text-sm">
-                        <Mail size={16} className="text-[#FF5C00] flex-shrink-0" />
-                        <a href="mailto:ujwal@sums.org.np" className="hover:text-white transition-colors">ujwal@sums.org.np</a>
+                      <div className="flex items-start gap-4 text-white/70">
+                        <Mail size={20} className="text-[#FF5C00] flex-shrink-0 mt-0.5" />
+                        <a href="mailto:ujwal@sums.org.np" className="text-base hover:text-white transition-colors break-all">ujwal@sums.org.np</a>
                       </div>
-                      <div className="flex items-center gap-3 text-white/70 text-sm">
-                        <Phone size={16} className="text-[#FF5C00] flex-shrink-0" />
-                        <a href="tel:+977XXXXXXXXXX" className="hover:text-white transition-colors">+977 XXX-XXXXXXX</a>
-                      </div>
-
-                      {/* Socials */}
-                      <div className="flex items-center gap-4 pt-4">
-                        {[
-                          { label: 'Instagram', href: '#', path: 'M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z' },
-                          { label: 'LinkedIn', href: '#', path: 'M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z' },
-                          { label: 'Facebook', href: '#', path: 'M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z' },
-                          { label: 'YouTube', href: '#', path: 'M23.495 6.205a3.007 3.007 0 0 0-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 0 0 .527 6.205a31.247 31.247 0 0 0-.522 5.805 31.247 31.247 0 0 0 .522 5.783 3.007 3.007 0 0 0 2.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 0 0 2.088-2.088 31.247 31.247 0 0 0 .5-5.783 31.247 31.247 0 0 0-.5-5.805zM9.609 15.601V8.408l6.264 3.602z' },
-                        ].map((s) => (
-                          <a
-                            key={s.label}
-                            href={s.href}
-                            aria-label={s.label}
-                            className="w-10 h-10 rounded-full border border-white/10 hover:border-[#FF5C00]/60 flex items-center justify-center text-white/50 hover:text-[#FF5C00] transition-all duration-300"
-                          >
-                            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
-                              <path d={s.path} />
-                            </svg>
-                          </a>
-                        ))}
+                      <div className="flex items-start gap-4 text-white/70">
+                        <Phone size={20} className="text-[#FF5C00] flex-shrink-0 mt-0.5" />
+                        <a href="tel:+977980XXXXXXX" className="text-base hover:text-white transition-colors">+977 980-XXXXXXX</a>
                       </div>
                     </div>
                   </div>
 
-                  {/* Right: Contact Form */}
-                  <form
-                    onSubmit={(e) => e.preventDefault()}
-                    className="flex flex-col gap-4"
-                  >
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="flex flex-col gap-1.5">
-                        <label className="text-white/40 text-xs font-semibold tracking-widest uppercase">First Name</label>
+                  {/* Card 2 — Follow the Journey */}
+                  <div className="rounded-2xl border border-white/8 bg-white/[0.03] p-9 flex flex-col gap-8">
+                    <div>
+                      <h3 className="font-bold text-white text-2xl tracking-tight mb-3">Follow the Journey</h3>
+                      <p className="text-white/50 text-base leading-relaxed">
+                        Stay updated with real-time announcements on our social handles.
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-5 flex-wrap">
+                      {[
+                        { label: 'Instagram', href: '#', path: 'M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z' },
+                        { label: 'Facebook', href: '#', path: 'M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z' },
+                        { label: 'YouTube', href: '#', path: 'M23.495 6.205a3.007 3.007 0 0 0-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 0 0 .527 6.205a31.247 31.247 0 0 0-.522 5.805 31.247 31.247 0 0 0 .522 5.783 3.007 3.007 0 0 0 2.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 0 0 2.088-2.088 31.247 31.247 0 0 0 .5-5.783 31.247 31.247 0 0 0-.5-5.805zM9.609 15.601V8.408l6.264 3.602z' },
+                        { label: 'LinkedIn', href: '#', path: 'M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z' },
+                      ].map((s) => (
+                        <a
+                          key={s.label}
+                          href={s.href}
+                          aria-label={s.label}
+                          className="w-16 h-16 rounded-full border border-white/15 hover:border-[#FF5C00]/60 flex items-center justify-center text-white/50 hover:text-[#FF5C00] transition-all duration-300"
+                        >
+                          <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                            <path d={s.path} />
+                          </svg>
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Card 3 — Send a Message */}
+                  <div className="rounded-2xl border border-white/8 bg-white/[0.03] p-9">
+                    <h3 className="font-bold text-white text-2xl tracking-tight mb-7">Send a Message</h3>
+                    <form onSubmit={(e) => e.preventDefault()} className="flex flex-col gap-5">
+                      <div className="flex flex-col gap-2">
+                        <label className="text-white/60 text-sm font-medium">Your Name</label>
                         <input
                           type="text"
-                          placeholder="John"
-                          className="bg-white/[0.03] border border-white/10 focus:border-[#FF5C00]/50 rounded-xl px-4 py-3 text-white text-sm outline-none transition-colors duration-200 placeholder:text-white/20"
+                          placeholder="John Doe"
+                          className="bg-white/[0.04] border border-white/10 focus:border-[#FF5C00]/50 rounded-xl px-5 py-3.5 text-white text-base outline-none transition-colors duration-200 placeholder:text-white/25"
+                        />
+                      </div>
+                      <div className="flex flex-col gap-2">
+                        <label className="text-white/60 text-sm font-medium">Email Address</label>
+                        <input
+                          type="email"
+                          placeholder="john@example.com"
+                          className="bg-white/[0.04] border border-white/10 focus:border-[#FF5C00]/50 rounded-xl px-5 py-3.5 text-white text-base outline-none transition-colors duration-200 placeholder:text-white/25"
                         />
                       </div>
                       <div className="flex flex-col gap-1.5">
-                        <label className="text-white/40 text-xs font-semibold tracking-widest uppercase">Last Name</label>
+                        <div className="flex items-baseline gap-2">
+                          <label className="text-white/60 text-sm font-medium">Phone Number</label>
+                          <span className="text-white/30 text-xs">(optional)</span>
+                        </div>
+                        <input
+                          type="tel"
+                          placeholder="98XXXXXXXX"
+                          className="bg-white/[0.04] border border-white/10 focus:border-[#FF5C00]/50 rounded-xl px-5 py-3.5 text-white text-base outline-none transition-colors duration-200 placeholder:text-white/25"
+                        />
+                        <span className="text-white/30 text-xs mt-0.5">Exactly 10 digits if provided.</span>
+                      </div>
+                      <div className="flex flex-col gap-2">
+                        <label className="text-white/60 text-sm font-medium">Subject</label>
                         <input
                           type="text"
-                          placeholder="Doe"
-                          className="bg-white/[0.03] border border-white/10 focus:border-[#FF5C00]/50 rounded-xl px-4 py-3 text-white text-sm outline-none transition-colors duration-200 placeholder:text-white/20"
+                          placeholder="General Inquiry"
+                          className="bg-white/[0.04] border border-white/10 focus:border-[#FF5C00]/50 rounded-xl px-5 py-3.5 text-white text-base outline-none transition-colors duration-200 placeholder:text-white/25"
                         />
                       </div>
-                    </div>
-                    <div className="flex flex-col gap-1.5">
-                      <label className="text-white/40 text-xs font-semibold tracking-widest uppercase">Email</label>
-                      <input
-                        type="email"
-                        placeholder="john@organization.com"
-                        className="bg-white/[0.03] border border-white/10 focus:border-[#FF5C00]/50 rounded-xl px-4 py-3 text-white text-sm outline-none transition-colors duration-200 placeholder:text-white/20"
-                      />
-                    </div>
-                    <div className="flex flex-col gap-1.5">
-                      <label className="text-white/40 text-xs font-semibold tracking-widest uppercase">Organization</label>
-                      <input
-                        type="text"
-                        placeholder="Your institution or company"
-                        className="bg-white/[0.03] border border-white/10 focus:border-[#FF5C00]/50 rounded-xl px-4 py-3 text-white text-sm outline-none transition-colors duration-200 placeholder:text-white/20"
-                      />
-                    </div>
-                    <div className="flex flex-col gap-1.5">
-                      <label className="text-white/40 text-xs font-semibold tracking-widest uppercase">Message</label>
-                      <textarea
-                        rows={4}
-                        placeholder="Tell us how we can help..."
-                        className="bg-white/[0.03] border border-white/10 focus:border-[#FF5C00]/50 rounded-xl px-4 py-3 text-white text-sm outline-none transition-colors duration-200 placeholder:text-white/20 resize-none"
-                      />
-                    </div>
-                    <button
-                      type="submit"
-                      className="mt-2 bg-[#FF5C00] hover:bg-[#e04f00] text-white font-bold tracking-widest uppercase text-sm py-4 px-8 rounded-xl transition-all duration-300 hover:shadow-[0_0_24px_rgba(255,92,0,0.4)] cursor-pointer"
-                    >
-                      Send Message
-                    </button>
-                  </form>
+                      <div className="flex flex-col gap-2">
+                        <label className="text-white/60 text-sm font-medium">Message</label>
+                        <textarea
+                          rows={6}
+                          placeholder="How can we help?"
+                          className="bg-white/[0.04] border border-white/10 focus:border-[#FF5C00]/50 rounded-xl px-5 py-3.5 text-white text-base outline-none transition-colors duration-200 placeholder:text-white/25 resize-none"
+                        />
+                      </div>
+                      <button
+                        type="submit"
+                        className="mt-1 w-full bg-[#FF5C00] hover:bg-[#e04f00] text-white font-bold text-base py-4 rounded-xl transition-all duration-300 hover:shadow-[0_0_24px_rgba(255,92,0,0.35)] cursor-pointer tracking-wide"
+                      >
+                        Submit Message
+                      </button>
+                    </form>
+                  </div>
+
                 </div>
               </div>
             </div>
