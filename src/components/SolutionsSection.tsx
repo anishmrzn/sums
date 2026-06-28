@@ -67,7 +67,7 @@ export const SolutionsSection: React.FC = () => {
         </motion.div>
 
         {/* ── Full-Width Bridge Scene — desktop only ───────────────── */}
-        <div className="hidden md:block -mt-28 relative w-full flex flex-col justify-end" style={{ height: 560 }}>
+        <div className="hidden md:block -mt-28 relative w-full flex flex-col justify-end" style={{ height: 480 }}>
 
           {/* ── Tools-pile image — sits on TOP of left cliff edge ── */}
           <motion.div
@@ -75,13 +75,13 @@ export const SolutionsSection: React.FC = () => {
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
             className="absolute z-20 rounded-xl overflow-hidden"
-            style={{ left: '2.5%', bottom: '250px', width: '24%', background: 'rgba(4,5,7,0.4)', backdropFilter: 'blur(2px)' }}
+            style={{ left: '0%', bottom: '210px', width: '26%', background: 'rgba(4,5,7,0.4)', backdropFilter: 'blur(2px)' }}
           >
             <img
               src="/tools-pile-orange-2.png"
               alt="Thousands of tools"
               className="w-full h-auto object-contain"
-              style={{ maxHeight: 170 }}
+              style={{ maxHeight: 145 }}
             />
           </motion.div>
 
@@ -91,13 +91,13 @@ export const SolutionsSection: React.FC = () => {
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
             className="absolute z-20 rounded-xl overflow-hidden"
-            style={{ right: '7%', bottom: '250px', width: '15%' }}
+            style={{ right: '0%', bottom: '210px', width: '22%', background: 'rgba(4,5,7,0.4)', backdropFilter: 'blur(2px)' }}
           >
             <img
               src="/target-diagram-orange.png"
               alt="Fundamental Change in Outcomes"
               className="w-full h-auto object-contain"
-              style={{ maxHeight: 120 }}
+              style={{ maxHeight: 145 }}
             />
           </motion.div>
 
@@ -105,7 +105,7 @@ export const SolutionsSection: React.FC = () => {
           <motion.svg
             viewBox="0 0 1200 340"
             className="absolute inset-x-0 bottom-0 w-full select-none"
-            style={{ height: 410 }}
+            style={{ height: 330 }}
             initial={{ opacity: 0 }}
             animate={isInView ? { opacity: 1 } : {}}
             transition={{ duration: 0.6 }}
@@ -251,6 +251,22 @@ export const SolutionsSection: React.FC = () => {
               <polygon points="598,212 607,208 605,218 596,217" fill="#1c1e27" stroke="#FF5C00" strokeWidth="0.8" />
             </motion.g>
 
+            {/* ── Main suspension cables (outer, from edges to tower tops) ── */}
+            <motion.path
+              d="M -10,70 Q 200,40 396,22"
+              fill="none" stroke="#FF5C00" strokeWidth="3"
+              filter="url(#cable-glow)"
+              initial={{ pathLength: 0 }} animate={isInView ? { pathLength: 1 } : {}}
+              transition={{ delay: 0.5, duration: 0.8 }}
+            />
+            <motion.path
+              d="M 1210,70 Q 1010,40 804,22"
+              fill="none" stroke="#FF5C00" strokeWidth="3"
+              filter="url(#cable-glow)"
+              initial={{ pathLength: 0 }} animate={isInView ? { pathLength: 1 } : {}}
+              transition={{ delay: 0.5, duration: 0.8 }}
+            />
+
             {/* ── Snapped/Frayed cables dangling in the gap ── */}
             {/* Left snapped piece */}
             <motion.path
@@ -283,6 +299,34 @@ export const SolutionsSection: React.FC = () => {
               initial={{ opacity: 0 }} animate={isInView ? { opacity: 0.75 } : {}}
               transition={{ delay: 1.1, duration: 0.4 }}
             />
+
+            {/* ── Left suspenders (vertical hangers from left cable to tilted road) ── */}
+            <motion.g
+              initial={{ opacity: 0 }} animate={isInView ? { opacity: 1 } : {}}
+              transition={{ delay: 0.95 }}
+              stroke="rgba(255,255,255,0.13)" strokeWidth="1.2"
+            >
+              <line x1="410" y1="28" x2="410" y2="114" />
+              <line x1="430" y1="42" x2="430" y2="122" />
+              <line x1="450" y1="56" x2="450" y2="130" />
+              <line x1="470" y1="70" x2="470" y2="138" />
+              <line x1="490" y1="84" x2="490" y2="146" />
+              <line x1="510" y1="98" x2="510" y2="154" />
+            </motion.g>
+
+            {/* ── Right suspenders ── */}
+            <motion.g
+              initial={{ opacity: 0 }} animate={isInView ? { opacity: 1 } : {}}
+              transition={{ delay: 0.95 }}
+              stroke="rgba(255,255,255,0.13)" strokeWidth="1.2"
+            >
+              <line x1="790" y1="28" x2="790" y2="114" />
+              <line x1="770" y1="42" x2="770" y2="122" />
+              <line x1="750" y1="56" x2="750" y2="130" />
+              <line x1="730" y1="70" x2="730" y2="138" />
+              <line x1="710" y1="84" x2="710" y2="146" />
+              <line x1="690" y1="98" x2="690" y2="154" />
+            </motion.g>
 
             {/* ── Systems are not connected text banner inside the broken gap ── */}
             {/* <motion.g
@@ -396,32 +440,29 @@ export const SolutionsSection: React.FC = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ delay: 1.2, duration: 0.6 }}
-          className="flex flex-col items-center justify-center gap-3 pt-16 pointer-events-auto"
+          className="flex flex-col items-center justify-center gap-3 pt-8 pointer-events-auto"
         >
-          <p className="text-white/50 text-xl md:text-2xl italic font-light text-center max-w-2xl leading-relaxed">
+          <p className="text-white/35 text-sm md:text-base italic font-light text-center max-w-xl leading-relaxed">
             "The problem isn't a lack of tools, it is the complete absence of structure"
           </p>
 
-          <span className="text-white/80 text-lg md:text-xl tracking-wide max-w-2xl text-center leading-relaxed font-sans mt-2">
+          <span className="text-white/70 text-sm md:text-base tracking-wide max-w-2xl text-center leading-relaxed font-sans mt-2">
             See how <span className="text-[#FF5C00] font-black">1,500+</span> students across{' '}
             <span className="text-[#FF5C00] font-black">10+</span> colleges are bridging this gap
           </span>
 
-          {/* Round arrow button */}
+          {/* Large clickable scroll-down arrow */}
           <button
             onClick={scrollToEcosystem}
-            className="mt-4 cursor-pointer group focus:outline-none"
+            className="flex flex-col items-center justify-center mt-1 cursor-pointer group focus:outline-none"
             aria-label="See the ecosystem"
           >
             <motion.div
-              animate={{ y: [0, 8, 0] }}
+              animate={{ y: [0, 12, 0], opacity: [0.5, 1, 0.5] }}
               transition={{ repeat: Infinity, duration: 1.8, ease: 'easeInOut' }}
-              className="w-16 h-16 rounded-full bg-[#FF5C00] flex items-center justify-center shadow-[0_0_24px_rgba(255,92,0,0.45)] group-hover:bg-[#e04f00] transition-colors duration-300"
+              className="text-[#FF5C00] text-6xl font-bold select-none tracking-widest group-hover:text-white transition-colors duration-300"
             >
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <line x1="12" y1="5" x2="12" y2="19" />
-                <polyline points="19 12 12 19 5 12" />
-              </svg>
+              ↓
             </motion.div>
           </button>
         </motion.div>

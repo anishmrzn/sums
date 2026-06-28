@@ -383,14 +383,46 @@ function App() {
                   ))}
                 </div>
 
-                {/* Partner logos row */}
-                <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-4 py-8 border-t border-white/5">
-                  {[6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18].map(n => (
-                    <img key={n} src={`/logos/${n}.png`} alt="" className="h-10 w-auto max-w-[100px] object-contain opacity-50 hover:opacity-90 transition-opacity duration-200" />
-                  ))}
-                  <img src="/siplogo.png" alt="SIP" className="h-10 w-auto max-w-[100px] object-contain opacity-50 hover:opacity-90 transition-opacity duration-200" />
-                  <img src="/aiclogo.png" alt="AIC" className="h-10 w-auto max-w-[100px] object-contain opacity-50 hover:opacity-90 transition-opacity duration-200" />
-                  <img src="/cogknitlogo.png" alt="Cogknit" className="h-10 w-auto max-w-[100px] object-contain opacity-50 hover:opacity-90 transition-opacity duration-200" />
+                {/* National | International — side by side */}
+                <div className="border-t border-white/5 pt-10 grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-0 md:divide-x md:divide-white/5">
+
+                  {/* Left — National Partners */}
+                  <div className="flex flex-col items-center gap-6 md:pr-10">
+                    <p className="text-white/30 text-[10px] font-bold tracking-[0.35em] uppercase">National Partners</p>
+                    <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-4">
+                      {[6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18].map(n => (
+                        <img key={n} src={`/logos/${n}.png`} alt="" className="h-9 w-auto max-w-[90px] object-contain opacity-50 hover:opacity-90 transition-opacity duration-200" />
+                      ))}
+                      <img src="/siplogo.png" alt="SIP" className="h-9 w-auto max-w-[90px] object-contain opacity-50 hover:opacity-90 transition-opacity duration-200" />
+                      <img src="/aiclogo.png" alt="AIC" className="h-9 w-auto max-w-[90px] object-contain opacity-50 hover:opacity-90 transition-opacity duration-200" />
+                      <img src="/cogknitlogo.png" alt="Cogknit" className="h-9 w-auto max-w-[90px] object-contain opacity-50 hover:opacity-90 transition-opacity duration-200" />
+                    </div>
+                  </div>
+
+                  {/* Right — International Presence */}
+                  <div className="flex flex-col items-center gap-6 md:pl-10">
+                    <p className="text-white/30 text-[10px] font-bold tracking-[0.35em] uppercase">International Presence</p>
+                    <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-4">
+                      {[
+                        { flag: '🇫🇮', name: 'Finland' },
+                        { flag: '🇵🇹', name: 'Portugal' },
+                        { flag: '🇫🇷', name: 'France' },
+                        { flag: '🇬🇧', name: 'UK' },
+                        { flag: '🇸🇪', name: 'Sweden' },
+                        { flag: '🇳🇵', name: 'Nepal' },
+                        { flag: '🇮🇳', name: 'India' },
+                        { flag: '🇧🇹', name: 'Bhutan' },
+                        { flag: '🇱🇹', name: 'Lithuania' },
+                        { flag: '🇳🇱', name: 'Netherlands' },
+                      ].map(({ flag, name }) => (
+                        <div key={name} className="flex flex-col items-center gap-1 group">
+                          <span className="text-3xl leading-none">{flag}</span>
+                          <span className="text-white/40 text-[9px] font-semibold tracking-widest uppercase group-hover:text-white/70 transition-colors duration-200">{name}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
                 </div>
 
               </div>
