@@ -441,9 +441,13 @@ export const SolutionsSection: React.FC = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ delay: 1.2, duration: 0.6 }}
-          className="flex flex-col items-center justify-center gap-4 pt-8 pointer-events-auto"
+          className="flex flex-col items-center justify-center gap-3 pt-8 pointer-events-auto"
         >
-          <span className="text-white/70 text-sm md:text-base tracking-wide max-w-2xl text-center leading-relaxed font-sans">
+          <p className="text-white/35 text-sm md:text-base italic font-light text-center max-w-xl leading-relaxed">
+            "The problem isn't a lack of tools, it is the complete absence of structure"
+          </p>
+
+          <span className="text-white/70 text-sm md:text-base tracking-wide max-w-2xl text-center leading-relaxed font-sans mt-2">
             See how <span className="text-[#FF5C00] font-black">1,500+</span> students across{' '}
             <span className="text-[#FF5C00] font-black">10+</span> colleges are bridging this gap
           </span>
@@ -457,7 +461,7 @@ export const SolutionsSection: React.FC = () => {
             <motion.div
               animate={{ y: [0, 12, 0], opacity: [0.5, 1, 0.5] }}
               transition={{ repeat: Infinity, duration: 1.8, ease: 'easeInOut' }}
-              className="text-[#FF5C00] text-6xl font-extralight select-none tracking-widest group-hover:text-white transition-colors duration-300"
+              className="text-[#FF5C00] text-6xl font-bold select-none tracking-widest group-hover:text-white transition-colors duration-300"
             >
               ↓
             </motion.div>

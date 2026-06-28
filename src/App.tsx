@@ -47,7 +47,7 @@ function App() {
         // Phase 1: planet orbiting ends very early, alignment starts almost immediately
         const phase1End = 0.2 * vh;
 
-        const hideThreshold = window.innerWidth < 768 ? 2.0 * vh : 3.0 * vh;
+        const hideThreshold = window.innerWidth < 768 ? 1.5 * vh : 2.0 * vh;
         const isInsideEcosystem = scrolledIntoSection >= 0 && scrolledIntoSection < hideThreshold;
         if (isInsideEcosystem || activePlatform) {
           setEcosystemRevealed(true);
@@ -224,7 +224,7 @@ function App() {
                 </motion.span>
 
                 {/* Large Bold Headline with word-by-word stagger */}
-                <h1 className="font-[900] tracking-tight leading-[1.0] flex flex-col items-center w-full">
+                <h1 className="font-[700] tracking-tight leading-[1.0] flex flex-col items-center w-full">
                   <motion.span
                     className="text-white text-6xl sm:text-7xl md:text-9xl block overflow-hidden w-full"
                     initial="hidden"
@@ -298,7 +298,7 @@ function App() {
 
             <div
               id="ecosystem-section"
-              className="relative pointer-events-none min-h-[200vh] md:min-h-[300vh]"
+              className="relative pointer-events-none min-h-[150vh] md:min-h-[200vh]"
             >
               {/* Sticky container for viewport elements */}
               <div className="sticky top-0 h-screen w-full flex flex-col pointer-events-none">
@@ -362,13 +362,13 @@ function App() {
             </div>
 
             {/* OUR IMPACT + CONTACT SECTIONS */}
-            <div className="w-full relative pointer-events-auto bg-gradient-to-t from-[#040507] via-[#040507]/90 to-transparent pt-12 pb-24 border-t border-white/5">
+            <div className="w-full relative pointer-events-auto pt-12 pb-24 border-t border-white/5" style={{ background: 'linear-gradient(to top, #040507 0%, #040507 85%, transparent 100%)' }}>
 
               {/* OUR IMPACT Section */}
               <div id="about" className="max-w-6xl mx-auto px-6 py-20">
                 {/* Big heading */}
                 <div className="text-center mb-16">
-                  <h2 className="font-sans font-black text-5xl md:text-7xl xl:text-8xl tracking-tight text-white leading-none">
+                  <h2 className="font-sans font-black text-6xl md:text-8xl xl:text-9xl tracking-tight text-white leading-none">
                     OUR <span className="text-[#FF5C00]">IMPACT</span>
                   </h2>
                 </div>
@@ -381,12 +381,21 @@ function App() {
                     { number: '7', label: 'Countries' },
                   ].map((stat) => (
                     <div key={stat.label} className="text-center p-8 rounded-2xl border border-white/5 bg-white/[0.02] backdrop-blur-sm">
-                      <div className="text-5xl md:text-6xl font-black text-[#FF5C00] mb-2">{stat.number}</div>
-                      <div className="text-white/60 text-sm font-semibold tracking-widest uppercase">{stat.label}</div>
+                      <div className="text-6xl md:text-7xl font-black text-[#FF5C00] mb-2">{stat.number}</div>
+                      <div className="text-white/60 text-base font-semibold tracking-widest uppercase">{stat.label}</div>
                     </div>
                   ))}
                 </div>
 
+                {/* Partner logos row */}
+                <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-4 py-8 border-t border-white/5">
+                  {[6,7,8,9,10,11,12,13,14,15,16,17,18].map(n => (
+                    <img key={n} src={`/logos/${n}.png`} alt="" className="h-10 w-auto max-w-[100px] object-contain opacity-50 hover:opacity-90 transition-opacity duration-200" />
+                  ))}
+                  <img src="/siplogo.png" alt="SIP" className="h-10 w-auto max-w-[100px] object-contain opacity-50 hover:opacity-90 transition-opacity duration-200" />
+                  <img src="/aiclogo.png" alt="AIC" className="h-10 w-auto max-w-[100px] object-contain opacity-50 hover:opacity-90 transition-opacity duration-200" />
+                  <img src="/cogknitlogo.png" alt="Cogknit" className="h-10 w-auto max-w-[100px] object-contain opacity-50 hover:opacity-90 transition-opacity duration-200" />
+                </div>
 
               </div>
 

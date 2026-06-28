@@ -2,6 +2,44 @@ import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Mail, Phone, MapPin } from 'lucide-react';
 
+// Placeholder logo paths — replace src values with real logos when ready
+const AIC_LOGOS = [
+  '/logos/6.png', '/logos/7.png', '/logos/8.png', '/logos/9.png',
+  '/logos/10.png', '/logos/11.png', '/logos/12.png', '/logos/13.png',
+];
+const SIP_LOGOS = [
+  '/logos/14.png', '/logos/15.png', '/logos/16.png', '/logos/17.png',
+  '/logos/18.png', '/logos/10.png', '/logos/11.png', '/logos/12.png',
+];
+
+const LogoSliderStrip: React.FC<{ logos: string[]; label: string }> = ({ logos, label }) => {
+  const looped = [...logos, ...logos, ...logos];
+  return (
+    <div className="w-full border border-white/5 rounded-xl overflow-hidden bg-white/[0.01]">
+      <div className="px-4 pt-4 pb-2">
+        <span className="text-white/30 text-[10px] font-semibold tracking-[0.25em] uppercase">{label}</span>
+      </div>
+      <div className="relative py-4 overflow-hidden">
+        {/* Edge fades */}
+        <div className="absolute inset-y-0 left-0 w-10 bg-gradient-to-r from-[#040507] to-transparent z-10 pointer-events-none" />
+        <div className="absolute inset-y-0 right-0 w-10 bg-gradient-to-l from-[#040507] to-transparent z-10 pointer-events-none" />
+        <div className="logo-scroll-track flex gap-8 w-max">
+          {looped.map((src, i) => (
+            <div key={i} className="flex items-center justify-center h-10 w-[90px] shrink-0">
+              <img
+                src={src}
+                alt={`Logo ${(i % logos.length) + 1}`}
+                className="h-8 w-auto max-w-[80px] object-contain opacity-60 grayscale hover:opacity-100 hover:grayscale-0 transition-all duration-300"
+                draggable={false}
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 interface PlatformDetailProps {
   platformId: string;
   activeSection: string;
@@ -126,10 +164,6 @@ const AicSections: React.FC = () => {
     },
   ];
 
-  const partners = [
-    'eSewa', 'Dolma Advisors', 'Texas International', 'Bajra Technologies',
-    'CloudFactory', 'Leapfrog Technology', 'Cotiviti Nepal', 'Fusemachines',
-  ];
 
   return (
     <>
@@ -206,19 +240,13 @@ const AicSections: React.FC = () => {
         <span className="text-[#FD4400] text-[10px] font-semibold tracking-[0.25em] uppercase block mb-3">
           04 / Partners
         </span>
-        <h2 className="font-serif text-xl md:text-3xl font-medium text-white mb-6">
+        <h2 className="font-serif text-xl md:text-3xl font-medium text-white mb-4">
           Our Corporate Network
         </h2>
         <p className="text-white/50 text-sm mb-8 leading-relaxed">
           AIC's sourcing pipeline is backed by 50+ national and international companies that contribute real R&D challenges and absorb top-performing students into their teams.
         </p>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          {partners.map(p => (
-            <div key={p} className="border border-white/5 rounded-lg p-3 bg-white/[0.01] text-center text-xs font-semibold tracking-wider text-white/50 hover:text-white/80 hover:border-[#FD4400]/20 transition-all duration-300">
-              {p}
-            </div>
-          ))}
-        </div>
+        <LogoSliderStrip logos={AIC_LOGOS} label="National & International Partners" />
       </motion.section>
 
       <ContactForm title="AIC" />
@@ -247,7 +275,6 @@ const SipSections: React.FC = () => {
     },
   ];
 
-  const trackRecord = ['RIIHIMÄKI', 'ITS', 'LYT', 'Xponential', 'NepalPay', 'GreenGrid'];
 
   return (
     <>
@@ -323,19 +350,8 @@ const SipSections: React.FC = () => {
         <p className="text-white/50 text-sm mb-8 leading-relaxed">
           50+ ventures have come out of the SIP pipeline — from local startups to internationally recognized companies.
         </p>
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-6">
-          {trackRecord.map((name) => (
-            <div
-              key={name}
-              className="border border-white/5 rounded-lg p-4 bg-white/[0.02] text-center font-bold tracking-wide text-white/70 hover:text-white hover:border-[#FD4400]/25 hover:bg-[#FD4400]/[0.04] transition-all duration-300 text-sm"
-            >
-              {name}
-            </div>
-          ))}
-          <div className="border border-[#FD4400]/20 rounded-lg p-4 bg-[#FD4400]/5 text-center font-bold tracking-wide text-[#FD4400] text-sm flex items-center justify-center">
-            +50 More
-          </div>
-        </div>
+        <LogoSliderStrip logos={SIP_LOGOS} label="Ventures Built Through SIP" />
+        <p className="text-[#FD4400]/70 text-xs font-semibold tracking-widest uppercase mt-4">+50 More ventures</p>
       </motion.section>
 
       <ContactForm title="SIP" />
