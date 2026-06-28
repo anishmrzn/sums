@@ -1,11 +1,11 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
 @import "tailwindcss";
 
 @theme {
   --color-brand: #FE6D00;
   --color-bg-dark: #040507;
-  --font-serif: "Poppins", sans-serif;
-  --font-sans: "Poppins", sans-serif;
+  --font-serif: "Space Grotesk", sans-serif;
+  --font-sans: "Space Grotesk", sans-serif;
 }
 
 /* Custom resets & base elements */
@@ -13,7 +13,7 @@
   color-scheme: dark;
   background-color: var(--color-bg-dark);
   color: #f3f4f6;
-  font-family: var(--font-sans);
+  font-family: "Space Grotesk", sans-serif;
 }
 
 body {

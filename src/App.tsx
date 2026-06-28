@@ -45,9 +45,9 @@ function App() {
         const rect = ecosystemSectionEl.getBoundingClientRect();
         const scrolledIntoSection = -rect.top;
         // Phase 1: planet orbiting ends very early, alignment starts almost immediately
-        const phase1End = 0.2 * vh;
+        const phase1End = 0.05 * vh;
 
-        const hideThreshold = window.innerWidth < 768 ? 1.5 * vh : 2.0 * vh;
+        const hideThreshold = window.innerWidth < 768 ? 0.8 * vh : 1.2 * vh;
         const isInsideEcosystem = scrolledIntoSection >= 0 && scrolledIntoSection < hideThreshold;
         if (isInsideEcosystem || activePlatform) {
           setEcosystemRevealed(true);
@@ -58,9 +58,9 @@ function App() {
         // Hide canvas permanently once user scrolls past the ecosystem section
         setHideCanvas(scrolledIntoSection >= hideThreshold);
 
-        // Phase 1 ends at 0.2*vh — planets orbit normally while user reads the text
-        // Phase 2 ends at 0.8*vh — planets align horizontally
-        const alignEnd = 0.8 * vh;
+        // Phase 1 ends at 0.05*vh — planets orbit briefly while user reads the text
+        // Phase 2 ends at 0.45*vh — planets align horizontally (snappier)
+        const alignEnd = 0.45 * vh;
 
         if (scrolledIntoSection < 0) {
           setEcosystemPhase(0);
@@ -220,9 +220,9 @@ function App() {
                 </motion.span>
 
                 {/* Large Bold Headline with word-by-word stagger */}
-                <h1 className="font-[700] tracking-tight leading-[1.0] flex flex-col items-center w-full">
+                <h1 className="font-[700] tracking-tight leading-[1.15] flex flex-col items-center w-full">
                   <motion.span
-                    className="text-white text-6xl sm:text-7xl md:text-9xl block overflow-hidden w-full"
+                    className="text-white text-6xl sm:text-7xl md:text-9xl block w-full pb-2"
                     initial="hidden"
                     animate="visible"
                     variants={{
@@ -246,7 +246,7 @@ function App() {
                   </motion.span>
 
                   <motion.span
-                    className="text-[#FF5C00] text-4xl sm:text-5xl md:text-7xl block overflow-hidden mt-3 w-full"
+                    className="text-[#FF5C00] text-4xl sm:text-5xl md:text-7xl block mt-3 w-full pb-2"
                     initial="hidden"
                     animate="visible"
                     variants={{
@@ -294,7 +294,7 @@ function App() {
 
             <div
               id="ecosystem-section"
-              className="relative pointer-events-none min-h-[150vh] md:min-h-[200vh]"
+              className="relative pointer-events-none min-h-[100vh] md:min-h-[140vh]"
             >
               {/* Sticky container for viewport elements */}
               <div className="sticky top-0 h-screen w-full flex flex-col pointer-events-none">
@@ -336,8 +336,8 @@ function App() {
               <div className="space-y-3">
                 {[
                   { id: 'cogknit', name: 'Cogknit', tagline: 'Smart Learning Platform', logo: '/cogknitlogo.png' },
-                  { id: 'sip', name: 'SIP', tagline: 'Student Innovators Program', logo: '/siplogo.png' },
-                  { id: 'aic', name: 'AIC', tagline: 'Academia Industry Collaboration', logo: '/aiclogo.png' },
+                  { id: 'sip', name: 'SIP', tagline: 'Student Innovators Program', logo: '/logos/sip_logo.png' },
+                  { id: 'aic', name: 'AIC', tagline: 'Academia Industry Collaboration', logo: '/logos/aic_logo.png' },
                 ].map(platform => (
                   <button
                     key={platform.id}
@@ -385,23 +385,25 @@ function App() {
 
                 {/* Flags strip — spans full width above both columns */}
                 <div className="border-t border-white/5 pt-10 mb-10">
-                  <p className="text-center text-white/30 text-[10px] font-bold tracking-[0.35em] uppercase mb-5">Countries</p>
-                  <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3">
+                  <p className="text-center text-white/30 text-[10px] font-bold tracking-[0.35em] uppercase mb-8">Countries We've Reached</p>
+                  <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-7">
                     {[
-                      { flag: '🇫🇮', name: 'Finland' },
-                      { flag: '🇵🇹', name: 'Portugal' },
-                      { flag: '🇫🇷', name: 'France' },
-                      { flag: '🇬🇧', name: 'UK' },
-                      { flag: '🇸🇪', name: 'Sweden' },
-                      { flag: '🇳🇵', name: 'Nepal' },
-                      { flag: '🇮🇳', name: 'India' },
-                      { flag: '🇧🇹', name: 'Bhutan' },
-                      { flag: '🇱🇹', name: 'Lithuania' },
-                      { flag: '🇳🇱', name: 'Netherlands' },
-                    ].map(({ flag, name }) => (
-                      <div key={name} className="flex flex-col items-center gap-1 group">
-                        <span className="text-3xl leading-none">{flag}</span>
-                        <span className="text-white/35 text-[9px] font-semibold tracking-widest uppercase group-hover:text-white/70 transition-colors duration-200">{name}</span>
+                      { img: '/pictures/countries/Nepal.jpg', name: 'Nepal' },
+                      { img: '/pictures/countries/India.svg.png', name: 'India' },
+                      { img: '/pictures/countries/Bhutan.svg.png', name: 'Bhutan' },
+                      { img: '/pictures/countries/Finland.svg', name: 'Finland' },
+                      { img: '/pictures/countries/Sweden.svg.png', name: 'Sweden' },
+                      { img: '/pictures/countries/Netherlands.svg.png', name: 'Netherlands' },
+                      { img: '/pictures/countries/France.svg.webp', name: 'France' },
+                      { img: '/pictures/countries/Portugal.svg.webp', name: 'Portugal' },
+                      { img: '/pictures/countries/United_Kingdom.svg.webp', name: 'UK' },
+                      { img: '/pictures/countries/Lithuania.svg.png', name: 'Lithuania' },
+                    ].map(({ img, name }) => (
+                      <div key={name} className="flex flex-col items-center gap-2 group">
+                        <div className="w-14 h-10 rounded-md overflow-hidden border border-white/10 group-hover:border-[#FF5C00]/40 transition-colors duration-200 shadow-md">
+                          <img src={img} alt={name} className="w-full h-full object-cover" />
+                        </div>
+                        <span className="text-white/40 text-[9px] font-semibold tracking-widest uppercase group-hover:text-white/70 transition-colors duration-200">{name}</span>
                       </div>
                     ))}
                   </div>
@@ -417,9 +419,6 @@ function App() {
                       {[6, 7, 8, 9, 11, 13, 14, 15, 16, 17, 18].map(n => (
                         <img key={n} src={`/logos/${n}.png`} alt="" className="h-9 w-auto max-w-[90px] object-contain opacity-50 hover:opacity-90 transition-opacity duration-200" />
                       ))}
-                      <img src="/siplogo.png" alt="SIP" className="h-9 w-auto max-w-[90px] object-contain opacity-50 hover:opacity-90 transition-opacity duration-200" />
-                      <img src="/aiclogo.png" alt="AIC" className="h-9 w-auto max-w-[90px] object-contain opacity-50 hover:opacity-90 transition-opacity duration-200" />
-                      <img src="/cogknitlogo.png" alt="Cogknit" className="h-9 w-auto max-w-[90px] object-contain opacity-50 hover:opacity-90 transition-opacity duration-200" />
                     </div>
                   </div>
 
@@ -430,6 +429,9 @@ function App() {
                       <img src="/int'l/cogknitlogo.png" alt="Cogknit" className="h-9 w-auto max-w-[100px] object-contain opacity-50 hover:opacity-90 transition-opacity duration-200" />
                       <img src="/int'l/10.png" alt="Rihimaki" className="h-9 w-auto max-w-[100px] object-contain opacity-50 hover:opacity-90 transition-opacity duration-200" />
                       <img src="/int'l/12.png" alt="Xvector" className="h-9 w-auto max-w-[100px] object-contain opacity-50 hover:opacity-90 transition-opacity duration-200" />
+                      <img src="/logos/unesco.png" alt="UNESCO" className="h-9 w-auto max-w-[100px] object-contain opacity-50 hover:opacity-90 transition-opacity duration-200" />
+                      <img src="/logos/aalto.png" alt="Aalto University" className="h-9 w-auto max-w-[100px] object-contain opacity-50 hover:opacity-90 transition-opacity duration-200" />
+                      <img src="/logos/lukla.png" alt="Lukla" className="h-9 w-auto max-w-[100px] object-contain opacity-50 hover:opacity-90 transition-opacity duration-200" />
                     </div>
                   </div>
 

@@ -75,7 +75,7 @@ export const SolutionsSection: React.FC = () => {
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
             className="absolute z-20 rounded-xl overflow-hidden"
-            style={{ left: '0%', bottom: '223px', width: '26%', background: 'rgba(10,11,14,0.6)' }}
+            style={{ left: '3%', bottom: '223px', width: '26%', background: 'rgba(10,11,14,0.6)' }}
           >
             <img
               src="/tools-pile-orange-2.png"
@@ -91,7 +91,7 @@ export const SolutionsSection: React.FC = () => {
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
             className="absolute z-20 rounded-xl overflow-hidden"
-            style={{ right: '0%', bottom: '223px', width: '22%', background: 'rgba(10,11,14,0.6)' }}
+            style={{ right: '3%', bottom: '223px', width: '22%', background: 'rgba(10,11,14,0.6)' }}
           >
             <img
               src="/target-diagram-orange.png"
@@ -327,7 +327,7 @@ export const SolutionsSection: React.FC = () => {
                 fontSize="26"
                 fontWeight="900"
                 letterSpacing="5"
-                fontFamily="Poppins, sans-serif"
+                fontFamily="Space Grotesk, sans-serif"
               >
                 KNOWING
               </text>
@@ -336,7 +336,7 @@ export const SolutionsSection: React.FC = () => {
                 textAnchor="middle"
                 fill="rgba(255,255,255,0.82)"
                 fontSize="13"
-                fontFamily="Poppins, sans-serif"
+                fontFamily="Space Grotesk, sans-serif"
                 fontWeight="600"
               >
                 Thousands of tools,
@@ -346,7 +346,7 @@ export const SolutionsSection: React.FC = () => {
                 textAnchor="middle"
                 fill="rgba(255,255,255,0.82)"
                 fontSize="13"
-                fontFamily="Poppins, sans-serif"
+                fontFamily="Space Grotesk, sans-serif"
                 fontWeight="600"
               >
                 workshops, and trainings
@@ -366,7 +366,7 @@ export const SolutionsSection: React.FC = () => {
                 fontSize="26"
                 fontWeight="900"
                 letterSpacing="5"
-                fontFamily="Poppins, sans-serif"
+                fontFamily="Space Grotesk, sans-serif"
               >
                 APPLYING
               </text>
@@ -375,7 +375,7 @@ export const SolutionsSection: React.FC = () => {
                 textAnchor="middle"
                 fill="rgba(255,255,255,0.82)"
                 fontSize="13"
-                fontFamily="Poppins, sans-serif"
+                fontFamily="Space Grotesk, sans-serif"
                 fontWeight="600"
               >
                 Fundamental Change
@@ -385,7 +385,7 @@ export const SolutionsSection: React.FC = () => {
                 textAnchor="middle"
                 fill="rgba(255,255,255,0.82)"
                 fontSize="13"
-                fontFamily="Poppins, sans-serif"
+                fontFamily="Space Grotesk, sans-serif"
                 fontWeight="600"
               >
                 in Outcomes
@@ -401,28 +401,57 @@ export const SolutionsSection: React.FC = () => {
           transition={{ delay: 1.2, duration: 0.6 }}
           className="flex flex-col items-center justify-center gap-3 pt-8 pointer-events-auto"
         >
-          <p className="text-white/35 text-sm md:text-base italic font-light text-center max-w-xl leading-relaxed">
+          <p className="text-white/70 text-2xl md:text-3xl lg:text-4xl italic font-semibold text-center max-w-3xl leading-snug tracking-tight">
             "The problem isn't a lack of tools, it is the complete absence of structure"
           </p>
 
-          <span className="text-white/70 text-sm md:text-base tracking-wide max-w-2xl text-center leading-relaxed font-sans mt-2">
-            See how <span className="text-[#FF5C00] font-black">1,500+</span> students across{' '}
-            <span className="text-[#FF5C00] font-black">10+</span> colleges are bridging this gap
+          <span className="text-white/55 text-sm md:text-base tracking-wide max-w-2xl text-center leading-relaxed font-sans mt-1">
+            See how <span className="text-[#FF5C00] font-bold">1,500+</span> students across{' '}
+            <span className="text-[#FF5C00] font-bold">10+</span> colleges are bridging this gap
           </span>
 
-          {/* Large clickable scroll-down arrow */}
+          {/* Animated circle arrow CTA */}
           <button
             onClick={scrollToEcosystem}
-            className="flex flex-col items-center justify-center mt-1 cursor-pointer group focus:outline-none"
+            className="relative flex items-center justify-center mt-4 cursor-pointer group focus:outline-none"
             aria-label="See the ecosystem"
+            style={{ width: 88, height: 88 }}
           >
-            <motion.div
-              animate={{ y: [0, 12, 0], opacity: [0.5, 1, 0.5] }}
-              transition={{ repeat: Infinity, duration: 1.8, ease: 'easeInOut' }}
-              className="text-[#FF5C00] text-6xl font-bold select-none tracking-widest group-hover:text-white transition-colors duration-300"
+            {/* Spinning dashed ring */}
+            <motion.svg
+              width="88" height="88" viewBox="0 0 88 88"
+              className="absolute inset-0"
+              animate={{ rotate: 360 }}
+              transition={{ repeat: Infinity, duration: 8, ease: 'linear' }}
             >
-              ↓
-            </motion.div>
+              <circle
+                cx="44" cy="44" r="40"
+                fill="none"
+                stroke="#FF5C00"
+                strokeWidth="1.5"
+                strokeDasharray="12 7"
+                opacity="0.55"
+              />
+            </motion.svg>
+            {/* Pulsing solid ring */}
+            <motion.svg
+              width="88" height="88" viewBox="0 0 88 88"
+              className="absolute inset-0"
+              animate={{ scale: [1, 1.08, 1], opacity: [0.3, 0.6, 0.3] }}
+              transition={{ repeat: Infinity, duration: 2.2, ease: 'easeInOut' }}
+            >
+              <circle cx="44" cy="44" r="36" fill="none" stroke="#FF5C00" strokeWidth="1" />
+            </motion.svg>
+            {/* Arrow icon */}
+            <motion.svg
+              width="32" height="32" viewBox="0 0 24 24"
+              fill="none"
+              className="relative z-10 text-[#FF5C00] group-hover:text-white transition-colors duration-300"
+              animate={{ y: [0, 5, 0] }}
+              transition={{ repeat: Infinity, duration: 1.6, ease: 'easeInOut' }}
+            >
+              <path d="M12 4v16M5 13l7 7 7-7" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+            </motion.svg>
           </button>
         </motion.div>
 

@@ -77,8 +77,8 @@ const PLATFORM_SECTIONS: Record<string, SectionDef[]> = {
 };
 
 const PLATFORM_LOGOS: Record<string, string> = {
-  aic:     '/aiclogo.png',
-  sip:     '/siplogo.png',
+  aic:     '/logos/aic_logo.png',
+  sip:     '/logos/sip_logo.png',
   cogknit: '/cogknitlogo.png',
 };
 
