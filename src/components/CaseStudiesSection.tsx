@@ -47,8 +47,8 @@ const Modal: React.FC<{ cs: typeof caseStudies[0]; onClose: () => void }> = ({ c
   >
     <div className="absolute inset-0 bg-black/80 backdrop-blur-md" />
     <motion.div
-      className="relative z-10 w-full max-w-5xl bg-[#0d0e14] border border-white/10 rounded-2xl overflow-hidden flex flex-col"
-      style={{ maxHeight: '90vh' }}
+      className="relative z-10 w-full bg-[#0d0e14] border border-white/10 rounded-2xl overflow-hidden flex flex-col"
+      style={{ width: '95vw', maxWidth: 1400, height: '92vh' }}
       initial={{ scale: 0.94, y: 20 }}
       animate={{ scale: 1, y: 0 }}
       exit={{ scale: 0.94, y: 20 }}
@@ -84,23 +84,23 @@ const Modal: React.FC<{ cs: typeof caseStudies[0]; onClose: () => void }> = ({ c
         </div>
       </div>
 
-      {/* body: PDF left, QR right */}
-      <div className="flex flex-col md:flex-row flex-1 min-h-0">
+      {/* body: PDF main, QR sidebar */}
+      <div className="flex flex-row flex-1 min-h-0">
         <div className="flex-1 min-h-0 bg-gray-100">
           <iframe
             src={cs.pdfUrl}
             className="w-full h-full"
-            style={{ minHeight: '60vh', border: 'none' }}
+            style={{ border: 'none', display: 'block' }}
             title={cs.title}
           />
         </div>
-        <div className="flex-shrink-0 md:w-52 flex flex-col items-center justify-center gap-4 px-6 py-8 border-t md:border-t-0 md:border-l border-white/8">
+        <div className="flex-shrink-0 w-44 flex flex-col items-center justify-center gap-4 px-4 py-6 border-l border-white/8">
           <p className="text-white/35 text-[9px] font-bold tracking-[0.3em] uppercase text-center">Scan for more info</p>
-          <div className="w-36 h-36 rounded-xl overflow-hidden border border-white/10 bg-white p-2">
+          <div className="w-32 h-32 rounded-xl overflow-hidden border border-white/10 bg-white p-2">
             <img src={cs.qrUrl} alt="QR code" className="w-full h-full object-contain" />
           </div>
           <p className="text-white/25 text-[9px] text-center leading-relaxed">
-            Scan with your phone camera to access the full report and additional resources
+            Scan to access the full report and additional resources
           </p>
         </div>
       </div>
@@ -145,29 +145,18 @@ const MobileCaseStudies: React.FC<{ onOpen: (cs: typeof caseStudies[0]) => void 
             style={{ height: 240, background: cs.gradient }}
             onClick={() => onOpen(cs)}
           >
-            <div className="absolute inset-0 bg-black/35" />
-            <div
-              className="absolute inset-0 opacity-[0.06]"
-              style={{
-                backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
-                backgroundSize: 'cover',
-              }}
-            />
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="absolute rounded-full border border-white/15" style={{ width: '65%', height: '65%' }} />
-              <div className="absolute rounded-full border border-white/8 border-dashed" style={{ width: '80%', height: '80%' }} />
-              {/* PDF preview */}
-              <div className="relative z-10 rounded-lg overflow-hidden shadow-xl" style={{ width: '48%', height: '70%' }}>
-                <div className="absolute inset-0 overflow-hidden pointer-events-none bg-white">
-                  <iframe
-                    src={`${cs.pdfUrl}#toolbar=0&navpanes=0&scrollbar=0`}
-                    style={{ width: '200%', height: '200%', transform: 'scale(0.5)', transformOrigin: 'top left', border: 'none' }}
-                    title={cs.title}
-                  />
-                </div>
-              </div>
+            {/* PDF fills full card */}
+            <div className="absolute inset-0 overflow-hidden bg-white" style={{ zIndex: 1, pointerEvents: 'none' }}>
+              <iframe
+                src={`${cs.pdfUrl}#toolbar=0&navpanes=0&scrollbar=0`}
+                style={{ width: '200%', height: '200%', transform: 'scale(0.5)', transformOrigin: 'top left', border: 'none', pointerEvents: 'none' }}
+                title={cs.title}
+              />
             </div>
-            <div className="absolute top-3 left-3">
+            {/* colour tint */}
+            <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 2, background: cs.gradient, opacity: 0.2 }} />
+            {/* tag badge above everything */}
+            <div className="absolute top-3 left-3" style={{ zIndex: 5 }}>
               <span
                 className="text-[10px] font-bold tracking-widest uppercase px-2.5 py-1 rounded-full border"
                 style={{ color: cs.accentColor, borderColor: `${cs.accentColor}40`, background: `${cs.accentColor}15` }}
@@ -244,7 +233,30 @@ const DesktopCaseStudies: React.FC<{ onOpen: (cs: typeof caseStudies[0]) => void
   };
 
   return (
-    <div className="h-screen w-full flex flex-col px-8 md:px-14 py-10 bg-[#040507] overflow-hidden pointer-events-auto">
+    <div className="relative h-screen w-full flex flex-col px-20 md:px-28 py-10 bg-[#040507] overflow-hidden pointer-events-auto">
+
+      {/* ── Side nav arrows ─────────────────────────────────────────── */}
+      <button
+        onClick={prev}
+        className="absolute left-4 md:left-5 top-1/2 -translate-y-1/2 z-20 flex flex-col items-center gap-2 group"
+        aria-label="Previous"
+      >
+        <div className="w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center border border-white/20 bg-white/8 group-hover:bg-[#FF5C00]/15 group-hover:border-[#FF5C00]/50 transition-all duration-200 shadow-lg shadow-black/30">
+          <ChevronLeft size={24} className="text-white/60 group-hover:text-white transition-colors duration-200" />
+        </div>
+        <span className="text-[9px] font-bold tracking-[0.2em] uppercase text-white/25 group-hover:text-white/60 transition-colors duration-200">Prev</span>
+      </button>
+
+      <button
+        onClick={next}
+        className="absolute right-4 md:right-5 top-1/2 -translate-y-1/2 z-20 flex flex-col items-center gap-2 group"
+        aria-label="Next"
+      >
+        <div className="w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center border border-white/20 bg-white/8 group-hover:bg-[#FF5C00]/15 group-hover:border-[#FF5C00]/50 transition-all duration-200 shadow-lg shadow-black/30">
+          <ChevronRight size={24} className="text-white/60 group-hover:text-white transition-colors duration-200" />
+        </div>
+        <span className="text-[9px] font-bold tracking-[0.2em] uppercase text-white/25 group-hover:text-white/60 transition-colors duration-200">Next</span>
+      </button>
 
       {/* top bar */}
       <div className="flex items-center justify-between mb-6 flex-shrink-0">
@@ -289,7 +301,7 @@ const DesktopCaseStudies: React.FC<{ onOpen: (cs: typeof caseStudies[0]) => void
         </div>
 
         {/* center: gradient card with PDF preview */}
-        <div className="flex-1 flex items-center justify-center">
+        <div className="flex-1 flex items-center justify-center min-w-0">
           <AnimatePresence mode="wait">
             <motion.div
               key={activeIndex + '-card'}
@@ -309,27 +321,24 @@ const DesktopCaseStudies: React.FC<{ onOpen: (cs: typeof caseStudies[0]) => void
               onMouseMove={onCardMouseMove}
               onClick={() => onOpen(cs)}
             >
-              {/* dark overlay */}
+              {/* gradient background */}
               <div className="absolute inset-0" style={{ background: 'rgba(0,0,0,0.38)' }} />
               {/* noise */}
               <div
-                className="absolute inset-0 opacity-[0.06]"
+                className="absolute inset-0 opacity-[0.06] pointer-events-none"
                 style={{
                   backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
                   backgroundSize: 'cover',
                 }}
               />
 
-              {/* rings + PDF preview — replaces old logo text */}
+              {/* rings + PDF preview centred */}
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="absolute rounded-full border opacity-20" style={{ width: '70%', height: '70%', borderColor: 'white' }} />
                 <div className="absolute rounded-full border opacity-10" style={{ width: '85%', height: '85%', borderColor: 'white', borderStyle: 'dashed' }} />
-                {/* PDF iframe scaled to fit */}
-                <div
-                  className="relative z-10 rounded-xl overflow-hidden shadow-2xl"
-                  style={{ width: '56%', height: '60%' }}
-                >
-                  <div className="absolute inset-0 overflow-hidden pointer-events-none bg-white">
+                {/* PDF preview — bigger than before */}
+                <div className="relative z-10 rounded-xl overflow-hidden shadow-2xl" style={{ width: '68%', height: '70%' }}>
+                  <div className="absolute inset-0 overflow-hidden bg-white" style={{ pointerEvents: 'none' }}>
                     <iframe
                       src={`${cs.pdfUrl}#toolbar=0&navpanes=0&scrollbar=0`}
                       style={{
@@ -338,6 +347,7 @@ const DesktopCaseStudies: React.FC<{ onOpen: (cs: typeof caseStudies[0]) => void
                         transform: 'scale(0.5)',
                         transformOrigin: 'top left',
                         border: 'none',
+                        pointerEvents: 'none',
                       }}
                       title={cs.title}
                     />
@@ -345,7 +355,7 @@ const DesktopCaseStudies: React.FC<{ onOpen: (cs: typeof caseStudies[0]) => void
                 </div>
               </div>
 
-              {/* cursor-following hover button (same pattern as original) */}
+              {/* cursor-following hover button — z-index above everything including iframe */}
               <AnimatePresence>
                 {hovering && (
                   <motion.div
@@ -354,12 +364,12 @@ const DesktopCaseStudies: React.FC<{ onOpen: (cs: typeof caseStudies[0]) => void
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.15 }}
                     className="absolute inset-0 pointer-events-none"
-                    style={{ background: 'rgba(0,0,0,0.25)', backdropFilter: 'blur(2px)' }}
+                    style={{ zIndex: 20, background: 'rgba(0,0,0,0.35)', backdropFilter: 'blur(2px)' }}
                   >
                     <div
                       ref={hoverBtnRef}
                       className="absolute pointer-events-auto"
-                      style={{ left: cursorPosRef.current.x, top: cursorPosRef.current.y, transform: 'translate(-50%, -50%)' }}
+                      style={{ zIndex: 21, left: cursorPosRef.current.x, top: cursorPosRef.current.y, transform: 'translate(-50%, -50%)' }}
                     >
                       <span
                         className="flex items-center gap-2.5 px-5 py-2.5 rounded-full text-white font-semibold text-sm tracking-wide whitespace-nowrap"
@@ -375,17 +385,57 @@ const DesktopCaseStudies: React.FC<{ onOpen: (cs: typeof caseStudies[0]) => void
           </AnimatePresence>
         </div>
 
+        {/* right: QR + download */}
+        <div className="w-[22%] flex-shrink-0">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeIndex + '-right'}
+              initial={{ opacity: 0, x: 24 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 24 }}
+              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+              className="flex flex-col gap-6"
+            >
+              {/* QR */}
+              <div className="flex flex-col items-start gap-3">
+                <span className="text-white/30 text-[10px] font-bold tracking-[0.3em] uppercase">Scan for details</span>
+                <div className="w-28 h-28 rounded-xl overflow-hidden border border-white/10 bg-white p-1.5">
+                  <img src={cs.qrUrl} alt="QR" className="w-full h-full object-contain" />
+                </div>
+                <p className="text-white/30 text-xs leading-relaxed max-w-[160px]">
+                  Scan with your camera to access the full report
+                </p>
+              </div>
+
+              <div className="h-px w-8 bg-white/10" />
+
+              {/* Download button */}
+              <a
+                href={cs.pdfUrl}
+                download
+                className="flex items-center gap-2.5 text-white/55 hover:text-white text-sm font-medium border border-white/10 rounded-full px-4 py-2.5 hover:bg-white/5 hover:border-white/25 transition-all duration-200 w-fit"
+              >
+                <Download size={13} strokeWidth={2} />
+                Download PDF
+              </a>
+
+              {/* View in modal */}
+              <button
+                onClick={() => onOpen(cs)}
+                className="flex items-center gap-2.5 text-white/55 hover:text-white text-sm font-medium transition-colors duration-200 group"
+              >
+                <span>View full report</span>
+                <span className="opacity-0 group-hover:opacity-60 transition-opacity text-xs">→</span>
+              </button>
+            </motion.div>
+          </AnimatePresence>
+        </div>
+
       </div>
 
-      {/* bottom: arrows + progress bar */}
-      <div className="mt-6 flex-shrink-0 flex items-center gap-4">
-        <button
-          onClick={prev}
-          className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-white/50 hover:text-white hover:bg-white/5 transition-all"
-        >
-          <ChevronLeft size={18} />
-        </button>
-        <div className="flex-1 h-px bg-white/8 relative overflow-hidden">
+      {/* bottom: progress bar only */}
+      <div className="mt-6 flex-shrink-0">
+        <div className="w-full h-px bg-white/8 relative overflow-hidden">
           <motion.div
             className="absolute left-0 top-0 h-full"
             style={{ backgroundColor: cs.accentColor }}
@@ -393,12 +443,6 @@ const DesktopCaseStudies: React.FC<{ onOpen: (cs: typeof caseStudies[0]) => void
             transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
           />
         </div>
-        <button
-          onClick={next}
-          className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-white/50 hover:text-white hover:bg-white/5 transition-all"
-        >
-          <ChevronRight size={18} />
-        </button>
       </div>
     </div>
   );
