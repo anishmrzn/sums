@@ -337,7 +337,7 @@ const DesktopCaseStudies: React.FC<{ onOpen: (cs: typeof caseStudies[0]) => void
                 <div className="absolute rounded-full border opacity-20" style={{ width: '70%', height: '70%', borderColor: 'white' }} />
                 <div className="absolute rounded-full border opacity-10" style={{ width: '85%', height: '85%', borderColor: 'white', borderStyle: 'dashed' }} />
                 {/* PDF preview — bigger than before */}
-                <div className="relative z-10 rounded-xl overflow-hidden shadow-2xl" style={{ width: '68%', height: '70%' }}>
+                <div className={`relative z-10 rounded-xl overflow-hidden shadow-2xl ${hovering ? 'scale-110' : 'scale-100'} transition-all duration-200 ease-in`} style={{ width: '68%', height: '70%' }}>
                   <div className="absolute inset-0 overflow-hidden bg-white" style={{ pointerEvents: 'none' }}>
                     <iframe
                       src={`${cs.pdfUrl}#toolbar=0&navpanes=0&scrollbar=0`}
@@ -360,11 +360,11 @@ const DesktopCaseStudies: React.FC<{ onOpen: (cs: typeof caseStudies[0]) => void
                 {hovering && (
                   <motion.div
                     initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
+                    animate={{ opacity: 1, }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.15 }}
                     className="absolute inset-0 pointer-events-none"
-                    style={{ zIndex: 20, background: 'rgba(0,0,0,0.35)', backdropFilter: 'blur(2px)' }}
+                    style={{ zIndex: 20, background: 'rgba(0,0,0,0.35)', }}
                   >
                     <div
                       ref={hoverBtnRef}
