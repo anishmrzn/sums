@@ -64,9 +64,6 @@ export const CrisisSection: React.FC = () => {
             {/* Wheel wrapper — much larger */}
             <div className="relative w-[400px] h-[400px] sm:w-[500px] sm:h-[500px] md:w-[560px] md:h-[560px] xl:w-[620px] xl:h-[620px] flex items-center justify-center">
 
-              {/* Outer decorative orbit rings */}
-              <div className="absolute inset-0 border border-white/[0.04] rounded-full scale-[1.06] pointer-events-none" />
-              <div className="absolute inset-0 border border-dashed border-[#FF5C00]/8 rounded-full scale-[1.12] pointer-events-none" />
 
               {/* Rotating SVG + label tags container */}
               <motion.div
@@ -80,147 +77,92 @@ export const CrisisSection: React.FC = () => {
               >
                 <svg viewBox="0 0 400 400" className="w-full h-full transform -rotate-45" aria-hidden="true">
                   <defs>
-                    <linearGradient id="segment-orange" x1="0" y1="0" x2="1" y2="1">
-                      <stop offset="0%" stopColor="#FF5C00" stopOpacity="0.9" />
-                      <stop offset="100%" stopColor="#CC3D00" stopOpacity="0.5" />
+                    {/* Per-segment gradients: transparent at start → bright at leading edge */}
+                    <linearGradient id="grad-seg1" x1="90" y1="200" x2="190" y2="92" gradientUnits="userSpaceOnUse">
+                      <stop offset="0%"   stopColor="#FF5C00" stopOpacity="0.08" />
+                      <stop offset="55%"  stopColor="#FF5C00" stopOpacity="0.65" />
+                      <stop offset="100%" stopColor="#FF8040" stopOpacity="1"    />
                     </linearGradient>
-                    <linearGradient id="segment-dark" x1="0" y1="0" x2="1" y2="1">
-                      <stop offset="0%" stopColor="#CC3D00" stopOpacity="0.9" />
-                      <stop offset="100%" stopColor="#801A00" stopOpacity="0.4" />
+                    <linearGradient id="grad-seg2" x1="200" y1="90" x2="308" y2="190" gradientUnits="userSpaceOnUse">
+                      <stop offset="0%"   stopColor="#CC3D00" stopOpacity="0.08" />
+                      <stop offset="55%"  stopColor="#CC3D00" stopOpacity="0.65" />
+                      <stop offset="100%" stopColor="#FF5C00" stopOpacity="1"    />
                     </linearGradient>
+                    <linearGradient id="grad-seg3" x1="310" y1="200" x2="210" y2="308" gradientUnits="userSpaceOnUse">
+                      <stop offset="0%"   stopColor="#FF5C00" stopOpacity="0.08" />
+                      <stop offset="55%"  stopColor="#FF5C00" stopOpacity="0.65" />
+                      <stop offset="100%" stopColor="#FF8040" stopOpacity="1"    />
+                    </linearGradient>
+                    <linearGradient id="grad-seg4" x1="200" y1="310" x2="92" y2="210" gradientUnits="userSpaceOnUse">
+                      <stop offset="0%"   stopColor="#CC3D00" stopOpacity="0.08" />
+                      <stop offset="55%"  stopColor="#CC3D00" stopOpacity="0.65" />
+                      <stop offset="100%" stopColor="#FF5C00" stopOpacity="1"    />
+                    </linearGradient>
+
                     <filter id="glow-light" x="-25%" y="-25%" width="150%" height="150%">
-                      <feGaussianBlur stdDeviation="7" result="blur" />
+                      <feGaussianBlur stdDeviation="5" result="blur" />
                       <feComposite in="SourceGraphic" in2="blur" operator="over" />
                     </filter>
-                    {/* Sharp chevron arrowhead — orange */}
-                    <marker
-                      id="arrow-orange"
-                      viewBox="0 0 14 14"
-                      refX="7" refY="7"
-                      markerWidth="9" markerHeight="9"
-                      orient="auto"
-                    >
-                      <path d="M 1,2 L 12,7 L 1,12 L 4,7 Z" fill="#FF5C00" opacity="0.95" />
-                    </marker>
-                    {/* Sharp chevron arrowhead — dark orange */}
-                    <marker
-                      id="arrow-dark"
-                      viewBox="0 0 14 14"
-                      refX="7" refY="7"
-                      markerWidth="9" markerHeight="9"
-                      orient="auto"
-                    >
-                      <path d="M 1,2 L 12,7 L 1,12 L 4,7 Z" fill="#E04500" opacity="0.95" />
-                    </marker>
+                    <filter id="dot-glow" x="-150%" y="-150%" width="400%" height="400%">
+                      <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="blur" />
+                      <feMerge>
+                        <feMergeNode in="blur" />
+                        <feMergeNode in="SourceGraphic" />
+                      </feMerge>
+                    </filter>
                   </defs>
 
-                  {/* Segment 1: Skill Gap — arc goes CW from bottom-left to top-right */}
+                  {/* Faint circular track */}
+                  <circle cx="200" cy="200" r="110" fill="none" stroke="#FF5C00" strokeOpacity="0.07" strokeWidth="1.5" />
+
+                  {/* Segment 1: Skill Gap */}
                   <motion.path
                     d="M 90,200 A 110,110 0 0,1 190,92"
                     fill="none"
-                    stroke="url(#segment-orange)"
-                    strokeWidth="14"
+                    stroke="url(#grad-seg1)"
+                    strokeWidth="12"
                     strokeLinecap="round"
                     filter="url(#glow-light)"
                     initial={{ pathLength: 0 }}
                     animate={activeStep >= 0 ? { pathLength: 1 } : {}}
                     transition={{ duration: 0.9, ease: 'easeInOut' }}
                   />
-                  {activeStep >= 0 && (
-                    <motion.g
-                      transform="translate(190, 92) rotate(354.7)"
-                      initial={{ opacity: 0, scale: 0 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ duration: 0.45, delay: 0.7, ease: [0.34, 1.56, 0.64, 1] }}
-                    >
-                      <path
-                        d="M -14,-8 L 6,0 L -14,8 L -8,0 Z"
-                        fill="#FF5C00"
-                        filter="url(#glow-light)"
-                      />
-                    </motion.g>
-                  )}
-
-                  {/* Segment 2: Degree Mills — arc goes CW from top to right */}
+                  {/* Segment 2: Degree Mills */}
                   <motion.path
                     d="M 200,90 A 110,110 0 0,1 308,190"
                     fill="none"
-                    stroke="url(#segment-dark)"
-                    strokeWidth="14"
+                    stroke="url(#grad-seg2)"
+                    strokeWidth="12"
                     strokeLinecap="round"
                     filter="url(#glow-light)"
                     initial={{ pathLength: 0 }}
                     animate={activeStep >= 1 ? { pathLength: 1 } : {}}
                     transition={{ duration: 0.9, ease: 'easeInOut' }}
                   />
-                  {activeStep >= 1 && (
-                    <motion.g
-                      transform="translate(308, 190) rotate(84.7)"
-                      initial={{ opacity: 0, scale: 0 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ duration: 0.45, delay: 0.7, ease: [0.34, 1.56, 0.64, 1] }}
-                    >
-                      <path
-                        d="M -14,-8 L 6,0 L -14,8 L -8,0 Z"
-                        fill="#CC3D00"
-                        filter="url(#glow-light)"
-                      />
-                    </motion.g>
-                  )}
-
-                  {/* Segment 3: Price Wars — arc goes CW from right to bottom-left */}
+                  {/* Segment 3: Price Wars */}
                   <motion.path
                     d="M 310,200 A 110,110 0 0,1 210,308"
                     fill="none"
-                    stroke="url(#segment-orange)"
-                    strokeWidth="14"
+                    stroke="url(#grad-seg3)"
+                    strokeWidth="12"
                     strokeLinecap="round"
                     filter="url(#glow-light)"
                     initial={{ pathLength: 0 }}
                     animate={activeStep >= 2 ? { pathLength: 1 } : {}}
                     transition={{ duration: 0.9, ease: 'easeInOut' }}
                   />
-                  {activeStep >= 2 && (
-                    <motion.g
-                      transform="translate(210, 308) rotate(174.7)"
-                      initial={{ opacity: 0, scale: 0 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ duration: 0.45, delay: 0.7, ease: [0.34, 1.56, 0.64, 1] }}
-                    >
-                      <path
-                        d="M -14,-8 L 6,0 L -14,8 L -8,0 Z"
-                        fill="#FF5C00"
-                        filter="url(#glow-light)"
-                      />
-                    </motion.g>
-                  )}
-
-                  {/* Segment 4: The Blindfold — arc goes CW from bottom to left */}
+                  {/* Segment 4: The Blindfold */}
                   <motion.path
                     d="M 200,310 A 110,110 0 0,1 92,210"
                     fill="none"
-                    stroke="url(#segment-dark)"
-                    strokeWidth="14"
+                    stroke="url(#grad-seg4)"
+                    strokeWidth="12"
                     strokeLinecap="round"
                     filter="url(#glow-light)"
                     initial={{ pathLength: 0 }}
                     animate={activeStep >= 3 ? { pathLength: 1 } : {}}
                     transition={{ duration: 0.9, ease: 'easeInOut' }}
                   />
-                  {activeStep >= 3 && (
-                    <motion.g
-                      transform="translate(92, 210) rotate(264.7)"
-                      initial={{ opacity: 0, scale: 0 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ duration: 0.45, delay: 0.7, ease: [0.34, 1.56, 0.64, 1] }}
-                    >
-                      <path
-                        d="M -14,-8 L 6,0 L -14,8 L -8,0 Z"
-                        fill="#CC3D00"
-                        filter="url(#glow-light)"
-                      />
-                    </motion.g>
-                  )}
                 </svg>
 
 

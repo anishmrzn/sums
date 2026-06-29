@@ -5,7 +5,6 @@ import React, { useRef, useMemo, useState } from 'react';
 import { Canvas, useFrame, useThree, useLoader } from '@react-three/fiber';
 import { Stars, Line, Html } from '@react-three/drei';
 import * as THREE from 'three';
-import { MousePointerClick } from 'lucide-react';
 
 
 
@@ -16,40 +15,47 @@ interface PlanetData {
   position: THREE.Vector3;
   color: string;
   size: number;
+  logoAspect?: number;
+  glowSize?: number;
+  logoScale?: number;
 }
 
 const planets: PlanetData[] = [
-  { id: 'cogknit', name: 'Cogknit', tagline: 'Smart Learning Platform', position: new THREE.Vector3(5, 0.5, -2), color: '#FE6D00', size: 0.65 },
-  { id: 'sip', name: 'SIP', tagline: 'Strategic Integrations', position: new THREE.Vector3(-5, -0.8, -4), color: '#FE6D00', size: 0.65 },
-  { id: 'aic', name: 'AIC', tagline: 'Youth Skill Incubation', position: new THREE.Vector3(4, -4, -8), color: '#FE6D00', size: 0.65 }
+  { id: 'cogknit', name: 'Cogknit', tagline: 'Smart Learning Platform', position: new THREE.Vector3(5, 0.5, -2),  color: '#FE6D00', size: 0.65, logoAspect: 1.0,  glowSize: 0.65, logoScale: 1.0  },
+  { id: 'sip',    name: 'SIP',    tagline: 'Strategic Integrations',    position: new THREE.Vector3(-5, -0.8, -4), color: '#FE6D00', size: 0.70, logoAspect: 1.57, glowSize: 0.70, logoScale: 0.52 },
+  { id: 'aic',    name: 'AIC',    tagline: 'Youth Skill Incubation',    position: new THREE.Vector3(4, -4, -8),   color: '#FE6D00', size: 0.80, logoAspect: 1.81, glowSize: 0.80, logoScale: 0.44 }
 ];
 
 // Planet logo component — loads a real PNG and billboards it with a pulsing glow halo
 const PlanetLogo: React.FC<{
   texturePath: string;
   size: number;
+  glowSize?: number;
+  aspect?: number;
   opacity?: number;
+  logoScale?: number;
   onClick?: (e: any) => void;
   onPointerOver?: (e: any) => void;
   onPointerOut?: (e: any) => void;
-}> = ({ texturePath, size, opacity = 1, onClick, onPointerOver, onPointerOut }) => {
+}> = ({ texturePath, size, glowSize, aspect = 1, opacity = 1, logoScale = 1, onClick, onPointerOver, onPointerOut }) => {
+  // glowSize defaults to size so existing callers are unchanged
+  const gs = glowSize ?? size;
   const texture = useLoader(THREE.TextureLoader, texturePath);
   const meshRef = useRef<THREE.Mesh>(null);
   const halo1Ref = useRef<THREE.Mesh>(null);
   const halo2Ref = useRef<THREE.Mesh>(null);
+  const halo3Ref = useRef<THREE.Mesh>(null);
   const { camera } = useThree();
 
   const glowTextures = useMemo(() => {
-    const makeGlow = (innerRgba: string, outerRgba: string) => {
+    const makeGlow = (stops: [number, string][]) => {
       const canvas = document.createElement('canvas');
       canvas.width = 256;
       canvas.height = 256;
       const ctx = canvas.getContext('2d')!;
       const cx = 128;
       const grad = ctx.createRadialGradient(cx, cx, 0, cx, cx, cx);
-      grad.addColorStop(0, innerRgba);
-      grad.addColorStop(0.45, outerRgba);
-      grad.addColorStop(1, 'rgba(0,0,0,0)');
+      stops.forEach(([t, c]) => grad.addColorStop(t, c));
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, 256, 256);
       const tex = new THREE.CanvasTexture(canvas);
@@ -57,8 +63,26 @@ const PlanetLogo: React.FC<{
       return tex;
     };
     return {
-      inner: makeGlow('rgba(254,109,0,0.7)', 'rgba(254,80,0,0.25)'),
-      outer: makeGlow('rgba(254,80,0,0.35)', 'rgba(180,40,0,0.0)'),
+      // Hot bright center fading fast → atmospheric outer haze
+      inner: makeGlow([
+        [0.00, 'rgba(255,150,50,0.75)'],
+        [0.15, 'rgba(254,110,0,0.50)'],
+        [0.40, 'rgba(254,70,0,0.18)'],
+        [0.70, 'rgba(200,35,0,0.05)'],
+        [1.00, 'rgba(0,0,0,0)'],
+      ]),
+      mid: makeGlow([
+        [0.00, 'rgba(254,90,0,0.30)'],
+        [0.35, 'rgba(180,40,0,0.08)'],
+        [0.70, 'rgba(100,20,0,0.02)'],
+        [1.00, 'rgba(0,0,0,0)'],
+      ]),
+      // Very soft wide corona
+      outer: makeGlow([
+        [0.00, 'rgba(254,60,0,0.12)'],
+        [0.50, 'rgba(150,25,0,0.03)'],
+        [1.00, 'rgba(0,0,0,0)'],
+      ]),
     };
   }, []);
 
@@ -68,29 +92,39 @@ const PlanetLogo: React.FC<{
     if (halo1Ref.current) {
       halo1Ref.current.quaternion.copy(camera.quaternion);
       const pulse = (Math.sin(t * 1.3) + 1) / 2;
-      (halo1Ref.current.material as THREE.MeshBasicMaterial).opacity = (0.4 + pulse * 0.25) * opacity;
+      (halo1Ref.current.material as THREE.MeshBasicMaterial).opacity = (0.32 + pulse * 0.18) * opacity;
     }
     if (halo2Ref.current) {
       halo2Ref.current.quaternion.copy(camera.quaternion);
       const pulse2 = (Math.sin(t * 0.8 + 1.2) + 1) / 2;
-      (halo2Ref.current.material as THREE.MeshBasicMaterial).opacity = (0.2 + pulse2 * 0.15) * opacity;
+      (halo2Ref.current.material as THREE.MeshBasicMaterial).opacity = (0.18 + pulse2 * 0.10) * opacity;
+    }
+    if (halo3Ref.current) {
+      halo3Ref.current.quaternion.copy(camera.quaternion);
+      const pulse3 = (Math.sin(t * 0.5 + 2.5) + 1) / 2;
+      (halo3Ref.current.material as THREE.MeshBasicMaterial).opacity = (0.08 + pulse3 * 0.06) * opacity;
     }
   });
 
   return (
     <group onClick={onClick} onPointerOver={onPointerOver} onPointerOut={onPointerOut}>
-      {/* Outer glow */}
+      {/* Wide soft corona — uses glowSize so SIP/AIC match Cogknit's aura footprint */}
+      <mesh ref={halo3Ref}>
+        <planeGeometry args={[gs * 6.5, gs * 6.5]} />
+        <meshBasicMaterial map={glowTextures.outer} transparent opacity={0.08} depthWrite={false} blending={THREE.AdditiveBlending} />
+      </mesh>
+      {/* Mid glow */}
       <mesh ref={halo2Ref}>
-        <planeGeometry args={[size * 5.0, size * 5.0]} />
-        <meshBasicMaterial map={glowTextures.outer} transparent opacity={0.2} depthWrite={false} blending={THREE.AdditiveBlending} />
+        <planeGeometry args={[gs * 4.2, gs * 4.2]} />
+        <meshBasicMaterial map={glowTextures.mid} transparent opacity={0.18} depthWrite={false} blending={THREE.AdditiveBlending} />
       </mesh>
-      {/* Inner glow */}
+      {/* Inner hot glow */}
       <mesh ref={halo1Ref}>
-        <planeGeometry args={[size * 3.2, size * 3.2]} />
-        <meshBasicMaterial map={glowTextures.inner} transparent opacity={0.4} depthWrite={false} blending={THREE.AdditiveBlending} />
+        <planeGeometry args={[gs * 2.8, gs * 2.8]} />
+        <meshBasicMaterial map={glowTextures.inner} transparent opacity={0.32} depthWrite={false} blending={THREE.AdditiveBlending} />
       </mesh>
-      {/* Logo */}
-      <mesh ref={meshRef} scale={[size * 2, size * 2, size * 2]}>
+      {/* Logo — logoScale shrinks the image inside the glow circle without changing the circle size */}
+      <mesh ref={meshRef} scale={[size * 2 * aspect * logoScale, size * 2 * logoScale, size * 2 * logoScale]}>
         <planeGeometry args={[1, 1]} />
         <meshBasicMaterial map={texture} transparent opacity={opacity} depthWrite={false} alphaTest={0.01} />
       </mesh>
@@ -317,8 +351,8 @@ const SceneContent: React.FC<{
 
   const planetLogoPaths: Record<string, string> = {
     cogknit: '/cogknitlogo.png',
-    sip: '/siplogo.png',
-    aic: '/aiclogo.png',
+    sip: '/logos/sip_logo.png',
+    aic: '/logos/aic_logo.png',
   };
 
   const orbitPlanes = useMemo(() => {
@@ -619,6 +653,9 @@ const SceneContent: React.FC<{
                   <PlanetLogo
                     texturePath={planetLogoPaths[planet.id]}
                     size={planet.size}
+                    glowSize={planet.glowSize ?? planet.size}
+                    aspect={planet.logoAspect ?? 1}
+                    logoScale={planet.logoScale ?? 1}
                     opacity={
                       activePlatform === planet.id
                         ? Math.max(0, 1 - detailScrollY / 350)
@@ -649,19 +686,24 @@ const SceneContent: React.FC<{
                 {hoveredPlatform === planet.id && (
                   <Html position={[0, -(planet.size + 0.55), 0]} center zIndexRange={[100, 0]}>
                     <div style={{ pointerEvents: 'none', userSelect: 'none', textAlign: 'center', background: 'rgba(4,5,7,0.96)', border: '1.5px solid rgba(253,68,0,0.6)', borderRadius: '12px', padding: '10px 20px', minWidth: '200px', boxShadow: '0 0 24px rgba(253,68,0,0.4)', backdropFilter: 'blur(12px)' }}>
-                      <h4 style={{ fontSize: '16px', fontWeight: 700, letterSpacing: '0.15em', color: '#FD4400', textTransform: 'uppercase', fontFamily: 'Poppins, sans-serif', margin: 0 }}>{planet.name}</h4>
-                      <p style={{ fontSize: '12px', color: 'rgba(255,255,255,0.65)', marginTop: '4px', whiteSpace: 'nowrap', fontFamily: 'Poppins, sans-serif' }}>{planet.tagline}</p>
+                      <h4 style={{ fontSize: '16px', fontWeight: 700, letterSpacing: '0.15em', color: '#FD4400', textTransform: 'uppercase', fontFamily: 'Space Grotesk, sans-serif', margin: 0 }}>{planet.name}</h4>
+                      <p style={{ fontSize: '12px', color: 'rgba(255,255,255,0.65)', marginTop: '4px', whiteSpace: 'nowrap', fontFamily: 'Space Grotesk, sans-serif' }}>{planet.tagline}</p>
                     </div>
                   </Html>
                 )}
 
-                {/* Click hint icon — only on Cogknit, only after planets are fully aligned */}
-                {isAligned && ecosystemRevealed && !hoveredPlatform && !activePlatform && planet.id === 'cogknit' && (
-                  <Html position={[0, -(planet.size + 0.38), 0]} center zIndexRange={[50, 0]}>
-                    <div style={{ pointerEvents: 'none', userSelect: 'none', textAlign: 'center', animation: 'clickHintBounce 2s ease-in-out infinite' }}>
-                      <MousePointerClick size={20} color="#FD4400" strokeWidth={1.5} style={{ opacity: 0.85, filter: 'drop-shadow(0 0 6px rgba(253,68,0,0.6))' }} />
+                {/* Click hint — shown on every planet when aligned, hidden on hover */}
+                {isAligned && ecosystemRevealed && !hoveredPlatform && !activePlatform && (
+                  <Html position={[0, -(planet.size + 0.58), 0]} center zIndexRange={[50, 0]}>
+                    <div style={{ pointerEvents: 'none', userSelect: 'none', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px', animation: 'explorePulse 2s ease-in-out infinite' }}>
+                      <div style={{ background: 'rgba(253,68,0,0.18)', border: '1px solid rgba(253,68,0,0.55)', borderRadius: '999px', padding: '5px 14px', display: 'flex', alignItems: 'center', gap: '6px', backdropFilter: 'blur(8px)', boxShadow: '0 0 12px rgba(253,68,0,0.25)' }}>
+                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#FD4400" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                        <span style={{ fontSize: '10px', fontWeight: 800, color: '#FD4400', letterSpacing: '0.18em', fontFamily: 'Space Grotesk, sans-serif', textTransform: 'uppercase' }}>Explore</span>
+                      </div>
                     </div>
-                    <style>{`@keyframes clickHintBounce { 0%,100%{transform:translateY(0) scale(1);opacity:0.5} 50%{transform:translateY(-5px) scale(1.1);opacity:1} }`}</style>
+                    <style>{`@keyframes explorePulse { 0%,100%{transform:translateY(0);opacity:0.65} 50%{transform:translateY(-5px);opacity:1} }`}</style>
                   </Html>
                 )}
               </>
@@ -700,7 +742,7 @@ export const SolarSystemScene: React.FC<SolarSystemSceneProps> = ({
       className="fixed inset-0 z-0 w-full h-full pointer-events-none bg-[#040507]"
     >
       <div
-        className="w-full h-full pointer-events-auto transition-all duration-1000 ease-in-out"
+        className="w-full h-full pointer-events-auto transition-all duration-500 ease-in-out"
         style={{
           opacity: canvasOpacity,
           transform: activePlatform ? 'translateY(0)' : 'translateY(70px)',

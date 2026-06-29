@@ -60,7 +60,7 @@ export const LogoSlider: React.FC = () => {
                 <img
                   src={logo}
                   alt={`Partner logo ${(i % LOGOS.length) + 1}`}
-                  className="h-[48px] w-auto max-w-[120px] object-contain opacity-100  grayscale"
+                  className="h-[48px] w-auto max-w-[120px] object-contain opacity-100"
                   draggable={false}
                 />
               </div>
