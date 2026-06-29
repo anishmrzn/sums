@@ -497,8 +497,8 @@ const CogknitSections: React.FC = () => {
 // ── MAIN COMPONENT ────────────────────────────────────────────────────────────
 export const PlatformDetail: React.FC<PlatformDetailProps> = ({
   platformId,
-  activeSection,
-  onActiveSectionChange,
+  activeSection: _activeSection,
+  onActiveSectionChange: _onActiveSectionChange,
   detailScrollY = 0,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
