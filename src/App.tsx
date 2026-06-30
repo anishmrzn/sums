@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { Seo } from './components/Seo';
 import { Navbar } from './components/Navbar';
 import { SolarSystemScene } from './components/SolarSystemScene';
 import { PlatformDetail } from './components/PlatformDetail';
@@ -290,6 +291,8 @@ function App() {
 
   return (
     <div className={`bg-[#040507] text-white relative font-sans selection:bg-brand selection:text-white min-h-screen`}>
+
+      <Seo page={activePlatform === 'cogknit' || activePlatform === 'sip' || activePlatform === 'aic' ? activePlatform : 'home'} />
 
       <SolarSystemScene
         scrollProgress={scrollProgress}
