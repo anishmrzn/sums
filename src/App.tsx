@@ -333,7 +333,7 @@ function App() {
                 {/* Large Bold Headline with word-by-word stagger */}
                 <h1 className="font-[700] tracking-tight leading-[1.15] flex flex-col items-center w-full">
                   <motion.span
-                    className="text-white text-6xl sm:text-7xl md:text-9xl block w-full pb-2"
+                    className="text-white text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl block w-full pb-2"
                     initial="hidden"
                     animate="visible"
                     variants={{
@@ -357,7 +357,7 @@ function App() {
                   </motion.span>
 
                   <motion.span
-                    className="text-[#FF5C00] text-4xl sm:text-5xl md:text-7xl block mt-3 w-full pb-2"
+                    className="text-[#FF5C00] text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl block mt-3 w-full pb-2"
                     initial="hidden"
                     animate="visible"
                     variants={{
@@ -439,8 +439,8 @@ function App() {
 
 
 
-            {/* MOBILE PLATFORM SELECTOR — shown after ecosystem section, mobile only */}
-            <div className="md:hidden relative z-10 pointer-events-auto bg-[#040507] px-4 pt-10 pb-6 border-t border-white/5">
+            {/* MOBILE PLATFORM SELECTOR — shown after ecosystem section, below lg */}
+            <div className="lg:hidden relative z-10 pointer-events-auto bg-[#040507] px-4 pt-10 pb-6 border-t border-white/5">
               <p className="text-center text-white/40 text-[10px] font-bold tracking-[0.3em] uppercase mb-5">
                 Explore Platforms
               </p>
@@ -475,7 +475,7 @@ function App() {
               <div id="about" className="max-w-6xl mx-auto px-6 py-20">
                 {/* Big heading */}
                 <div className="text-center mb-16">
-                  <h2 className="font-sans font-black text-6xl md:text-8xl xl:text-9xl tracking-tight text-white leading-none">
+                  <h2 className="font-sans font-black text-5xl md:text-6xl lg:text-8xl xl:text-9xl tracking-tight text-white leading-none">
                     OUR <span className="text-[#FF5C00]">IMPACT</span>
                   </h2>
                 </div>
@@ -487,8 +487,8 @@ function App() {
                     { number: '15+', label: 'Institutions' },
                     { number: '7', label: 'Countries' },
                   ].map((stat) => (
-                    <div key={stat.label} className="text-center p-8 rounded-2xl border border-white/5 bg-white/[0.02] backdrop-blur-sm">
-                      <div className="text-6xl md:text-7xl font-black text-[#FF5C00] mb-2">{stat.number}</div>
+                    <div key={stat.label} className="text-center p-5 md:p-6 lg:p-8 rounded-2xl border border-white/5 bg-white/[0.02] backdrop-blur-sm">
+                      <div className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black text-[#FF5C00] mb-2">{stat.number}</div>
                       <div className="text-white/60 text-base font-semibold tracking-widest uppercase">{stat.label}</div>
                     </div>
                   ))}
@@ -554,8 +554,8 @@ function App() {
               <CaseStudiesSection />
 
               {/* Contact Section */}
-              <div id="contact" className="mmx-auto px-20 md:px-28 py-20">
-                <div className="grid grid-cols-1 md:grid-cols-[1fr_1.3fr_2.7fr] gap-6 items-start">
+              <div id="contact" className="mx-auto px-4 sm:px-6 md:px-8 lg:px-16 xl:px-28 py-10 md:py-16 xl:py-20">
+                <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.3fr_2.7fr] gap-6 items-start">
 
                   {/* Card 1 — Organizing Committee */}
                   <div className="rounded-2xl border border-white/8 bg-white/[0.03] p-9 flex flex-col gap-8">

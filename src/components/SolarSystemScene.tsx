@@ -449,8 +449,8 @@ const SceneContent: React.FC<{
     } else {
       // DEFAULT / HOME / ECOSYSTEM REVEAL VIEW
       const baseCamera = new THREE.Vector3(0, 1.5, 24);
-      const isMobile = window.innerWidth < 768;
-      const zoomedCamera = new THREE.Vector3(0, -2.0, isMobile ? 23 : 17); // Shifted from -1.6 to -2.0
+      const isMobile = window.innerWidth < 1024;
+      const zoomedCamera = new THREE.Vector3(0, -2.0, isMobile ? 22 : 17);
       
       const homeCameraPos = new THREE.Vector3().lerpVectors(baseCamera, zoomedCamera, revealProgress.current);
       const homeLookAt = new THREE.Vector3(0, 1.6, 0); // Shifted from 1.3 to 1.6 to push the scene downward
@@ -475,7 +475,7 @@ const SceneContent: React.FC<{
 
     let targetFov = targetPlatformId ? 40 : 50;
     if (!targetPlatformId) {
-      const lineFov = window.innerWidth < 768 ? 68 : 50;
+      const lineFov = window.innerWidth < 1024 ? 62 : 50;
       targetFov = THREE.MathUtils.lerp(targetFov, lineFov, smoothedTransitionT.current);
     }
 
@@ -750,7 +750,8 @@ export const SolarSystemScene: React.FC<SolarSystemSceneProps> = ({
       >
         <Canvas
           camera={{ position: [0, 1.5, 24], fov: 52, near: 0.1, far: 1000 }}
-          gl={{ antialias: true, alpha: false }}
+          dpr={[1, 1.5]}
+          gl={{ antialias: true, alpha: false, powerPreference: 'default' }}
           onCreated={({ gl }) => {
             gl.setClearColor(new THREE.Color('#040507'), 1);
           }}

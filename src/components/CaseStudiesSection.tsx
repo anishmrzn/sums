@@ -84,8 +84,8 @@ const Modal: React.FC<{ cs: typeof caseStudies[0]; onClose: () => void }> = ({ c
         </div>
       </div>
 
-      {/* body: PDF main, QR sidebar */}
-      <div className="flex flex-row flex-1 min-h-0">
+      {/* body: PDF full-width */}
+      <div className="flex flex-col flex-1 min-h-0">
         <div className="flex-1 min-h-0 bg-gray-100">
           <iframe
             src={cs.pdfUrl}
@@ -94,14 +94,15 @@ const Modal: React.FC<{ cs: typeof caseStudies[0]; onClose: () => void }> = ({ c
             title={cs.title}
           />
         </div>
-        <div className="flex-shrink-0 w-44 flex flex-col items-center justify-center gap-4 px-4 py-6 border-l border-white/8">
-          <p className="text-white/35 text-[9px] font-bold tracking-[0.3em] uppercase text-center">Scan for more info</p>
-          <div className="w-32 h-32 rounded-xl overflow-hidden border border-white/10 bg-white p-2">
+        {/* QR strip at bottom */}
+        <div className="flex-shrink-0 flex items-center gap-4 px-6 py-3 border-t border-white/8 bg-[#0d0e14]">
+          <div className="w-12 h-12 rounded-lg overflow-hidden border border-white/10 bg-white p-1 shrink-0">
             <img src={cs.qrUrl} alt="QR code" className="w-full h-full object-contain" />
           </div>
-          <p className="text-white/25 text-[9px] text-center leading-relaxed">
-            Scan to access the full report and additional resources
-          </p>
+          <div>
+            <p className="text-white/40 text-[9px] font-bold tracking-[0.3em] uppercase">Scan for more info</p>
+            <p className="text-white/25 text-[9px] mt-0.5">Scan with your camera to access the full report and additional resources</p>
+          </div>
         </div>
       </div>
     </motion.div>
@@ -233,12 +234,12 @@ const DesktopCaseStudies: React.FC<{ onOpen: (cs: typeof caseStudies[0]) => void
   };
 
   return (
-    <div className="relative h-screen w-full flex flex-col px-20 md:px-28 py-10 bg-[#040507] overflow-hidden pointer-events-auto">
+    <div className="relative h-screen w-full flex flex-col px-8 lg:px-16 xl:px-28 py-10 bg-[#040507] overflow-hidden pointer-events-auto">
 
       {/* ── Side nav arrows ─────────────────────────────────────────── */}
       <button
         onClick={prev}
-        className="absolute left-4 md:left-5 top-1/2 -translate-y-1/2 z-20 flex flex-col items-center gap-2 group"
+        className="absolute left-2 lg:left-4 xl:left-5 top-1/2 -translate-y-1/2 z-20 flex flex-col items-center gap-2 group"
         aria-label="Previous"
       >
         <div className="w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center border border-white/20 bg-white/8 group-hover:bg-[#FF5C00]/15 group-hover:border-[#FF5C00]/50 transition-all duration-200 shadow-lg shadow-black/30">
@@ -249,7 +250,7 @@ const DesktopCaseStudies: React.FC<{ onOpen: (cs: typeof caseStudies[0]) => void
 
       <button
         onClick={next}
-        className="absolute right-4 md:right-5 top-1/2 -translate-y-1/2 z-20 flex flex-col items-center gap-2 group"
+        className="absolute right-2 lg:right-4 xl:right-5 top-1/2 -translate-y-1/2 z-20 flex flex-col items-center gap-2 group"
         aria-label="Next"
       >
         <div className="w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center border border-white/20 bg-white/8 group-hover:bg-[#FF5C00]/15 group-hover:border-[#FF5C00]/50 transition-all duration-200 shadow-lg shadow-black/30">
@@ -450,11 +451,11 @@ const DesktopCaseStudies: React.FC<{ onOpen: (cs: typeof caseStudies[0]) => void
 
 // ── EXPORT ───────────────────────────────────────────────────────────────────
 export const CaseStudiesSection: React.FC = () => {
-  const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth < 768);
+  const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth < 1024);
   const [modalCs, setModalCs] = useState<typeof caseStudies[0] | null>(null);
 
   React.useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 768);
+    const check = () => setIsMobile(window.innerWidth < 1024);
     window.addEventListener('resize', check);
     return () => window.removeEventListener('resize', check);
   }, []);

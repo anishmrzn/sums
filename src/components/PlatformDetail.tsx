@@ -273,14 +273,14 @@ const AicSections: React.FC = () => {
         <h2 className="font-serif text-xl md:text-3xl font-medium text-white mb-8">
           Proven at Scale
         </h2>
-        <div className="grid grid-cols-3 gap-4 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
           {[
             { num: '100+',   label: 'Projects Completed' },
             { num: '50+',    label: 'National & International Partners' },
             { num: '1,500+', label: 'Capable Students Trained' },
           ].map(stat => (
-            <div key={stat.label} className="border border-white/5 rounded-xl p-5 bg-white/[0.02] text-center">
-              <div className="text-3xl md:text-4xl font-black text-[#FD4400] mb-1">{stat.num}</div>
+            <div key={stat.label} className="border border-white/5 rounded-xl p-4 sm:p-5 bg-white/[0.02] text-center">
+              <div className="text-3xl sm:text-3xl md:text-4xl font-black text-[#FD4400] mb-1">{stat.num}</div>
               <div className="text-white/45 text-[10px] font-semibold tracking-wider uppercase leading-tight">{stat.label}</div>
             </div>
           ))}
@@ -503,11 +503,11 @@ export const PlatformDetail: React.FC<PlatformDetailProps> = ({
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isMobile, setIsMobile] = useState<boolean>(
-    () => typeof window !== 'undefined' && window.innerWidth < 768
+    () => typeof window !== 'undefined' && window.innerWidth < 1024
   );
 
   useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 768);
+    const check = () => setIsMobile(window.innerWidth < 1024);
     window.addEventListener('resize', check);
     return () => window.removeEventListener('resize', check);
   }, []);
