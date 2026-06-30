@@ -29,28 +29,21 @@ const LOGOS = [
 ];
 
 export const LogoSlider: React.FC = () => {
-  // Triple the array so the seamless loop works even at wide viewports
   const loopedLogos = [...LOGOS, ...LOGOS, ...LOGOS];
 
   return (
     <div className="w-full bg-[#040507] border-y border-white/5 py-5 overflow-hidden relative pointer-events-none">
-      {/* Row: label on the left + scrolling strip */}
       <div className="flex items-center gap-6">
-
-        {/* Left Label — stays fixed */}
         <div className="flex-shrink-0 pl-6 md:pl-10 z-20 bg-[#040507]">
           <span className="text-[10px] font-semibold tracking-[0.2em] text-white/35 uppercase whitespace-nowrap">
             TRUSTED BY INDUSTRIES & ACADEMIA
           </span>
         </div>
 
-        {/* Scrolling strip */}
         <div className="relative flex-grow overflow-hidden select-none">
-          {/* Left & Right edge fade */}
           <div className="absolute inset-y-0 left-0 w-12 bg-gradient-to-r from-[#040507] to-transparent z-10 pointer-events-none" />
           <div className="absolute inset-y-0 right-0 w-12 bg-gradient-to-l from-[#040507] to-transparent z-10 pointer-events-none" />
 
-          {/* Track — uses global .logo-scroll-track class defined in index.css */}
           <div className="logo-scroll-track flex gap-10 w-max py-2">
             {loopedLogos.map((logo, i) => (
               <div

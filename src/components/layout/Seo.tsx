@@ -1,5 +1,5 @@
 import { Helmet } from 'react-helmet-async';
-import seoData from '../data/seo.json';
+import seoData from '../../data/seo.json';
 
 type PageKey = keyof typeof seoData.pages;
 
@@ -20,7 +20,6 @@ export function Seo({ page }: SeoProps) {
       <meta name="keywords" content={meta.keywords} />
       <link rel="canonical" href={canonicalUrl} />
 
-      {/* Open Graph */}
       <meta property="og:site_name" content={site.name} />
       <meta property="og:type" content={meta.ogType} />
       <meta property="og:url" content={canonicalUrl} />
@@ -29,7 +28,6 @@ export function Seo({ page }: SeoProps) {
       <meta property="og:image" content={ogImageUrl} />
       <meta property="og:locale" content={site.locale} />
 
-      {/* Twitter Card */}
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:site" content={site.twitterHandle} />
       <meta name="twitter:title" content={meta.title} />

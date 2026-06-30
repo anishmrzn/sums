@@ -23,13 +23,12 @@ export const Navbar: React.FC<NavbarProps> = ({ activePlatform, onBackToEcosyste
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
 
-      // Reveal navbar at the very top of the page, otherwise hide on scroll down and show on scroll up
       if (currentScrollY <= 50) {
         setVisible(true);
       } else if (currentScrollY > prevScrollY) {
-        setVisible(false); // scrolling down
+        setVisible(false);
       } else {
-        setVisible(true); // scrolling up
+        setVisible(true);
       }
 
       setPrevScrollY(currentScrollY);
@@ -50,14 +49,11 @@ export const Navbar: React.FC<NavbarProps> = ({ activePlatform, onBackToEcosyste
         className={`fixed top-0 left-0 right-0 z-50 px-5 py-4 md:px-12 md:py-6 flex items-center justify-between border-b border-white/[0.03] bg-[#040507]/40 backdrop-blur-md transition-all duration-300 ${visible ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0 pointer-events-none'
           }`}
       >
-
-        {/* Logo — 3D glowing sums_logo.png */}
         <div
           onClick={() => handleNav('ecosystem')}
           className="cursor-pointer group flex items-center gap-2.5"
         >
           <div className="relative flex items-center justify-center">
-            {/* Outer ambient glow layer */}
             <div
               className="absolute inset-0 rounded-full blur-xl opacity-60 group-hover:opacity-90 transition-opacity duration-500"
               style={{
@@ -65,7 +61,6 @@ export const Navbar: React.FC<NavbarProps> = ({ activePlatform, onBackToEcosyste
                 transform: 'scale(1.8)',
               }}
             />
-            {/* Inner sharper glow */}
             <div
               className="absolute inset-0 rounded-full blur-md opacity-50 group-hover:opacity-80 transition-opacity duration-300"
               style={{
@@ -73,7 +68,6 @@ export const Navbar: React.FC<NavbarProps> = ({ activePlatform, onBackToEcosyste
                 transform: 'scale(1.3)',
               }}
             />
-            {/* Logo image */}
             <img
               src="/sums_logo.png"
               alt="SUMS Nepal"
@@ -83,12 +77,8 @@ export const Navbar: React.FC<NavbarProps> = ({ activePlatform, onBackToEcosyste
               }}
             />
           </div>
-          {/* <span className="font-serif font-semibold tracking-wider text-base text-white/90 group-hover:text-white transition-colors duration-300 hidden sm:block">
-            SUMS<span className="text-brand font-sans text-[10px] align-super ml-0.5 font-bold">NEPAL</span>
-          </span> */}
         </div>
 
-        {/* Desktop nav links */}
         <nav className="hidden md:flex items-center space-x-8 text-sm font-medium tracking-wide">
           {NAV_LINKS.map(link => (
             <a
@@ -102,7 +92,6 @@ export const Navbar: React.FC<NavbarProps> = ({ activePlatform, onBackToEcosyste
           ))}
         </nav>
 
-        {/* Right side: CTA + hamburger */}
         <div className="flex items-center gap-3">
           <AnimatePresence mode="wait">
             {activePlatform ? (
@@ -131,7 +120,6 @@ export const Navbar: React.FC<NavbarProps> = ({ activePlatform, onBackToEcosyste
             )}
           </AnimatePresence>
 
-          {/* Hamburger — mobile only */}
           <button
             onClick={() => setMobileOpen(o => !o)}
             aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
@@ -142,7 +130,6 @@ export const Navbar: React.FC<NavbarProps> = ({ activePlatform, onBackToEcosyste
         </div>
       </header>
 
-      {/* Mobile slide-down menu */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
