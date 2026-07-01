@@ -9,7 +9,7 @@ export const HeroSection: React.FC = () => {
   const shouldReduceMotion = useReducedMotion();
 
   return (
-    <div className="w-full min-h-screen flex flex-col justify-between pt-24 px-6 relative">
+    <div className="w-full min-h-screen flex flex-col justify-between pt-28 md:pt-36 px-6 relative">
       <div className="flex-grow flex flex-col items-center justify-center text-center max-w-7xl mx-auto w-full pointer-events-auto">
         <motion.span
           initial={{ opacity: 0, y: shouldReduceMotion ? 0 : -15 }}
