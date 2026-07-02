@@ -1,0 +1,66 @@
+{
+  "site": {
+    "name": "SUMS",
+    "url": "https://sumsnepal.com",
+    "locale": "en_US",
+    "twitterHandle": "@sumsnepal"
+  },
+  "pages": {
+    "gateway": {
+      "path": "/",
+      "title": "SUMS — Bridging Education & Industry in Nepal",
+      "description": "Choose your path into SUMS — explore the academic ecosystem, our philosophy, or how industry partners with us to close the skills gap in Nepal.",
+      "keywords": "SUMS, education Nepal, EdTech, students, industry, skills gap, Cogknit, SIP, AIC, learning platform, academia, university, Nepal",
+      "ogImage": "/sums_logo.png",
+      "ogType": "website"
+    },
+    "academia": {
+      "path": "/academia",
+      "title": "SUMS — Bridging Education & Industry in Nepal",
+      "description": "SUMS connects students, institutions, and industry through an integrated ecosystem of platforms — Cogknit, SIP, and AIC. 1,500+ students. 15+ institutions. 7 countries.",
+      "keywords": "SUMS, education Nepal, EdTech, students, industry, skills gap, Cogknit, SIP, AIC, learning platform, academia, university, Nepal",
+      "ogImage": "/sums_logo.png",
+      "ogType": "website"
+    },
+    "cogknit": {
+      "path": "/academia#/cogknit",
+      "title": "Cogknit — Smart Learning Platform | SUMS",
+      "description": "Cogknit is SUMS's smart learning platform designed to bridge the gap between academic curricula and real-world professional skills for students across Nepal.",
+      "keywords": "Cogknit, smart learning, EdTech Nepal, AI learning platform, online courses, professional skills, student learning",
+      "ogImage": "/cogknitlogo.png",
+      "ogType": "website"
+    },
+    "sip": {
+      "path": "/academia#/sip",
+      "title": "SIP — Student Innovators Program | SUMS",
+      "description": "The Student Innovators Program (SIP) connects students with real-world projects, industry mentors, and innovation opportunities — turning classroom knowledge into professional experience.",
+      "keywords": "SIP, Student Innovators Program, innovation Nepal, student entrepreneurship, industry mentorship, startup, project-based learning",
+      "ogImage": "/siplogo.png",
+      "ogType": "website"
+    },
+    "aic": {
+      "path": "/academia#/aic",
+      "title": "AIC — Academia Industry Collaboration | SUMS",
+      "description": "AIC (Academia Industry Collaboration) creates structured, lasting partnerships between universities and industry leaders to align education with real market demands.",
+      "keywords": "AIC, Academia Industry Collaboration, university industry partnership, Nepal education reform, institutional collaboration, market-aligned curriculum",
+      "ogImage": "/aiclogo.png",
+      "ogType": "website"
+    },
+    "philosophy": {
+      "path": "/philosophy",
+      "title": "Our Philosophy | SUMS",
+      "description": "The thinking behind SUMS — why we believe education is broken, and the principles guiding what we're building to fix it. This page is under construction.",
+      "keywords": "SUMS philosophy, education reform Nepal, mission, vision, coming soon",
+      "ogImage": "/sums_logo.png",
+      "ogType": "website"
+    },
+    "industry": {
+      "path": "/industry",
+      "title": "For Industry | SUMS",
+      "description": "Partner with SUMS to build the talent pipeline your business will need tomorrow. This page is under construction.",
+      "keywords": "SUMS industry partnership, talent pipeline Nepal, employer partnership, coming soon",
+      "ogImage": "/sums_logo.png",
+      "ogType": "website"
+    }
+  }
+}

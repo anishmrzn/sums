@@ -1,0 +1,120 @@
+import type { LogoEntry } from '../types';
+
+const logo = (name: string, file: string): LogoEntry => ({ name, src: `/logos/${file}` });
+const placeholder = (name: string): LogoEntry => ({ name });
+
+// Top-of-page trusted-by slider
+export const SLIDER_LOGOS: LogoEntry[] = [
+  logo('eSewa', 'esewa.png'),
+  logo('Dolma', 'dolma.png'),
+  logo('NTB', 'ntb.png'),
+  logo('Cogknit', 'cogknit.png'),
+  logo('TU Delft', 'tudelft.png'),
+  logo('Aalto University', 'aalto.png'),
+  logo('Tribhuvan University', 'tu.png'),
+  logo('Kathmandu University', 'ku.png'),
+  logo("St. Xavier's Academy", 'st.xavier.png'),
+  logo('Sagarmatha', 'sagarmatha.png'),
+  logo('Texas International College', 'texas.png'),
+  logo('European Commission', 'eucommission.png'),
+  logo('European Union', 'eu.png'),
+  logo('ACEM', 'acem.png'),
+  logo('UNESCO', 'unesco.png'),
+  logo('Lincoln International College', 'lincon.png'),
+  logo("King's College", 'kings.png'),
+  logo('AITM', 'aitm.png'),
+];
+
+// Inside AIC — corporate / academic network
+export const AIC_LOGOS: LogoEntry[] = [
+  logo('eSewa', 'esewa.png'),
+  logo('Dolma', 'dolma.png'),
+  logo('NTB', 'ntb.png'),
+  logo('Cogknit', 'cogknit.png'),
+  logo('Khajurico', 'khajurico.png'),
+  logo('Xtreme', 'xtreme.png'),
+  logo('Ather', 'ather.png'),
+  logo('TU Delft', 'tudelft.png'),
+  logo('Aalto University', 'aalto.png'),
+  logo('Tribhuvan University', 'tu.png'),
+  logo('Kathmandu University', 'ku.png'),
+  logo("St. Xavier's Academy", 'st.xavier.png'),
+  logo('Sagarmatha', 'sagarmatha.png'),
+  logo('Texas International College', 'texas.png'),
+  logo('European Commission', 'eucommission.png'),
+  logo('European Union', 'eu.png'),
+  logo('ACEM', 'acem.png'),
+  logo('UNESCO', 'unesco.png'),
+  logo('Lincoln International College', 'lincon.png'),
+  logo("King's College", 'kings.png'),
+  logo('AITM', 'aitm.png'),
+];
+
+// Ventures & companies built through SIP
+export const SIP_LOGOS: LogoEntry[] = [
+  logo('Milkart', 'milkart.png'),
+  logo('Xvector', 'xvector.png'),
+  logo('Cogknit', 'cogknit.png'),
+  logo('LYT', 'lyt.png'),
+  logo('Lukla', 'lukla.png'),
+  logo("L'Era Maison", 'eramaison.webp'),
+  logo('CEO Group', 'ceogroup.png'),
+  logo('Mediverse', 'mediverse.png'),
+  logo('Riihimäki Hub', 'riihimaki.png'),
+  logo('Tapriksu', 'tapriksu.png'),
+  logo('Kathmandu University', 'ku.png'),
+  logo('Texas International College', 'texas.png'),
+  placeholder('StyleSync'),
+  placeholder('Airwear'),
+  placeholder('Find Your Tribe'),
+  placeholder('Bazinga Bites'),
+  placeholder('CODEUNITED'),
+  placeholder('Co-Engineering Oy'),
+  placeholder('Robotx Oy'),
+  placeholder('Smart Metering'),
+  placeholder('Saransa Catalyst'),
+  placeholder('National Innovation Centre'),
+  placeholder('Aroma Bags'),
+  placeholder('SINCOE'),
+  placeholder('Int. Mobility Project'),
+  placeholder('Helsinki Hub Testbed'),
+  placeholder('Krishi Krate'),
+  placeholder('Lalitpur Innovation'),
+];
+
+// Partner logos split by origin for the impact section
+export const NATIONAL_PARTNER_LOGOS: LogoEntry[] = [
+  logo('eSewa', 'esewa.png'),
+  logo('Dolma', 'dolma.png'),
+  logo('NTB', 'ntb.png'),
+  logo('Cogknit', 'cogknit.png'),
+  logo('Khajurico', 'khajurico.png'),
+  logo('Xtreme', 'xtreme.png'),
+  logo('Ather', 'ather.png'),
+  logo('Tribhuvan University', 'tu.png'),
+  logo('Kathmandu University', 'ku.png'),
+  logo("St. Xavier's Academy", 'st.xavier.png'),
+  logo('Sagarmatha', 'sagarmatha.png'),
+  logo('Texas International College', 'texas.png'),
+  logo('ACEM', 'acem.png'),
+  logo('Lincoln International College', 'lincon.png'),
+  logo("King's College", 'kings.png'),
+  logo('AITM', 'aitm.png'),
+  logo('Milkart', 'milkart.png'),
+  logo('Xvector', 'xvector.png'),
+  logo('LYT', 'lyt.png'),
+  logo('Lukla', 'lukla.png'),
+  logo('Tapriksu', 'tapriksu.png'),
+];
+
+export const INTERNATIONAL_PARTNER_LOGOS: LogoEntry[] = [
+  logo('TU Delft', 'tudelft.png'),
+  logo('Aalto University', 'aalto.png'),
+  logo('European Commission', 'eucommission.png'),
+  logo('European Union', 'eu.png'),
+  logo('UNESCO', 'unesco.png'),
+  logo("L'Era Maison", 'eramaison.webp'),
+  logo('CEO Group', 'ceogroup.png'),
+  logo('Mediverse', 'mediverse.png'),
+  logo('Riihimäki Hub', 'riihimaki.png'),
+];
