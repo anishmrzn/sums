@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { FADE_UP } from '../../utils/animations';
 import { AIC_LOGOS } from '../../data/platforms';
-import { LogoSliderStrip } from '../ui/LogoSliderStrip';
+import { LogoGrid } from '../ui/LogoGrid';
 import { PlatformContactForm } from '../ui/PlatformContactForm';
 
 const STEPS = [
@@ -71,7 +71,7 @@ export const AicSections: React.FC = () => (
       <p className="text-white/50 text-sm mb-8 leading-relaxed">
         AIC's sourcing pipeline is backed by 50+ national and international companies that contribute real R&D challenges and absorb top-performing students into their teams.
       </p>
-      <LogoSliderStrip logos={AIC_LOGOS} label="National & International Partners" />
+      <LogoGrid logos={AIC_LOGOS} label="National & International Partners" />
     </motion.section>
 
     <PlatformContactForm title="AIC" />

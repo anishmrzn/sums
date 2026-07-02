@@ -12,6 +12,12 @@ export interface CaseStudy {
   accentColor: string;
   pdfUrl: string;
   qrUrl: string;
+  downloadUrl: string;
 }
 
 export type PlatformId = 'cogknit' | 'sip' | 'aic';
+
+export interface LogoEntry {
+  name: string;
+  src?: string;
+}

@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { FADE_UP } from '../../utils/animations';
 import { SIP_LOGOS } from '../../data/platforms';
-import { LogoSliderStrip } from '../ui/LogoSliderStrip';
+import { LogoGrid } from '../ui/LogoGrid';
 import { PlatformContactForm } from '../ui/PlatformContactForm';
 
 const PHASES = [
@@ -68,8 +68,7 @@ export const SipSections: React.FC = () => (
       <p className="text-white/50 text-sm mb-8 leading-relaxed">
         50+ ventures have come out of the SIP pipeline — from local startups to internationally recognized companies.
       </p>
-      <LogoSliderStrip logos={SIP_LOGOS} label="Ventures Built Through SIP" />
-      <p className="text-[#FD4400]/70 text-xs font-semibold tracking-widest uppercase mt-4">+50 More ventures</p>
+      <LogoGrid logos={SIP_LOGOS} label="Ventures Built Through SIP" />
     </motion.section>
 
     <PlatformContactForm title="SIP" />

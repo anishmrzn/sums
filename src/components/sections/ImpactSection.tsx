@@ -1,4 +1,6 @@
 import React from 'react';
+import { NATIONAL_PARTNER_LOGOS, INTERNATIONAL_PARTNER_LOGOS } from '../../data/logos';
+import { PlaceholderLogo } from '../ui/PlaceholderLogo';
 
 export const ImpactSection: React.FC<{ headingRef?: React.RefObject<HTMLHeadingElement | null> }> = ({ headingRef }) => (
   <div id="about" className="max-w-6xl mx-auto px-6 py-20">
@@ -25,7 +27,7 @@ export const ImpactSection: React.FC<{ headingRef?: React.RefObject<HTMLHeadingE
     </div>
 
     <div className="border-t border-white/5 pt-10 mb-10">
-      <p className="text-center text-white/30 text-[10px] font-bold tracking-[0.35em] uppercase mb-8">Countries We've Reached</p>
+      <p className="text-center text-white/50 text-lg md:text-xl font-black tracking-[0.15em] uppercase mb-8">Countries We've Reached</p>
       <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-7">
         {[
           { img: '/pictures/countries/Nepal.jpg',            name: 'Nepal' },
@@ -49,25 +51,30 @@ export const ImpactSection: React.FC<{ headingRef?: React.RefObject<HTMLHeadingE
       </div>
     </div>
 
-    <div className="border-t border-white/5 pt-10 grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-0 md:divide-x md:divide-white/5">
+    <div className="border-t border-white/5 pt-10 grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-0 md:divide-x md:divide-white/5">
       <div className="flex flex-col items-center gap-6 md:pr-10">
-        <p className="text-white/30 text-[10px] font-bold tracking-[0.35em] uppercase">National Partners</p>
+        <p className="text-white/50 text-lg md:text-xl font-black tracking-[0.15em] uppercase">National Partners</p>
         <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-4">
-          {[6, 7, 8, 9, 11, 13, 14, 15, 16, 17, 18].map(n => (
-            <img key={n} src={`/logos/${n}.png`} alt="" className="h-9 w-auto max-w-[90px] object-contain opacity-50 hover:opacity-90 transition-opacity duration-200" />
-          ))}
+          {NATIONAL_PARTNER_LOGOS.map((item, i) =>
+            item.src ? (
+              <img key={i} src={item.src} alt={item.name} title={item.name} className="h-9 w-auto max-w-[90px] object-contain opacity-80 hover:opacity-100 transition-opacity duration-200" />
+            ) : (
+              <PlaceholderLogo key={i} name={item.name} className="h-9 py-1 w-[90px]" />
+            )
+          )}
         </div>
       </div>
 
       <div className="flex flex-col items-center gap-6 md:pl-10">
-        <p className="text-white/30 text-[10px] font-bold tracking-[0.35em] uppercase">International Partners</p>
+        <p className="text-white/50 text-lg md:text-xl font-black tracking-[0.15em] uppercase">International Partners</p>
         <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-4">
-          <img src="/int'l/cogknitlogo.png"  alt="Cogknit"        className="h-9 w-auto max-w-[100px] object-contain opacity-50 hover:opacity-90 transition-opacity duration-200" />
-          <img src="/int'l/10.png"           alt="Rihimaki"       className="h-9 w-auto max-w-[100px] object-contain opacity-50 hover:opacity-90 transition-opacity duration-200" />
-          <img src="/int'l/12.png"           alt="Xvector"        className="h-9 w-auto max-w-[100px] object-contain opacity-50 hover:opacity-90 transition-opacity duration-200" />
-          <img src="/logos/unesco.png"       alt="UNESCO"         className="h-9 w-auto max-w-[100px] object-contain opacity-50 hover:opacity-90 transition-opacity duration-200" />
-          <img src="/logos/aalto.png"        alt="Aalto University" className="h-9 w-auto max-w-[100px] object-contain opacity-50 hover:opacity-90 transition-opacity duration-200" />
-          <img src="/logos/lukla.png"        alt="Lukla"          className="h-9 w-auto max-w-[100px] object-contain opacity-50 hover:opacity-90 transition-opacity duration-200" />
+          {INTERNATIONAL_PARTNER_LOGOS.map((item, i) =>
+            item.src ? (
+              <img key={i} src={item.src} alt={item.name} title={item.name} className="h-9 w-auto max-w-[100px] object-contain opacity-80 hover:opacity-100 transition-opacity duration-200" />
+            ) : (
+              <PlaceholderLogo key={i} name={item.name} className="h-9 py-1 w-[100px]" />
+            )
+          )}
         </div>
       </div>
     </div>

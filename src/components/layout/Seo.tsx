@@ -10,7 +10,7 @@ interface SeoProps {
 export function Seo({ page }: SeoProps) {
   const { site } = seoData;
   const meta = seoData.pages[page];
-  const canonicalUrl = page === 'home' ? site.url : `${site.url}/#/${page}`;
+  const canonicalUrl = `${site.url}${meta.path}`;
   const ogImageUrl = `${site.url}${meta.ogImage}`;
 
   return (

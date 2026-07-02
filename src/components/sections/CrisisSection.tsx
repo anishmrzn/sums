@@ -7,14 +7,19 @@ export const CrisisSection: React.FC = () => {
   const reduced = useReducedMotion() ?? false;
 
   const [activeStep, setActiveStep] = useState(-1);
+  const [highlightStep, setHighlightStep] = useState(-1);
   const [isSpinning, setIsSpinning] = useState(false);
 
   useEffect(() => {
     if (isInView) {
       const delays = [200, 900, 1600, 2300];
       delays.forEach((delay, idx) => {
-        setTimeout(() => setActiveStep(idx), delay);
+        setTimeout(() => {
+          setActiveStep(idx);
+          setHighlightStep(idx);
+        }, delay);
       });
+      setTimeout(() => setHighlightStep(-1), delays[delays.length - 1] + 700);
       setTimeout(() => setIsSpinning(true), 3000);
     }
   }, [isInView]);
@@ -22,13 +27,13 @@ export const CrisisSection: React.FC = () => {
   const cards = [
     {
       title: 'Skill Gap',
-      desc: "Colleges aren't producing employable graduates. Theoretical curricula mismatch employer needs.",
+      desc: "Colleges aren't producing employable graduates.",
       label: 'SKILL GAP',
       color: '#FF5C00'
     },
     {
       title: 'Degree Mills',
-      desc: 'Rote-learning has replaced actual innovation. Degrees prioritize attendance over actual building.',
+      desc: 'Rote-learning has replaced actual innovation.',
       label: 'DEGREE MILLS',
       color: '#CC3D00'
     },
@@ -40,7 +45,7 @@ export const CrisisSection: React.FC = () => {
     },
     {
       title: 'The Blindfold',
-      desc: 'Zero visibility into learning quality forces leadership to make critical decisions on pure guesswork.',
+      desc: 'Zero visibility into learning quality forces leadership to make decisions on guesswork.',
       label: 'THE BLINDFOLD',
       color: '#CC3D00'
     }
@@ -54,8 +59,8 @@ export const CrisisSection: React.FC = () => {
       <div className="max-w-[1400px] mx-auto w-full z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 xl:gap-16 items-center">
 
-          <div className="hidden lg:flex lg:col-span-7 flex-col items-center justify-center relative">
-            <div className="relative w-[400px] h-[400px] sm:w-[500px] sm:h-[500px] md:w-[560px] md:h-[560px] xl:w-[620px] xl:h-[620px] flex items-center justify-center">
+          <div className="flex lg:col-span-7 flex-col items-center justify-center relative">
+            <div className="relative w-[220px] h-[220px] sm:w-[280px] sm:h-[280px] md:w-[380px] md:h-[380px] lg:w-[500px] lg:h-[500px] xl:w-[620px] xl:h-[620px] flex items-center justify-center">
               <motion.div
                 animate={isSpinning && !reduced ? { rotate: 360 } : { rotate: 0 }}
                 transition={
@@ -117,8 +122,8 @@ export const CrisisSection: React.FC = () => {
                   ].map((label, i) => (
                     <motion.div key={i} className="absolute" style={label.style} initial={{ opacity: 0, scale: 0.85 }} animate={activeStep >= label.step ? { opacity: 1, scale: 1 } : {}} transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}>
                       <motion.div animate={isSpinning && !reduced ? { rotate: -360 } : { rotate: 0 }} transition={isSpinning && !reduced ? { repeat: Infinity, duration: 30, ease: 'linear' } : { duration: 0 }}>
-                        <span className={`text-[11px] md:text-[13px] font-mono font-bold tracking-wider bg-[#040507]/95 border ${label.border} px-4 py-2 rounded-lg shadow-[0_4px_20px_rgba(0,0,0,0.6)] backdrop-blur-md text-white flex items-center gap-2 whitespace-nowrap`}>
-                          <span className={`w-2 h-2 rounded-full ${label.dot} animate-pulse`} />
+                        <span className={`text-[7px] sm:text-[9px] md:text-[11px] lg:text-[13px] font-mono font-bold tracking-wider bg-[#040507]/95 border ${label.border} px-1.5 py-0.5 sm:px-2.5 sm:py-1 md:px-3 md:py-1.5 lg:px-4 lg:py-2 rounded-lg shadow-[0_4px_20px_rgba(0,0,0,0.6)] backdrop-blur-md text-white flex items-center gap-1 md:gap-2 whitespace-nowrap`}>
+                          <span className={`w-1 h-1 md:w-2 md:h-2 rounded-full ${label.dot} animate-pulse`} />
                           {label.text}
                         </span>
                       </motion.div>
@@ -127,7 +132,7 @@ export const CrisisSection: React.FC = () => {
                 </div>
               </motion.div>
 
-              <div className="absolute inset-0 m-auto w-32 h-32 md:w-36 md:h-36 flex items-center justify-center pointer-events-none z-20">
+              <div className="absolute inset-0 m-auto w-14 h-14 sm:w-20 sm:h-20 md:w-28 md:h-28 lg:w-32 lg:h-32 xl:w-36 xl:h-36 flex items-center justify-center pointer-events-none z-20">
                 <div className="absolute inset-0 rounded-full blur-xl" style={{ background: 'radial-gradient(circle, rgba(255,109,0,0.55) 0%, rgba(255,60,0,0.2) 60%, transparent 100%)', transform: 'scale(1.6)' }} />
                 <div className="absolute inset-0 rounded-full blur-md" style={{ background: 'radial-gradient(circle, rgba(255,140,0,0.7) 0%, rgba(255,60,0,0.3) 50%, transparent 100%)', transform: 'scale(1.2)' }} />
                 <img src="/sums_logo.png" alt="SUMS" className="relative z-10 w-full h-full object-contain" style={{ animation: 'logoFloat 3.5s ease-in-out infinite, logoGlowPulse 2.5s ease-in-out infinite' }} />
@@ -139,7 +144,7 @@ export const CrisisSection: React.FC = () => {
             <motion.div initial={{ opacity: 0, x: 30 }} animate={isInView ? { opacity: 1, x: 0 } : {}} transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }} className="mb-4">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-8 h-[2px] bg-[#FF5C00]" />
-                <span className="text-[#FF5C00] text-[11px] font-extrabold tracking-[0.35em] uppercase">01 / The Crisis</span>
+                <span className="text-[#FF5C00] text-sm md:text-base font-extrabold tracking-[0.35em] uppercase">01 / The Crisis</span>
               </div>
               <h2 className="font-sans font-black text-4xl md:text-5xl xl:text-6xl leading-[0.95] tracking-tight text-white">
                 Education<br />
@@ -157,17 +162,17 @@ export const CrisisSection: React.FC = () => {
                 initial={{ opacity: 0, x: 50 }}
                 animate={activeStep >= idx ? { opacity: 1, x: 0 } : {}}
                 transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                className={`p-5 md:p-6 rounded-xl border transition-all duration-500 flex items-start gap-4 relative overflow-hidden bg-white/[0.01] ${activeStep === idx ? 'border-[#FF5C00]/40 bg-white/[0.025]' : 'border-white/5'}`}
+                className={`p-5 md:p-6 rounded-xl border transition-all duration-500 flex items-start gap-4 relative overflow-hidden bg-white/[0.01] ${highlightStep === idx ? 'border-[#FF5C00]/40 bg-white/[0.025]' : 'border-white/5'}`}
               >
-                <div className="absolute left-0 top-0 h-full w-[3px] transition-all duration-500" style={{ backgroundColor: card.color, opacity: activeStep === idx ? 1 : 0.25 }} />
-                {activeStep === idx && (
+                <div className="absolute left-0 top-0 h-full w-[3px] transition-all duration-500" style={{ backgroundColor: card.color, opacity: highlightStep === idx ? 1 : 0.25 }} />
+                {highlightStep === idx && (
                   <div className="absolute inset-0 pointer-events-none" style={{ background: `radial-gradient(ellipse at left center, ${card.color}10 0%, transparent 70%)` }} />
                 )}
                 <span className="text-sm md:text-base font-bold font-mono tracking-wider text-white/25 pt-0.5 relative z-10">
                   {String(idx + 1).padStart(2, '0')}
                 </span>
                 <div className="relative z-10">
-                  <h4 className="text-base md:text-lg font-bold text-white tracking-wide">{card.title}</h4>
+                  <h4 className="text-xl md:text-2xl font-bold text-white tracking-wide">{card.title}</h4>
                   <p className="text-white/50 text-sm md:text-[15px] mt-1.5 leading-relaxed">{card.desc}</p>
                 </div>
               </motion.div>

@@ -1,14 +1,6 @@
 import type { SectionDef } from '../types';
 
-export const AIC_LOGOS: string[] = [
-  '/logos/6.png', '/logos/7.png', '/logos/8.png', '/logos/9.png',
-  '/logos/10.png', '/logos/11.png', '/logos/12.png', '/logos/13.png',
-];
-
-export const SIP_LOGOS: string[] = [
-  '/logos/14.png', '/logos/15.png', '/logos/16.png', '/logos/17.png',
-  '/logos/18.png', '/logos/10.png', '/logos/11.png', '/logos/12.png',
-];
+export { AIC_LOGOS, SIP_LOGOS } from './logos';
 
 export const PLATFORM_SECTIONS: Record<string, SectionDef[]> = {
   aic: [

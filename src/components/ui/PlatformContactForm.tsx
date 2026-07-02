@@ -47,15 +47,15 @@ export const PlatformContactForm: React.FC<{ title: string }> = ({ title }) => {
         <div className="space-y-3 text-white/75 text-sm">
           <div className="flex items-center space-x-3 text-white/60">
             <MapPin size={14} className="text-[#FD4400] shrink-0" />
-            <span>Kathmandu, Nepal</span>
+            <span>Lalitpur, Nepal</span>
           </div>
           <div className="flex items-center space-x-3 text-white/60">
             <Phone size={14} className="text-[#FD4400] shrink-0" />
-            <span>+977 1-4400000</span>
+            <a href="tel:+9779823299362" className="hover:text-white transition-colors">+977 982-3299362</a>
           </div>
           <div className="flex items-center space-x-3 text-white/60">
             <Mail size={14} className="text-[#FD4400] shrink-0" />
-            <span>info@sums.org.np</span>
+            <a href="mailto:abinesh.maharjan@sumsnepal.com" className="hover:text-white transition-colors break-all">abinesh.maharjan@sumsnepal.com</a>
           </div>
         </div>
         {status === 'sent' ? (

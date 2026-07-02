@@ -24,13 +24,16 @@ export const SolutionsSection: React.FC = () => {
         >
           <div className="flex items-center gap-3 mb-4 justify-center">
             <div className="w-8 h-[2px] bg-[#FF5C00]" />
-            <span className="text-[#FF5C00] text-[11px] font-extrabold tracking-[0.35em] uppercase font-sans">02 / The Disconnect</span>
+            <span className="text-[#FF5C00] text-sm md:text-base font-extrabold tracking-[0.35em] uppercase font-sans">02 / The Disconnect</span>
             <div className="w-8 h-[2px] bg-[#FF5C00]" />
           </div>
           <h2 className="font-sans font-black text-4xl md:text-5xl xl:text-6xl leading-[0.95] tracking-tight text-white">
             Contemporary Solutions<br />
             <span className="text-[#FF5C00]" style={{ textShadow: '0 0 40px rgba(255,92,0,0.4)' }}>Miss the Mark</span>
           </h2>
+          <p className="text-white/50 text-lg md:text-xl font-medium tracking-tight mt-4">
+            The Broken Bridge Between Knowing and Applying
+          </p>
           <div className="mt-5 flex items-center gap-3 justify-center w-full">
             <div className="h-[1px] w-12 bg-[#FF5C00]/60" />
             <div className="h-[1px] w-24 bg-white/5" />
@@ -46,12 +49,12 @@ export const SolutionsSection: React.FC = () => {
         >
           <div className="w-full grid grid-cols-2 gap-3">
             <div className="border border-white/5 rounded-xl p-5 bg-white/[0.02] text-center">
-              <p className="text-[#FF5C00] font-black text-lg mb-1">KNOWING</p>
-              <p className="text-white/45 text-xs leading-relaxed">Thousands of tools, workshops, and trainings</p>
+              <p className="text-[#FF5C00] font-black text-2xl mb-1.5">KNOWING</p>
+              <p className="text-white/50 text-base leading-relaxed">Thousands of tools, workshops, and trainings</p>
             </div>
             <div className="border border-white/5 rounded-xl p-5 bg-white/[0.02] text-center">
-              <p className="text-[#FF5C00] font-black text-lg mb-1">APPLYING</p>
-              <p className="text-white/45 text-xs leading-relaxed">Fundamental change in outcomes</p>
+              <p className="text-[#FF5C00] font-black text-2xl mb-1.5">APPLYING</p>
+              <p className="text-white/50 text-base leading-relaxed">Fundamental change in outcomes</p>
             </div>
           </div>
           <div className="border border-[#FF5C00]/20 bg-[#FF5C00]/5 rounded-xl px-5 py-4 w-full text-center">
@@ -64,7 +67,7 @@ export const SolutionsSection: React.FC = () => {
           <motion.div initial={{ opacity: 0, y: 15 }} animate={isInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }} className="absolute z-20 rounded-xl overflow-hidden" style={{ left: '3%', bottom: '223px', width: '26%', background: 'rgba(10,11,14,0.6)' }}>
             <img src="/tools-pile-orange-2.png" alt="Thousands of tools" className="w-full h-auto object-contain" style={{ maxHeight: 145 }} />
           </motion.div>
-          <motion.div initial={{ opacity: 0, y: 15 }} animate={isInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.8, delay: 0.4, ease: [0.16, 1, 0.3, 1] }} className="absolute z-20 rounded-xl overflow-hidden" style={{ right: '3%', bottom: '223px', width: '22%', background: 'rgba(10,11,14,0.6)' }}>
+          <motion.div initial={{ opacity: 0, y: 15 }} animate={isInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.8, delay: 0.4, ease: [0.16, 1, 0.3, 1] }} className="absolute z-20 rounded-xl overflow-hidden" style={{ right: '7%', bottom: '223px', width: '22%', background: 'rgba(10,11,14,0.6)' }}>
             <img src="/target-diagram-orange.png" alt="Fundamental Change in Outcomes" className="w-full h-auto object-contain" style={{ maxHeight: 145 }} />
           </motion.div>
 
@@ -116,14 +119,14 @@ export const SolutionsSection: React.FC = () => {
               <line x1="780" y1="18" x2="780" y2="112" /><line x1="760" y1="32" x2="760" y2="120" /><line x1="740" y1="48" x2="740" y2="128" /><line x1="720" y1="64" x2="720" y2="136" /><line x1="700" y1="82" x2="700" y2="144" /><line x1="680" y1="100" x2="680" y2="152" />
             </motion.g>
             <motion.g initial={{ opacity: 0 }} animate={isInView ? { opacity: 1 } : {}} transition={{ delay: 0.6, duration: 0.7 }}>
-              <text x="185" y="200" textAnchor="middle" fill="#FF5C00" fontSize="26" fontWeight="900" letterSpacing="5" fontFamily="Space Grotesk, sans-serif">KNOWING</text>
-              <text x="185" y="226" textAnchor="middle" fill="rgba(255,255,255,0.82)" fontSize="13" fontFamily="Space Grotesk, sans-serif" fontWeight="600">Thousands of tools,</text>
-              <text x="185" y="245" textAnchor="middle" fill="rgba(255,255,255,0.82)" fontSize="13" fontFamily="Space Grotesk, sans-serif" fontWeight="600">workshops, and trainings</text>
+              <text x="185" y="202" textAnchor="middle" fill="#FF5C00" fontSize="42" fontWeight="900" letterSpacing="5" fontFamily="Space Grotesk, sans-serif">KNOWING</text>
+              <text x="185" y="236" textAnchor="middle" fill="rgba(255,255,255,0.85)" fontSize="19" fontFamily="Space Grotesk, sans-serif" fontWeight="600">Thousands of tools,</text>
+              <text x="185" y="260" textAnchor="middle" fill="rgba(255,255,255,0.85)" fontSize="19" fontFamily="Space Grotesk, sans-serif" fontWeight="600">workshops, and trainings</text>
             </motion.g>
             <motion.g initial={{ opacity: 0 }} animate={isInView ? { opacity: 1 } : {}} transition={{ delay: 0.6, duration: 0.7 }}>
-              <text x="1015" y="200" textAnchor="middle" fill="#FF5C00" fontSize="26" fontWeight="900" letterSpacing="5" fontFamily="Space Grotesk, sans-serif">APPLYING</text>
-              <text x="1015" y="226" textAnchor="middle" fill="rgba(255,255,255,0.82)" fontSize="13" fontFamily="Space Grotesk, sans-serif" fontWeight="600">Fundamental Change</text>
-              <text x="1015" y="245" textAnchor="middle" fill="rgba(255,255,255,0.82)" fontSize="13" fontFamily="Space Grotesk, sans-serif" fontWeight="600">in Outcomes</text>
+              <text x="1015" y="202" textAnchor="middle" fill="#FF5C00" fontSize="42" fontWeight="900" letterSpacing="5" fontFamily="Space Grotesk, sans-serif">APPLYING</text>
+              <text x="1015" y="236" textAnchor="middle" fill="rgba(255,255,255,0.85)" fontSize="19" fontFamily="Space Grotesk, sans-serif" fontWeight="600">Fundamental Change</text>
+              <text x="1015" y="260" textAnchor="middle" fill="rgba(255,255,255,0.85)" fontSize="19" fontFamily="Space Grotesk, sans-serif" fontWeight="600">in Outcomes</text>
             </motion.g>
           </motion.svg>
         </div>
@@ -134,12 +137,12 @@ export const SolutionsSection: React.FC = () => {
           transition={{ delay: 1.2, duration: 0.6 }}
           className="flex flex-col items-center justify-center gap-3 pt-8 pointer-events-auto"
         >
-          <p className="text-white/70 text-2xl md:text-3xl lg:text-4xl italic font-semibold text-center max-w-3xl leading-snug tracking-tight">
-            "The problem isn't a lack of tools, it is the complete absence of structure"
+          <p className="text-white/85 text-xl md:text-2xl lg:text-3xl font-bold text-center max-w-3xl leading-snug tracking-tight">
+            Knowing the answers gets students a degree. Aligning their work with industry demands gets them results.
           </p>
-          <span className="text-white/55 text-sm md:text-base tracking-wide max-w-2xl text-center leading-relaxed font-sans mt-1">
+          <span className="text-white/75 text-[clamp(8px,2.6vw,22px)] font-semibold tracking-wide text-center leading-relaxed font-sans mt-2 whitespace-nowrap">
             See how <span className="text-[#FF5C00] font-bold">1,500+</span> students across{' '}
-            <span className="text-[#FF5C00] font-bold">10+</span> colleges are bridging this gap
+            <span className="text-[#FF5C00] font-bold">15+</span> colleges are bridging this gap
           </span>
           <button onClick={scrollToEcosystem} className="relative flex items-center justify-center mt-4 cursor-pointer group focus:outline-none" aria-label="See the ecosystem" style={{ width: 88, height: 88 }}>
             <motion.svg width="88" height="88" viewBox="0 0 88 88" className="absolute inset-0" animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 8, ease: 'linear' }}>

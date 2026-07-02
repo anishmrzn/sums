@@ -116,7 +116,7 @@ export const DesktopCaseStudies: React.FC<{ onOpen: (cs: CaseStudy) => void }> =
 
               <div className="h-px w-8 bg-white/10" />
 
-              <a href={cs.pdfUrl} download className="flex items-center gap-2.5 text-white/55 hover:text-white text-sm font-medium border border-white/10 rounded-full px-4 py-2.5 hover:bg-white/5 hover:border-white/25 transition-all duration-200 w-fit">
+              <a href={cs.downloadUrl} download className="flex items-center gap-2.5 text-white/55 hover:text-white text-sm font-medium border border-white/10 rounded-full px-4 py-2.5 hover:bg-white/5 hover:border-white/25 transition-all duration-200 w-fit">
                 <Download size={13} strokeWidth={2} />
                 Download PDF
               </a>

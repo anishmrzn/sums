@@ -39,7 +39,7 @@ export const CaseStudyModal: React.FC<CaseStudyModalProps> = ({ cs, onClose }) =
         </div>
         <div className="flex items-center gap-3">
           <a
-            href={cs.pdfUrl}
+            href={cs.downloadUrl}
             download
             className="flex items-center gap-1.5 text-white/60 hover:text-white text-xs font-semibold border border-white/10 rounded-full px-3 py-1.5 hover:bg-white/5 transition-all"
           >

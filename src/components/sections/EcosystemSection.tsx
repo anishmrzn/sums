@@ -21,11 +21,11 @@ export const EcosystemSection: React.FC<{ ecosystemPhase: number }> = ({ ecosyst
         </span>
 
         <h2 className="font-serif text-3xl md:text-5xl lg:text-6xl font-black leading-tight text-white drop-shadow-[0_4px_16px_rgba(0,0,0,0.95)] max-w-4xl">
-          We Built the Ecosystem to Solve These Problems
+          Our Ecosystem Brings Everything Under One Roof
         </h2>
 
         <p className="text-white/80 text-sm md:text-base max-w-[620px] leading-relaxed drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)] bg-[#040507]/50 px-4 py-2 rounded-lg backdrop-blur-sm">
-          SUMs connects every isolated tool, workshop, and training into a single unified gravitational center.
+          SUMS helps your students land jobs, build a culture of innovation, and give your team the platform and tech to truly thrive.
         </p>
       </motion.div>
     </div>
