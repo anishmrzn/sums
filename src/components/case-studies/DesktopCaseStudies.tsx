@@ -28,14 +28,14 @@ export const DesktopCaseStudies: React.FC<{ onOpen: (cs: CaseStudy) => void }> =
   return (
     <div className="relative h-screen w-full flex flex-col px-8 lg:px-16 xl:px-28 py-10 bg-[#040507] overflow-hidden pointer-events-auto">
       <button onClick={prev} className="absolute left-2 lg:left-4 xl:left-5 top-1/2 -translate-y-1/2 z-20 flex flex-col items-center gap-2 group" aria-label="Previous">
-        <div className="w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center border border-white/20 bg-white/8 group-hover:bg-[#FF5C00]/15 group-hover:border-[#FF5C00]/50 transition-all duration-200 shadow-lg shadow-black/30">
+        <div className="w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center border border-white/20 bg-white/8 group-hover:bg-brand/15 group-hover:border-brand/50 transition-all duration-200 shadow-lg shadow-black/30">
           <ChevronLeft size={24} className="text-white/60 group-hover:text-white transition-colors duration-200" />
         </div>
         <span className="text-[9px] font-bold tracking-[0.2em] uppercase text-white/25 group-hover:text-white/60 transition-colors duration-200">Prev</span>
       </button>
 
       <button onClick={next} className="absolute right-2 lg:right-4 xl:right-5 top-1/2 -translate-y-1/2 z-20 flex flex-col items-center gap-2 group" aria-label="Next">
-        <div className="w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center border border-white/20 bg-white/8 group-hover:bg-[#FF5C00]/15 group-hover:border-[#FF5C00]/50 transition-all duration-200 shadow-lg shadow-black/30">
+        <div className="w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center border border-white/20 bg-white/8 group-hover:bg-brand/15 group-hover:border-brand/50 transition-all duration-200 shadow-lg shadow-black/30">
           <ChevronRight size={24} className="text-white/60 group-hover:text-white transition-colors duration-200" />
         </div>
         <span className="text-[9px] font-bold tracking-[0.2em] uppercase text-white/25 group-hover:text-white/60 transition-colors duration-200">Next</span>
@@ -91,7 +91,17 @@ export const DesktopCaseStudies: React.FC<{ onOpen: (cs: CaseStudy) => void }> =
               <AnimatePresence>
                 {hovering && (
                   <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.15 }} className="absolute inset-0 pointer-events-none" style={{ zIndex: 20, background: 'rgba(0,0,0,0.35)' }}>
-                    <div ref={hoverBtnRef} className="absolute pointer-events-auto" style={{ zIndex: 21, left: cursorPosRef.current.x, top: cursorPosRef.current.y, transform: 'translate(-50%, -50%)' }}>
+                    <div
+                      ref={(el) => {
+                        hoverBtnRef.current = el;
+                        if (el) {
+                          el.style.left = `${cursorPosRef.current.x}px`;
+                          el.style.top = `${cursorPosRef.current.y}px`;
+                        }
+                      }}
+                      className="absolute pointer-events-auto"
+                      style={{ zIndex: 21, transform: 'translate(-50%, -50%)' }}
+                    >
                       <span className="flex items-center gap-2.5 px-5 py-2.5 rounded-full text-white font-semibold text-sm tracking-wide whitespace-nowrap" style={{ background: 'rgba(255,255,255,0.12)', border: '1px solid rgba(255,255,255,0.35)', backdropFilter: 'blur(8px)', boxShadow: '0 4px 24px rgba(0,0,0,0.4)' }}>
                         View Report →
                       </span>

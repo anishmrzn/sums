@@ -18,7 +18,7 @@ const SOLUTIONS = [
 export const CogknitSections: React.FC = () => (
   <>
     <motion.section id="overview" className="scroll-mt-24" {...FADE_UP}>
-      <span className="text-[#FD4400] text-[10px] font-semibold tracking-[0.25em] uppercase block mb-3">01 / Overview</span>
+      <span className="text-brand text-[10px] font-semibold tracking-[0.25em] uppercase block mb-3">01 / Overview</span>
       <h1 className="font-serif text-2xl md:text-4xl font-medium text-white leading-tight mb-4">
         Empowering institutions with next-generation smart learning frameworks.
       </h1>
@@ -28,11 +28,11 @@ export const CogknitSections: React.FC = () => (
     </motion.section>
 
     <motion.section id="features" className="scroll-mt-24 border-t border-white/5 pt-12" {...FADE_UP}>
-      <span className="text-[#FD4400] text-[10px] font-semibold tracking-[0.25em] uppercase block mb-3">02 / Features</span>
+      <span className="text-brand text-[10px] font-semibold tracking-[0.25em] uppercase block mb-3">02 / Features</span>
       <h2 className="font-serif text-xl md:text-3xl font-medium text-white mb-8">Key Capabilities</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
         {FEATURES.map((feat, idx) => (
-          <div key={idx} className="border-l border-[#FD4400]/30 pl-4 hover:border-[#FD4400] transition-colors duration-300">
+          <div key={idx} className="border-l border-brand/30 pl-4 hover:border-brand transition-colors duration-300">
             <h3 className="font-semibold text-white text-sm mb-1">{feat.title}</h3>
             <p className="text-white/50 text-sm">{feat.desc}</p>
           </div>
@@ -41,11 +41,11 @@ export const CogknitSections: React.FC = () => (
     </motion.section>
 
     <motion.section id="solutions" className="scroll-mt-24 border-t border-white/5 pt-12" {...FADE_UP}>
-      <span className="text-[#FD4400] text-[10px] font-semibold tracking-[0.25em] uppercase block mb-3">03 / Solutions</span>
+      <span className="text-brand text-[10px] font-semibold tracking-[0.25em] uppercase block mb-3">03 / Solutions</span>
       <h2 className="font-serif text-xl md:text-3xl font-medium text-white mb-8">Tailored for Every Institution</h2>
       <div className="space-y-4">
         {SOLUTIONS.map((sol, idx) => (
-          <div key={idx} className="border border-white/5 p-5 rounded-xl bg-white/[0.01] hover:border-[#FD4400]/20 transition-all duration-300">
+          <div key={idx} className="border border-white/5 p-5 rounded-xl bg-white/[0.01] hover:border-brand/20 transition-all duration-300">
             <h3 className="text-white font-semibold text-base mb-1">{sol.name}</h3>
             <p className="text-white/50 text-sm">{sol.audience}</p>
           </div>
@@ -54,7 +54,7 @@ export const CogknitSections: React.FC = () => (
     </motion.section>
 
     <motion.section id="impact" className="scroll-mt-24 border-t border-white/5 pt-12" {...FADE_UP}>
-      <span className="text-[#FD4400] text-[10px] font-semibold tracking-[0.25em] uppercase block mb-3">04 / Impact</span>
+      <span className="text-brand text-[10px] font-semibold tracking-[0.25em] uppercase block mb-3">04 / Impact</span>
       <h2 className="font-serif text-xl md:text-3xl font-medium text-white mb-6">Proven Outcomes</h2>
       <p className="text-white/70 text-base md:text-lg font-serif italic leading-relaxed">
         "Empowered over 150+ institutions with 85% higher learner retention compared to traditional learning systems."

@@ -37,7 +37,7 @@ export const PlatformContactForm: React.FC<{ title: string }> = ({ title }) => {
 
   return (
     <motion.section id="connect" className="scroll-mt-24 border-t border-white/5 pt-12 pb-12" {...FADE_UP}>
-      <span className="text-[#FD4400] text-[10px] font-semibold tracking-[0.25em] uppercase block mb-3">
+      <span className="text-brand text-[10px] font-semibold tracking-[0.25em] uppercase block mb-3">
         Connect
       </span>
       <h2 className="font-serif text-xl md:text-3xl font-medium text-white mb-6">
@@ -46,20 +46,20 @@ export const PlatformContactForm: React.FC<{ title: string }> = ({ title }) => {
       <div className="space-y-6">
         <div className="space-y-3 text-white/75 text-sm">
           <div className="flex items-center space-x-3 text-white/60">
-            <MapPin size={14} className="text-[#FD4400] shrink-0" />
+            <MapPin size={14} className="text-brand shrink-0" />
             <span>Lalitpur, Nepal</span>
           </div>
           <div className="flex items-center space-x-3 text-white/60">
-            <Phone size={14} className="text-[#FD4400] shrink-0" />
+            <Phone size={14} className="text-brand shrink-0" />
             <a href="tel:+9779823299362" className="hover:text-white transition-colors">+977 982-3299362</a>
           </div>
           <div className="flex items-center space-x-3 text-white/60">
-            <Mail size={14} className="text-[#FD4400] shrink-0" />
+            <Mail size={14} className="text-brand shrink-0" />
             <a href="mailto:abinesh.maharjan@sumsnepal.com" className="hover:text-white transition-colors break-all">abinesh.maharjan@sumsnepal.com</a>
           </div>
         </div>
         {status === 'sent' ? (
-          <div className="p-4 rounded border border-[#FD4400]/30 bg-[#FD4400]/10 text-[#FD4400] text-sm text-center">
+          <div className="p-4 rounded border border-brand/30 bg-brand/10 text-brand text-sm text-center">
             Message sent! We'll be in touch soon.
           </div>
         ) : (
@@ -70,7 +70,7 @@ export const PlatformContactForm: React.FC<{ title: string }> = ({ title }) => {
               value={name}
               onChange={e => setName(e.target.value)}
               required
-              className="w-full bg-white/[0.03] border border-white/10 focus:border-[#FD4400]/70 px-4 py-3 rounded text-sm outline-none transition-all duration-300 text-white placeholder:text-white/30"
+              className="w-full bg-white/[0.03] border border-white/10 focus:border-brand/70 px-4 py-3 rounded text-sm outline-none transition-all duration-300 text-white placeholder:text-white/30"
             />
             <input
               type="email"
@@ -78,7 +78,7 @@ export const PlatformContactForm: React.FC<{ title: string }> = ({ title }) => {
               value={email}
               onChange={e => setEmail(e.target.value)}
               required
-              className="w-full bg-white/[0.03] border border-white/10 focus:border-[#FD4400]/70 px-4 py-3 rounded text-sm outline-none transition-all duration-300 text-white placeholder:text-white/30"
+              className="w-full bg-white/[0.03] border border-white/10 focus:border-brand/70 px-4 py-3 rounded text-sm outline-none transition-all duration-300 text-white placeholder:text-white/30"
             />
             <textarea
               rows={3}
@@ -86,7 +86,7 @@ export const PlatformContactForm: React.FC<{ title: string }> = ({ title }) => {
               value={message}
               onChange={e => setMessage(e.target.value)}
               required
-              className="w-full bg-white/[0.03] border border-white/10 focus:border-[#FD4400]/70 px-4 py-3 rounded text-sm outline-none transition-all duration-300 text-white placeholder:text-white/30"
+              className="w-full bg-white/[0.03] border border-white/10 focus:border-brand/70 px-4 py-3 rounded text-sm outline-none transition-all duration-300 text-white placeholder:text-white/30"
             />
             {status === 'error' && (
               <p className="text-red-400 text-xs">Something went wrong. Please try again.</p>
@@ -94,7 +94,7 @@ export const PlatformContactForm: React.FC<{ title: string }> = ({ title }) => {
             <button
               type="submit"
               disabled={status === 'sending'}
-              className="w-full bg-[#FD4400] hover:bg-[#FD4400]/90 disabled:opacity-60 text-white font-semibold text-xs uppercase tracking-wider py-3 rounded transition-all duration-300 cursor-pointer"
+              className="w-full bg-brand hover:bg-brand/90 disabled:opacity-60 text-white font-semibold text-xs uppercase tracking-wider py-3 rounded transition-all duration-300 cursor-pointer"
             >
               {status === 'sending' ? 'Sending…' : 'Send Message'}
             </button>

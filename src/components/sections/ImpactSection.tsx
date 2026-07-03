@@ -9,7 +9,7 @@ export const ImpactSection: React.FC<{ headingRef?: React.RefObject<HTMLHeadingE
         ref={headingRef}
         className="font-sans font-black text-5xl md:text-6xl lg:text-8xl xl:text-9xl tracking-tight text-white leading-none"
       >
-        OUR <span className="text-[#FF5C00]">IMPACT</span>
+        OUR <span className="text-brand">IMPACT</span>
       </h2>
     </div>
 
@@ -20,7 +20,7 @@ export const ImpactSection: React.FC<{ headingRef?: React.RefObject<HTMLHeadingE
         { number: '10',     label: 'Countries' },
       ].map((stat) => (
         <div key={stat.label} className="text-center p-5 md:p-6 lg:p-8 rounded-2xl border border-white/5 bg-white/[0.02] backdrop-blur-sm">
-          <div className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black text-[#FF5C00] mb-2">{stat.number}</div>
+          <div className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black text-brand mb-2">{stat.number}</div>
           <div className="text-white/60 text-base font-semibold tracking-widest uppercase">{stat.label}</div>
         </div>
       ))}
@@ -42,7 +42,7 @@ export const ImpactSection: React.FC<{ headingRef?: React.RefObject<HTMLHeadingE
           { img: '/pictures/countries/Lithuania.svg.png',    name: 'Lithuania' },
         ].map(({ img, name }) => (
           <div key={name} className="flex flex-col items-center gap-2 group">
-            <div className="w-14 h-10 rounded-md overflow-hidden border border-white/10 group-hover:border-[#FF5C00]/40 transition-colors duration-200 shadow-md">
+            <div className="w-14 h-10 rounded-md overflow-hidden border border-white/10 group-hover:border-brand/40 transition-colors duration-200 shadow-md">
               <img src={img} alt={name} className="w-full h-full object-cover" />
             </div>
             <span className="text-white/40 text-[9px] font-semibold tracking-widest uppercase group-hover:text-white/70 transition-colors duration-200">{name}</span>

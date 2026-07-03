@@ -16,7 +16,7 @@ export const EcosystemSection: React.FC<{ ecosystemPhase: number }> = ({ ecosyst
         }
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
       >
-        <span className="text-[#FF5C00] text-xs font-bold tracking-[0.3em] uppercase bg-[#040507]/90 px-3.5 py-1 rounded border border-[#FF5C00]/20 backdrop-blur-md">
+        <span className="text-brand text-xs font-bold tracking-[0.3em] uppercase bg-[#040507]/90 px-3.5 py-1 rounded border border-brand/20 backdrop-blur-md">
           The Integrated Solution
         </span>
 

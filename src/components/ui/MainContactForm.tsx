@@ -39,14 +39,14 @@ export const MainContactForm: React.FC = () => {
   if (status === 'sent') {
     return (
       <div className="flex flex-col items-center justify-center py-16 gap-4">
-        <div className="w-14 h-14 rounded-full bg-[#FF5C00]/15 border border-[#FF5C00]/40 flex items-center justify-center">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FF5C00" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+        <div className="w-14 h-14 rounded-full bg-brand/15 border border-brand/40 flex items-center justify-center">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--color-brand)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
             <polyline points="20 6 9 17 4 12" />
           </svg>
         </div>
         <h4 className="text-white font-bold text-lg">Message Sent!</h4>
         <p className="text-white/50 text-sm">We'll get back to you shortly.</p>
-        <button onClick={() => setStatus('idle')} className="text-[#FF5C00] text-sm underline cursor-pointer mt-2">
+        <button onClick={() => setStatus('idle')} className="text-brand text-sm underline cursor-pointer mt-2">
           Send another message
         </button>
       </div>
@@ -58,12 +58,12 @@ export const MainContactForm: React.FC = () => {
       <div className="flex flex-col gap-2">
         <label className="text-white/60 text-sm font-medium">Your Name</label>
         <input type="text" placeholder="John Doe" value={fields.name} onChange={set('name')} required
-          className="bg-white/[0.04] border border-white/10 focus:border-[#FF5C00]/50 rounded-xl px-5 py-3.5 text-white text-base outline-none transition-colors duration-200 placeholder:text-white/25" />
+          className="bg-white/[0.04] border border-white/10 focus:border-brand/50 rounded-xl px-5 py-3.5 text-white text-base outline-none transition-colors duration-200 placeholder:text-white/25" />
       </div>
       <div className="flex flex-col gap-2">
         <label className="text-white/60 text-sm font-medium">Email Address</label>
         <input type="email" placeholder="john@example.com" value={fields.email} onChange={set('email')} required
-          className="bg-white/[0.04] border border-white/10 focus:border-[#FF5C00]/50 rounded-xl px-5 py-3.5 text-white text-base outline-none transition-colors duration-200 placeholder:text-white/25" />
+          className="bg-white/[0.04] border border-white/10 focus:border-brand/50 rounded-xl px-5 py-3.5 text-white text-base outline-none transition-colors duration-200 placeholder:text-white/25" />
       </div>
       <div className="flex flex-col gap-1.5">
         <div className="flex items-baseline gap-2">
@@ -71,24 +71,24 @@ export const MainContactForm: React.FC = () => {
           <span className="text-white/30 text-xs">(optional)</span>
         </div>
         <input type="tel" placeholder="98XXXXXXXX" value={fields.phone} onChange={set('phone')}
-          className="bg-white/[0.04] border border-white/10 focus:border-[#FF5C00]/50 rounded-xl px-5 py-3.5 text-white text-base outline-none transition-colors duration-200 placeholder:text-white/25" />
+          className="bg-white/[0.04] border border-white/10 focus:border-brand/50 rounded-xl px-5 py-3.5 text-white text-base outline-none transition-colors duration-200 placeholder:text-white/25" />
         <span className="text-white/30 text-xs mt-0.5">Exactly 10 digits if provided.</span>
       </div>
       <div className="flex flex-col gap-2">
         <label className="text-white/60 text-sm font-medium">Subject</label>
         <input type="text" placeholder="General Inquiry" value={fields.subject} onChange={set('subject')} required
-          className="bg-white/[0.04] border border-white/10 focus:border-[#FF5C00]/50 rounded-xl px-5 py-3.5 text-white text-base outline-none transition-colors duration-200 placeholder:text-white/25" />
+          className="bg-white/[0.04] border border-white/10 focus:border-brand/50 rounded-xl px-5 py-3.5 text-white text-base outline-none transition-colors duration-200 placeholder:text-white/25" />
       </div>
       <div className="flex flex-col gap-2">
         <label className="text-white/60 text-sm font-medium">Message</label>
         <textarea rows={6} placeholder="How can we help?" value={fields.message} onChange={set('message')} required
-          className="bg-white/[0.04] border border-white/10 focus:border-[#FF5C00]/50 rounded-xl px-5 py-3.5 text-white text-base outline-none transition-colors duration-200 placeholder:text-white/25 resize-none" />
+          className="bg-white/[0.04] border border-white/10 focus:border-brand/50 rounded-xl px-5 py-3.5 text-white text-base outline-none transition-colors duration-200 placeholder:text-white/25 resize-none" />
       </div>
       {status === 'error' && (
         <p className="text-red-400 text-sm">Something went wrong. Please try again.</p>
       )}
       <button type="submit" disabled={status === 'sending'}
-        className="mt-1 w-full bg-[#FF5C00] hover:bg-[#e04f00] disabled:opacity-60 text-white font-bold text-base py-4 rounded-xl transition-all duration-300 hover:shadow-[0_0_24px_rgba(255,92,0,0.35)] cursor-pointer tracking-wide">
+        className="mt-1 w-full bg-brand hover:bg-[#e04f00] disabled:opacity-60 text-white font-bold text-base py-4 rounded-xl transition-all duration-300 hover:shadow-[0_0_24px_rgb(var(--color-brand-rgb)_/_0.35)] cursor-pointer tracking-wide">
         {status === 'sending' ? 'Sending…' : 'Submit Message'}
       </button>
     </form>

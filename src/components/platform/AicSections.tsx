@@ -15,7 +15,7 @@ const STEPS = [
 export const AicSections: React.FC = () => (
   <>
     <motion.section id="overview" className="scroll-mt-24" {...FADE_UP}>
-      <span className="text-[#FD4400] text-[10px] font-semibold tracking-[0.25em] uppercase block mb-3">01 / Overview</span>
+      <span className="text-brand text-[10px] font-semibold tracking-[0.25em] uppercase block mb-3">01 / Overview</span>
       <h1 className="font-serif text-2xl md:text-4xl font-medium text-white leading-tight mb-4">Academia Industry Collaboration</h1>
       <p className="text-white/60 text-sm md:text-base leading-relaxed mb-4">
         AIC is our decentralized R&D ecosystem where students work on real-world research, business, and technical projects — while still in college.
@@ -26,17 +26,17 @@ export const AicSections: React.FC = () => (
     </motion.section>
 
     <motion.section id="process" className="scroll-mt-24 border-t border-white/5 pt-12" {...FADE_UP}>
-      <span className="text-[#FD4400] text-[10px] font-semibold tracking-[0.25em] uppercase block mb-3">02 / The Process</span>
+      <span className="text-brand text-[10px] font-semibold tracking-[0.25em] uppercase block mb-3">02 / The Process</span>
       <h2 className="font-serif text-xl md:text-3xl font-medium text-white mb-10">From Corporate Challenge to Career Opportunity</h2>
       <div className="relative space-y-0">
         {STEPS.map((step, idx) => (
           <div key={step.num} className="relative flex gap-6">
             <div className="flex flex-col items-center">
-              <div className="w-10 h-10 rounded-full border border-[#FD4400]/60 bg-[#FD4400]/10 flex items-center justify-center shrink-0 z-10">
-                <span className="text-[#FD4400] text-xs font-black">{step.num}</span>
+              <div className="w-10 h-10 rounded-full border border-brand/60 bg-brand/10 flex items-center justify-center shrink-0 z-10">
+                <span className="text-brand text-xs font-black">{step.num}</span>
               </div>
               {idx < STEPS.length - 1 && (
-                <div className="w-px flex-1 bg-gradient-to-b from-[#FD4400]/30 to-transparent my-1" style={{ minHeight: '40px' }} />
+                <div className="w-px flex-1 bg-gradient-to-b from-brand/30 to-transparent my-1" style={{ minHeight: '40px' }} />
               )}
             </div>
             <div className="pb-10">
@@ -49,7 +49,7 @@ export const AicSections: React.FC = () => (
     </motion.section>
 
     <motion.section id="impact" className="scroll-mt-24 border-t border-white/5 pt-12" {...FADE_UP}>
-      <span className="text-[#FD4400] text-[10px] font-semibold tracking-[0.25em] uppercase block mb-3">03 / Impact</span>
+      <span className="text-brand text-[10px] font-semibold tracking-[0.25em] uppercase block mb-3">03 / Impact</span>
       <h2 className="font-serif text-xl md:text-3xl font-medium text-white mb-8">Proven at Scale</h2>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
         {[
@@ -58,7 +58,7 @@ export const AicSections: React.FC = () => (
           { num: '1,500+', label: 'Capable Students Trained' },
         ].map(stat => (
           <div key={stat.label} className="border border-white/5 rounded-xl p-4 sm:p-5 bg-white/[0.02] text-center">
-            <div className="text-3xl sm:text-3xl md:text-4xl font-black text-[#FD4400] mb-1">{stat.num}</div>
+            <div className="text-3xl sm:text-3xl md:text-4xl font-black text-brand mb-1">{stat.num}</div>
             <div className="text-white/45 text-[10px] font-semibold tracking-wider uppercase leading-tight">{stat.label}</div>
           </div>
         ))}
@@ -66,7 +66,7 @@ export const AicSections: React.FC = () => (
     </motion.section>
 
     <motion.section id="partners" className="scroll-mt-24 border-t border-white/5 pt-12" {...FADE_UP}>
-      <span className="text-[#FD4400] text-[10px] font-semibold tracking-[0.25em] uppercase block mb-3">04 / Partners</span>
+      <span className="text-brand text-[10px] font-semibold tracking-[0.25em] uppercase block mb-3">04 / Partners</span>
       <h2 className="font-serif text-xl md:text-3xl font-medium text-white mb-4">Our Corporate Network</h2>
       <p className="text-white/50 text-sm mb-8 leading-relaxed">
         AIC's sourcing pipeline is backed by 50+ national and international companies that contribute real R&D challenges and absorb top-performing students into their teams.

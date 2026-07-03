@@ -1,6 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 
 export interface Platform {
   id: string;
@@ -69,6 +69,7 @@ interface EcosystemProps {
 export const Ecosystem: React.FC<EcosystemProps> = ({ onSelectPlatform, isZoomed }) => {
   const [hoveredNode, setHoveredNode] = useState<string | null>(null);
   const [pausedPlatform, setPausedPlatform] = useState<string | null>(null);
+  const shouldReduceMotion = useReducedMotion();
 
   // High-end vector SVG logo representation for each platform
   const renderLogo = (id: string) => {
@@ -76,42 +77,42 @@ export const Ecosystem: React.FC<EcosystemProps> = ({ onSelectPlatform, isZoomed
       case 'cogknit':
         return (
           <svg className="w-10 h-10 md:w-12 md:h-12" viewBox="0 0 40 40" fill="none">
-            <circle cx="20" cy="20" r="18" stroke="rgba(254, 109, 0, 0.2)" strokeWidth="1" />
-            <path d="M12 20C12 15.58 15.58 12 20 12C24.42 12 28 15.58 28 20" stroke="#FE6D00" strokeWidth="1.5" strokeLinecap="round" />
-            <circle cx="20" cy="12" r="2" fill="#FE6D00" />
-            <circle cx="28" cy="20" r="2" fill="#FE6D00" />
-            <path d="M16 24C16 21.79 17.79 20 20 20C22.21 20 24 21.79 24 24" stroke="#FE6D00" strokeWidth="1" strokeLinecap="round" />
-            <circle cx="20" cy="20" r="3" fill="#FE6D00" />
+            <circle cx="20" cy="20" r="18" stroke="rgb(var(--color-brand-rgb) / 0.2)" strokeWidth="1" />
+            <path d="M12 20C12 15.58 15.58 12 20 12C24.42 12 28 15.58 28 20" stroke="var(--color-brand)" strokeWidth="1.5" strokeLinecap="round" />
+            <circle cx="20" cy="12" r="2" fill="var(--color-brand)" />
+            <circle cx="28" cy="20" r="2" fill="var(--color-brand)" />
+            <path d="M16 24C16 21.79 17.79 20 20 20C22.21 20 24 21.79 24 24" stroke="var(--color-brand)" strokeWidth="1" strokeLinecap="round" />
+            <circle cx="20" cy="20" r="3" fill="var(--color-brand)" />
           </svg>
         );
       case 'sip':
         return (
           <svg className="w-10 h-10 md:w-12 md:h-12" viewBox="0 0 40 40" fill="none">
-            <circle cx="20" cy="20" r="18" stroke="rgba(254, 109, 0, 0.2)" strokeWidth="1" />
-            <path d="M14 20C14 16.68 16.68 14 20 14C23.32 14 26 16.68 26 20C26 23.32 23.32 26 20 26" stroke="#FE6D00" strokeWidth="1.5" strokeDasharray="3 3" />
-            <path d="M20 10V30" stroke="#FE6D00" strokeWidth="1" />
-            <path d="M10 20H30" stroke="#FE6D00" strokeWidth="1" />
-            <circle cx="20" cy="20" r="4" fill="#FE6D00" />
+            <circle cx="20" cy="20" r="18" stroke="rgb(var(--color-brand-rgb) / 0.2)" strokeWidth="1" />
+            <path d="M14 20C14 16.68 16.68 14 20 14C23.32 14 26 16.68 26 20C26 23.32 23.32 26 20 26" stroke="var(--color-brand)" strokeWidth="1.5" strokeDasharray="3 3" />
+            <path d="M20 10V30" stroke="var(--color-brand)" strokeWidth="1" />
+            <path d="M10 20H30" stroke="var(--color-brand)" strokeWidth="1" />
+            <circle cx="20" cy="20" r="4" fill="var(--color-brand)" />
           </svg>
         );
       case 'academia':
         return (
           <svg className="w-10 h-10 md:w-12 md:h-12" viewBox="0 0 40 40" fill="none">
-            <circle cx="20" cy="20" r="18" stroke="rgba(254, 109, 0, 0.2)" strokeWidth="1" />
-            <rect x="14" y="14" width="12" height="12" rx="1" stroke="#FE6D00" strokeWidth="1.5" />
-            <line x1="20" y1="8" x2="20" y2="32" stroke="#FE6D00" strokeWidth="1" />
-            <line x1="8" y1="20" x2="32" y2="20" stroke="#FE6D00" strokeWidth="1" />
-            <circle cx="20" cy="20" r="2.5" fill="#FE6D00" />
+            <circle cx="20" cy="20" r="18" stroke="rgb(var(--color-brand-rgb) / 0.2)" strokeWidth="1" />
+            <rect x="14" y="14" width="12" height="12" rx="1" stroke="var(--color-brand)" strokeWidth="1.5" />
+            <line x1="20" y1="8" x2="20" y2="32" stroke="var(--color-brand)" strokeWidth="1" />
+            <line x1="8" y1="20" x2="32" y2="20" stroke="var(--color-brand)" strokeWidth="1" />
+            <circle cx="20" cy="20" r="2.5" fill="var(--color-brand)" />
           </svg>
         );
       case 'aic':
       default:
         return (
           <svg className="w-10 h-10 md:w-12 md:h-12" viewBox="0 0 40 40" fill="none">
-            <circle cx="20" cy="20" r="18" stroke="rgba(254, 109, 0, 0.2)" strokeWidth="1" />
-            <path d="M20 11L28 27H12L20 11Z" stroke="#FE6D00" strokeWidth="1.5" strokeLinejoin="round" />
-            <circle cx="20" cy="20" r="4" stroke="#FE6D00" strokeWidth="1" />
-            <circle cx="20" cy="20" r="1.5" fill="#FE6D00" />
+            <circle cx="20" cy="20" r="18" stroke="rgb(var(--color-brand-rgb) / 0.2)" strokeWidth="1" />
+            <path d="M20 11L28 27H12L20 11Z" stroke="var(--color-brand)" strokeWidth="1.5" strokeLinejoin="round" />
+            <circle cx="20" cy="20" r="4" stroke="var(--color-brand)" strokeWidth="1" />
+            <circle cx="20" cy="20" r="1.5" fill="var(--color-brand)" />
           </svg>
         );
     }
@@ -122,7 +123,7 @@ export const Ecosystem: React.FC<EcosystemProps> = ({ onSelectPlatform, isZoomed
       className="relative w-full aspect-square max-w-[760px] mx-auto flex items-center justify-center gpu-accelerated select-none"
     >
       {/* SUMS Central Core (The Center of Gravity) */}
-      <div className="relative z-10 w-28 h-28 md:w-36 md:h-36 rounded-full flex items-center justify-center bg-bg-dark border-2 border-brand/50 shadow-[0_0_40px_rgba(254,109,0,0.25)]">
+      <div className="relative z-10 w-28 h-28 md:w-36 md:h-36 rounded-full flex items-center justify-center bg-bg-dark border-2 border-brand/50 shadow-[0_0_40px_rgb(var(--color-brand-rgb)_/_0.25)]">
         {/* Core Glowing Atmosphere */}
         <div className="absolute w-[220%] h-[220%] bg-brand/5 rounded-full filter blur-3xl animate-pulse-glow" />
         
@@ -152,7 +153,7 @@ export const Ecosystem: React.FC<EcosystemProps> = ({ onSelectPlatform, isZoomed
               style={{
                 width: `${platform.orbitRadius * 2}px`,
                 height: `${platform.orbitRadius * 2}px`,
-                borderColor: isHovered ? 'rgba(254, 109, 0, 0.15)' : 'rgba(255, 255, 255, 0.04)',
+                borderColor: isHovered ? 'rgb(var(--color-brand-rgb) / 0.15)' : 'rgba(255, 255, 255, 0.04)',
                 borderStyle: isHovered ? 'solid' : 'dashed',
               }}
             />
@@ -162,7 +163,7 @@ export const Ecosystem: React.FC<EcosystemProps> = ({ onSelectPlatform, isZoomed
               className="absolute inset-0 flex items-center justify-center pointer-events-none"
               style={{
                 animation: `${orbitAnimationClass} ${platform.orbitSpeed}s linear infinite`,
-                animationPlayState: isPaused ? 'paused' : 'running',
+                animationPlayState: (isPaused || shouldReduceMotion) ? 'paused' : 'running',
               }}
             >
               {/* Planetary node wrapper positioned on the orbit ring */}
@@ -186,14 +187,14 @@ export const Ecosystem: React.FC<EcosystemProps> = ({ onSelectPlatform, isZoomed
                   className="flex flex-col items-center"
                   style={{
                     animation: `${orbitAnimationClass} ${platform.orbitSpeed}s linear infinite reverse`,
-                    animationPlayState: isPaused ? 'paused' : 'running',
+                    animationPlayState: (isPaused || shouldReduceMotion) ? 'paused' : 'running',
                   }}
                 >
                   {/* Planetary Sphere */}
                   <motion.div
                     layoutId={isZoomed ? undefined : `platform-entity-${platform.id}`}
                     className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-bg-dark border border-white/10 hover:border-brand/70 flex items-center justify-center relative shadow-[0_4px_20px_rgba(0,0,0,0.5)] transition-all duration-300"
-                    whileHover={{ scale: 1.15, boxShadow: `0 0 25px rgba(254, 109, 0, 0.25)` }}
+                    whileHover={{ scale: 1.15, boxShadow: `0 0 25px rgb(var(--color-brand-rgb) / 0.25)` }}
                   >
                     {/* Glowing effect inside sphere */}
                     <div 

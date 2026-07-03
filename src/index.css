@@ -3,6 +3,7 @@
 
 @theme {
   --color-brand: #FE6D00;
+  --color-brand-rgb: 254 109 0;
   --color-bg-dark: #040507;
   --font-serif: "Space Grotesk", sans-serif;
   --font-sans: "Space Grotesk", sans-serif;

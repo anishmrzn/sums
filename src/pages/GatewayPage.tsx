@@ -87,7 +87,7 @@ function GatewayPage() {
           animate={{ rotate: 360 }}
           transition={{ repeat: Infinity, duration: 180, ease: 'linear' }}
         >
-          <circle cx="700" cy="700" r="420" fill="none" stroke="#FF5C00" strokeWidth="1" strokeDasharray="10 14" />
+          <circle cx="700" cy="700" r="420" fill="none" stroke="var(--color-brand)" strokeWidth="1" strokeDasharray="10 14" />
           <circle cx="700" cy="700" r="620" fill="none" stroke="#ffffff" strokeWidth="1" strokeDasharray="2 18" />
         </motion.svg>
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#040507]" />
@@ -131,7 +131,7 @@ function GatewayPage() {
           </div>
 
           <h1 className="font-sans font-black text-4xl sm:text-5xl md:text-6xl xl:text-7xl leading-[0.95] tracking-tight text-white">
-            Pick Your <span className="text-brand" style={{ textShadow: '0 0 40px rgba(255,92,0,0.4)' }}>Orbit</span>
+            Pick Your <span className="text-brand" style={{ textShadow: '0 0 40px rgb(var(--color-brand-rgb) / 0.4)' }}>Orbit</span>
           </h1>
 
           <p className="text-white/55 text-sm md:text-base mt-5 max-w-xl leading-relaxed">
@@ -157,8 +157,8 @@ function GatewayPage() {
                     to={path.route}
                     className={`group relative flex flex-col justify-between overflow-hidden rounded-2xl border p-7 md:p-8 min-h-[300px] sm:min-h-[340px] lg:min-h-[380px] transition-all duration-500 ${
                       path.featured
-                        ? 'border-brand/30 bg-gradient-to-b from-brand/[0.06] to-white/[0.02] hover:border-brand/60 hover:shadow-[0_0_60px_rgba(254,109,0,0.18)]'
-                        : 'border-white/8 bg-white/[0.02] hover:border-brand/40 hover:bg-white/[0.035] hover:shadow-[0_0_40px_rgba(254,109,0,0.12)]'
+                        ? 'border-brand/30 bg-gradient-to-b from-brand/[0.06] to-white/[0.02] hover:border-brand/60 hover:shadow-[0_0_60px_rgb(var(--color-brand-rgb)_/_0.18)]'
+                        : 'border-white/8 bg-white/[0.02] hover:border-brand/40 hover:bg-white/[0.035] hover:shadow-[0_0_40px_rgb(var(--color-brand-rgb)_/_0.12)]'
                     } hover:-translate-y-1.5`}
                   >
                     <span
