@@ -133,19 +133,19 @@ export function ComingSoonPage({ variant }: { variant: Variant }) {
             {/* Scan sweep */}
             <motion.div
               className="absolute inset-x-0 h-24 pointer-events-none"
-              style={{ background: 'linear-gradient(180deg, transparent 0%, rgba(255,92,0,0.08) 50%, transparent 100%)' }}
+              style={{ background: 'linear-gradient(180deg, transparent 0%, rgb(var(--color-brand-rgb) / 0.08) 50%, transparent 100%)' }}
               animate={{ top: ['-10%', '110%'] }}
               transition={{ repeat: Infinity, duration: 3.2, ease: 'linear' }}
             />
 
             <svg viewBox="0 0 400 220" className="w-full h-auto relative z-10" fill="none">
               {/* nav line */}
-              <motion.rect x="8" y="8" width="90" height="10" rx="3" stroke="#FF5C00" strokeOpacity="0.5" strokeWidth="1.2" strokeDasharray="4 3" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 1.4, repeat: Infinity, repeatType: 'reverse', ease: 'easeInOut' }} />
+              <motion.rect x="8" y="8" width="90" height="10" rx="3" stroke="var(--color-brand)" strokeOpacity="0.5" strokeWidth="1.2" strokeDasharray="4 3" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 1.4, repeat: Infinity, repeatType: 'reverse', ease: 'easeInOut' }} />
               <motion.circle cx="380" cy="13" r="6" stroke="rgba(255,255,255,0.25)" strokeWidth="1.2" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 1.2, delay: 0.2, repeat: Infinity, repeatType: 'reverse', ease: 'easeInOut' }} />
 
               {/* hero block */}
               <motion.rect x="8" y="34" width="384" height="70" rx="8" stroke="rgba(255,255,255,0.18)" strokeWidth="1.3" strokeDasharray="6 4" initial={{ pathLength: 0, opacity: 0 }} animate={{ pathLength: 1, opacity: 1 }} transition={{ duration: 1.8, delay: 0.1, repeat: Infinity, repeatType: 'reverse', ease: 'easeInOut' }} />
-              <motion.line x1="24" y1="56" x2="180" y2="56" stroke="#FF5C00" strokeWidth="2" strokeLinecap="round" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 1, delay: 0.4, repeat: Infinity, repeatType: 'reverse', ease: 'easeInOut' }} />
+              <motion.line x1="24" y1="56" x2="180" y2="56" stroke="var(--color-brand)" strokeWidth="2" strokeLinecap="round" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 1, delay: 0.4, repeat: Infinity, repeatType: 'reverse', ease: 'easeInOut' }} />
               <motion.line x1="24" y1="72" x2="240" y2="72" stroke="rgba(255,255,255,0.2)" strokeWidth="2" strokeLinecap="round" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 1, delay: 0.55, repeat: Infinity, repeatType: 'reverse', ease: 'easeInOut' }} />
               <motion.line x1="24" y1="88" x2="130" y2="88" stroke="rgba(255,255,255,0.14)" strokeWidth="2" strokeLinecap="round" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 1, delay: 0.7, repeat: Infinity, repeatType: 'reverse', ease: 'easeInOut' }} />
 
@@ -154,7 +154,7 @@ export function ComingSoonPage({ variant }: { variant: Variant }) {
                 <motion.rect
                   key={x}
                   x={x} y="118" width="120" height="94" rx="8"
-                  stroke={i === 1 ? '#FF5C00' : 'rgba(255,255,255,0.18)'}
+                  stroke={i === 1 ? 'var(--color-brand)' : 'rgba(255,255,255,0.18)'}
                   strokeOpacity={i === 1 ? 0.7 : 1}
                   strokeWidth="1.3" strokeDasharray="6 4"
                   initial={{ pathLength: 0, opacity: 0 }}

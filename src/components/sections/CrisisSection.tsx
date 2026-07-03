@@ -29,7 +29,7 @@ export const CrisisSection: React.FC = () => {
       title: 'Skill Gap',
       desc: "Colleges aren't producing employable graduates.",
       label: 'SKILL GAP',
-      color: '#FF5C00'
+      color: 'var(--color-brand)'
     },
     {
       title: 'Degree Mills',
@@ -41,7 +41,7 @@ export const CrisisSection: React.FC = () => {
       title: 'Price Wars',
       desc: 'Commoditized degrees trigger a race to the bottom, making premium tuition impossible to justify.',
       label: 'PRICE WARS',
-      color: '#FF5C00'
+      color: 'var(--color-brand)'
     },
     {
       title: 'The Blindfold',
@@ -73,24 +73,24 @@ export const CrisisSection: React.FC = () => {
                 <svg viewBox="0 0 400 400" className="w-full h-full transform -rotate-45" aria-hidden="true">
                   <defs>
                     <linearGradient id="grad-seg1" x1="90" y1="200" x2="190" y2="92" gradientUnits="userSpaceOnUse">
-                      <stop offset="0%"   stopColor="#FF5C00" stopOpacity="0.08" />
-                      <stop offset="55%"  stopColor="#FF5C00" stopOpacity="0.65" />
+                      <stop offset="0%"   stopColor="var(--color-brand)" stopOpacity="0.08" />
+                      <stop offset="55%"  stopColor="var(--color-brand)" stopOpacity="0.65" />
                       <stop offset="100%" stopColor="#FF8040" stopOpacity="1"    />
                     </linearGradient>
                     <linearGradient id="grad-seg2" x1="200" y1="90" x2="308" y2="190" gradientUnits="userSpaceOnUse">
                       <stop offset="0%"   stopColor="#CC3D00" stopOpacity="0.08" />
                       <stop offset="55%"  stopColor="#CC3D00" stopOpacity="0.65" />
-                      <stop offset="100%" stopColor="#FF5C00" stopOpacity="1"    />
+                      <stop offset="100%" stopColor="var(--color-brand)" stopOpacity="1"    />
                     </linearGradient>
                     <linearGradient id="grad-seg3" x1="310" y1="200" x2="210" y2="308" gradientUnits="userSpaceOnUse">
-                      <stop offset="0%"   stopColor="#FF5C00" stopOpacity="0.08" />
-                      <stop offset="55%"  stopColor="#FF5C00" stopOpacity="0.65" />
+                      <stop offset="0%"   stopColor="var(--color-brand)" stopOpacity="0.08" />
+                      <stop offset="55%"  stopColor="var(--color-brand)" stopOpacity="0.65" />
                       <stop offset="100%" stopColor="#FF8040" stopOpacity="1"    />
                     </linearGradient>
                     <linearGradient id="grad-seg4" x1="200" y1="310" x2="92" y2="210" gradientUnits="userSpaceOnUse">
                       <stop offset="0%"   stopColor="#CC3D00" stopOpacity="0.08" />
                       <stop offset="55%"  stopColor="#CC3D00" stopOpacity="0.65" />
-                      <stop offset="100%" stopColor="#FF5C00" stopOpacity="1"    />
+                      <stop offset="100%" stopColor="var(--color-brand)" stopOpacity="1"    />
                     </linearGradient>
                     <filter id="glow-light" x="-25%" y="-25%" width="150%" height="150%">
                       <feGaussianBlur stdDeviation="5" result="blur" />
@@ -105,7 +105,7 @@ export const CrisisSection: React.FC = () => {
                     </filter>
                   </defs>
 
-                  <circle cx="200" cy="200" r="110" fill="none" stroke="#FF5C00" strokeOpacity="0.07" strokeWidth="1.5" />
+                  <circle cx="200" cy="200" r="110" fill="none" stroke="var(--color-brand)" strokeOpacity="0.07" strokeWidth="1.5" />
 
                   <motion.path d="M 90,200 A 110,110 0 0,1 190,92" fill="none" stroke="url(#grad-seg1)" strokeWidth="12" strokeLinecap="round" filter="url(#glow-light)" initial={{ pathLength: 0 }} animate={activeStep >= 0 ? { pathLength: 1 } : {}} transition={{ duration: 0.9, ease: 'easeInOut' }} />
                   <motion.path d="M 200,90 A 110,110 0 0,1 308,190" fill="none" stroke="url(#grad-seg2)" strokeWidth="12" strokeLinecap="round" filter="url(#glow-light)" initial={{ pathLength: 0 }} animate={activeStep >= 1 ? { pathLength: 1 } : {}} transition={{ duration: 0.9, ease: 'easeInOut' }} />
@@ -115,9 +115,9 @@ export const CrisisSection: React.FC = () => {
 
                 <div className="absolute inset-0 pointer-events-none">
                   {[
-                    { style: { top: '10%', left: '4%' },      text: 'SKILL GAP',     border: 'border-[#FF5C00]/40', dot: 'bg-[#FF5C00]', step: 0 },
+                    { style: { top: '10%', left: '4%' },      text: 'SKILL GAP',     border: 'border-brand/40', dot: 'bg-brand', step: 0 },
                     { style: { top: '10%', right: '4%' },     text: 'DEGREE MILLS',  border: 'border-[#CC3D00]/40', dot: 'bg-[#CC3D00]', step: 1 },
-                    { style: { bottom: '10%', right: '4%' },  text: 'PRICE WARS',    border: 'border-[#FF5C00]/40', dot: 'bg-[#FF5C00]', step: 2 },
+                    { style: { bottom: '10%', right: '4%' },  text: 'PRICE WARS',    border: 'border-brand/40', dot: 'bg-brand', step: 2 },
                     { style: { bottom: '10%', left: '4%' },   text: 'THE BLINDFOLD', border: 'border-[#CC3D00]/40', dot: 'bg-[#CC3D00]', step: 3 },
                   ].map((label, i) => (
                     <motion.div key={i} className="absolute" style={label.style} initial={{ opacity: 0, scale: 0.85 }} animate={activeStep >= label.step ? { opacity: 1, scale: 1 } : {}} transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}>
@@ -143,15 +143,15 @@ export const CrisisSection: React.FC = () => {
           <div className="lg:col-span-5 flex flex-col space-y-4 justify-center col-span-1">
             <motion.div initial={{ opacity: 0, x: 30 }} animate={isInView ? { opacity: 1, x: 0 } : {}} transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }} className="mb-4">
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-8 h-[2px] bg-[#FF5C00]" />
-                <span className="text-[#FF5C00] text-sm md:text-base font-extrabold tracking-[0.35em] uppercase">01 / The Crisis</span>
+                <div className="w-8 h-[2px] bg-brand" />
+                <span className="text-brand text-sm md:text-base font-extrabold tracking-[0.35em] uppercase">01 / The Crisis</span>
               </div>
               <h2 className="font-sans font-black text-4xl md:text-5xl xl:text-6xl leading-[0.95] tracking-tight text-white">
                 Education<br />
-                <span className="text-[#FF5C00]" style={{ WebkitTextStroke: '0px', textShadow: '0 0 40px rgba(255,92,0,0.4)' }}>Is In Crisis</span>
+                <span className="text-brand" style={{ WebkitTextStroke: '0px', textShadow: '0 0 40px rgb(var(--color-brand-rgb) / 0.4)' }}>Is In Crisis</span>
               </h2>
               <div className="mt-5 flex items-center gap-3">
-                <div className="h-[1px] w-12 bg-[#FF5C00]/60" />
+                <div className="h-[1px] w-12 bg-brand/60" />
                 <div className="h-[1px] flex-1 bg-white/5" />
               </div>
             </motion.div>
@@ -162,7 +162,7 @@ export const CrisisSection: React.FC = () => {
                 initial={{ opacity: 0, x: 50 }}
                 animate={activeStep >= idx ? { opacity: 1, x: 0 } : {}}
                 transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                className={`p-5 md:p-6 rounded-xl border transition-all duration-500 flex items-start gap-4 relative overflow-hidden bg-white/[0.01] ${highlightStep === idx ? 'border-[#FF5C00]/40 bg-white/[0.025]' : 'border-white/5'}`}
+                className={`p-5 md:p-6 rounded-xl border transition-all duration-500 flex items-start gap-4 relative overflow-hidden bg-white/[0.01] ${highlightStep === idx ? 'border-brand/40 bg-white/[0.025]' : 'border-white/5'}`}
               >
                 <div className="absolute left-0 top-0 h-full w-[3px] transition-all duration-500" style={{ backgroundColor: card.color, opacity: highlightStep === idx ? 1 : 0.25 }} />
                 {highlightStep === idx && (

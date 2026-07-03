@@ -14,7 +14,7 @@ const PHASES = [
 export const SipSections: React.FC = () => (
   <>
     <motion.section id="overview" className="scroll-mt-24" {...FADE_UP}>
-      <span className="text-[#FD4400] text-[10px] font-semibold tracking-[0.25em] uppercase block mb-3">01 / Overview</span>
+      <span className="text-brand text-[10px] font-semibold tracking-[0.25em] uppercase block mb-3">01 / Overview</span>
       <h1 className="font-serif text-2xl md:text-4xl font-medium text-white leading-tight mb-4">Student Innovators Program</h1>
       <p className="text-white/60 text-sm md:text-base leading-relaxed mb-4">
         SIP is our innovation ecosystem — a structured 3-phase journey that bridges academia and industry for students who want to build real things.
@@ -22,13 +22,13 @@ export const SipSections: React.FC = () => (
       <p className="text-white/50 text-sm leading-relaxed">
         Scale or fail, every student who goes through SIP gains critical real-world experience in finance, resource management, and business operations. The journey matters as much as the outcome.
       </p>
-      <div className="mt-6 p-4 rounded-xl border border-[#FD4400]/15 bg-[#FD4400]/5">
-        <p className="text-[#FD4400] text-sm font-semibold">"Scale or fail — every student walks away with real business experience."</p>
+      <div className="mt-6 p-4 rounded-xl border border-brand/15 bg-brand/5">
+        <p className="text-brand text-sm font-semibold">"Scale or fail — every student walks away with real business experience."</p>
       </div>
     </motion.section>
 
     <motion.section id="journey" className="scroll-mt-24 border-t border-white/5 pt-12" {...FADE_UP}>
-      <span className="text-[#FD4400] text-[10px] font-semibold tracking-[0.25em] uppercase block mb-3">02 / The Journey</span>
+      <span className="text-brand text-[10px] font-semibold tracking-[0.25em] uppercase block mb-3">02 / The Journey</span>
       <h2 className="font-serif text-xl md:text-3xl font-medium text-white mb-10">Three Phases. One Complete Experience.</h2>
       <div className="space-y-6">
         {PHASES.map((phase, idx) => (
@@ -38,24 +38,24 @@ export const SipSections: React.FC = () => (
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: idx * 0.15, ease: [0.16, 1, 0.3, 1] }}
-            className="relative border border-white/5 rounded-xl p-6 bg-white/[0.02] hover:border-[#FD4400]/20 hover:bg-[#FD4400]/[0.03] transition-all duration-300 group"
+            className="relative border border-white/5 rounded-xl p-6 bg-white/[0.02] hover:border-brand/20 hover:bg-brand/[0.03] transition-all duration-300 group"
           >
             <div className="flex items-start gap-5">
-              <div className="w-12 h-12 rounded-full border border-[#FD4400]/50 bg-[#FD4400]/10 flex items-center justify-center shrink-0 group-hover:border-[#FD4400] group-hover:bg-[#FD4400]/20 transition-all duration-300">
-                <span className="text-[#FD4400] text-sm font-black">{phase.num}</span>
+              <div className="w-12 h-12 rounded-full border border-brand/50 bg-brand/10 flex items-center justify-center shrink-0 group-hover:border-brand group-hover:bg-brand/20 transition-all duration-300">
+                <span className="text-brand text-sm font-black">{phase.num}</span>
               </div>
               <div className="flex-1">
                 <div className="flex items-baseline gap-3 mb-2">
                   <h3 className="text-white font-bold text-base">{phase.title}</h3>
                   {'duration' in phase && (
-                    <span className="text-[#FD4400]/70 text-[10px] font-semibold tracking-wider uppercase">{phase.duration}</span>
+                    <span className="text-brand/70 text-[10px] font-semibold tracking-wider uppercase">{phase.duration}</span>
                   )}
                 </div>
                 <p className="text-white/55 text-sm leading-relaxed">{phase.desc}</p>
               </div>
             </div>
             {idx < PHASES.length - 1 && (
-              <div className="absolute -bottom-3 left-[2.75rem] w-px h-6 bg-gradient-to-b from-[#FD4400]/30 to-transparent z-10" />
+              <div className="absolute -bottom-3 left-[2.75rem] w-px h-6 bg-gradient-to-b from-brand/30 to-transparent z-10" />
             )}
           </motion.div>
         ))}
@@ -63,7 +63,7 @@ export const SipSections: React.FC = () => (
     </motion.section>
 
     <motion.section id="track-record" className="scroll-mt-24 border-t border-white/5 pt-12" {...FADE_UP}>
-      <span className="text-[#FD4400] text-[10px] font-semibold tracking-[0.25em] uppercase block mb-3">03 / Track Record</span>
+      <span className="text-brand text-[10px] font-semibold tracking-[0.25em] uppercase block mb-3">03 / Track Record</span>
       <h2 className="font-serif text-xl md:text-3xl font-medium text-white mb-4">Companies Built Through SIP</h2>
       <p className="text-white/50 text-sm mb-8 leading-relaxed">
         50+ ventures have come out of the SIP pipeline — from local startups to internationally recognized companies.

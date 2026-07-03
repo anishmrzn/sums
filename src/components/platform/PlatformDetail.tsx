@@ -30,23 +30,22 @@ export const PlatformDetail: React.FC<PlatformDetailProps> = ({ platformId, deta
     platformId === 'sip' ? 'SIP' :
     'Cogknit';
 
-  const [validActiveSection, setValidActiveSection] = useState<string>(sections[0]?.id ?? 'overview');
-
-  useEffect(() => {
-    setValidActiveSection(sections[0]?.id ?? 'overview');
-  }, [platformId]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  useEffect(() => {
-    const threshold = window.innerHeight * 0.4;
+  // Derived directly from scroll position + layout on every render instead of
+  // mirroring it into state via an effect — detailScrollY changing already
+  // means the DOM has settled at that scroll position, so there's nothing to
+  // wait for.
+  const validActiveSection = (() => {
     const ids = sectionLayout.map(s => s.id);
-    let current = ids[0];
+    if (typeof window === 'undefined') return ids[0] ?? 'overview';
+    const threshold = window.innerHeight * 0.4;
+    let current = ids[0] ?? 'overview';
     for (const id of ids) {
       const el = document.getElementById(id);
       if (!el) continue;
       if (el.getBoundingClientRect().top <= threshold) current = id;
     }
-    setValidActiveSection(current);
-  }, [detailScrollY, platformId, sectionLayout]);
+    return current;
+  })();
 
   const scrollToSection = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -65,8 +64,8 @@ export const PlatformDetail: React.FC<PlatformDetailProps> = ({ platformId, deta
     return (
       <div className="relative w-full text-white">
         <div className="flex items-center gap-4 px-5 pt-6 pb-4 border-b border-white/5">
-          <div className="w-12 h-12 rounded-full border border-[#FD4400]/30 bg-[#FD4400]/5 flex items-center justify-center shrink-0">
-            <img src={logoPath} alt={platformTitle} className="w-8 h-8 object-contain" style={{ filter: 'drop-shadow(0 0 6px rgba(253,68,0,0.5))' }} />
+          <div className="w-12 h-12 rounded-full border border-brand/30 bg-brand/5 flex items-center justify-center shrink-0">
+            <img src={logoPath} alt={platformTitle} className="w-8 h-8 object-contain" style={{ filter: 'drop-shadow(0 0 6px rgb(var(--color-brand-rgb) / 0.5))' }} />
           </div>
           <h2 className="text-white font-black text-lg tracking-tight">{platformTitle}</h2>
         </div>
@@ -83,12 +82,12 @@ export const PlatformDetail: React.FC<PlatformDetailProps> = ({ platformId, deta
                 onClick={() => scrollToSection(sec.id)}
                 className={`relative shrink-0 px-4 py-2.5 rounded-full text-[11px] font-semibold uppercase tracking-wider transition-all duration-300 cursor-pointer min-h-[40px] ${
                   isActive
-                    ? 'bg-[#FD4400] text-white shadow-[0_0_12px_rgba(253,68,0,0.4)]'
+                    ? 'bg-brand text-white shadow-[0_0_12px_rgb(var(--color-brand-rgb)_/_0.4)]'
                     : 'bg-white/[0.04] text-white/50 border border-white/10 active:text-white active:bg-white/[0.08]'
                 }`}
               >
                 {isActive && (
-                  <span className="absolute inset-0 rounded-full bg-[#FD4400]/30 animate-ping pointer-events-none" style={{ animationDuration: '2s' }} />
+                  <span className="absolute inset-0 rounded-full bg-brand/30 animate-ping pointer-events-none" style={{ animationDuration: '2s' }} />
                 )}
                 {sec.label}
               </button>
@@ -110,10 +109,10 @@ export const PlatformDetail: React.FC<PlatformDetailProps> = ({ platformId, deta
         className="sticky top-0 h-screen w-0 flex items-center justify-center pointer-events-none z-20 transition-all duration-75 ease-out"
       >
         <div
-          className="absolute w-28 h-28 md:w-32 md:h-32 rounded-full border border-[#FD4400]/20 bg-[#040507]/90 flex items-center justify-center z-10"
-          style={{ boxShadow: '0 0 32px rgba(253,68,0,0.12), inset 0 0 20px rgba(253,68,0,0.05)' }}
+          className="absolute w-28 h-28 md:w-32 md:h-32 rounded-full border border-brand/20 bg-[#040507]/90 flex items-center justify-center z-10"
+          style={{ boxShadow: '0 0 32px rgb(var(--color-brand-rgb) / 0.12), inset 0 0 20px rgb(var(--color-brand-rgb) / 0.05)' }}
         >
-          <img src={logoPath} alt={platformTitle} className="w-20 h-20 md:w-24 md:h-24 object-contain" style={{ filter: 'drop-shadow(0 0 10px rgba(253,68,0,0.6))' }} />
+          <img src={logoPath} alt={platformTitle} className="w-20 h-20 md:w-24 md:h-24 object-contain" style={{ filter: 'drop-shadow(0 0 10px rgb(var(--color-brand-rgb) / 0.6))' }} />
         </div>
 
         <svg
@@ -137,13 +136,13 @@ export const PlatformDetail: React.FC<PlatformDetailProps> = ({ platformId, deta
             const lx = Math.cos(rad) * labelR, ly = Math.sin(rad) * labelR;
             const ta = sec.angle >= 315 || sec.angle <= 45 ? 'start' : sec.angle > 135 && sec.angle < 225 ? 'end' : 'middle';
             const db = sec.angle > 225 && sec.angle < 315 ? 'auto' : sec.angle > 45 && sec.angle < 135 ? 'hanging' : 'central';
-            const glow = 'drop-shadow(0 0 4px #FE6D00) drop-shadow(0 0 8px rgba(254,109,0,0.6))';
+            const glow = 'drop-shadow(0 0 4px var(--color-brand)) drop-shadow(0 0 8px rgb(var(--color-brand-rgb) / 0.6))';
 
             return (
               <g key={sec.id} onClick={() => scrollToSection(sec.id)} style={{ cursor: 'pointer', pointerEvents: 'all' }}>
-                <line x1={x1} y1={y1} x2={x2} y2={y2} stroke={isActive ? '#FE6D00' : 'rgba(255,255,255,0.12)'} strokeWidth={isActive ? 2 : 1} style={{ transition: 'stroke 0.5s ease, stroke-width 0.5s ease, filter 0.5s ease', filter: isActive ? glow : 'none' }} />
-                <circle cx={dotX} cy={dotY} r={dotR} fill={isActive ? '#FE6D00' : 'rgba(255,120,0,0.45)'} style={{ transition: 'fill 0.5s ease, filter 0.5s ease', filter: isActive ? glow : 'none' }} />
-                <text x={lx} y={ly} textAnchor={ta} dominantBaseline={db} fontSize="9.5" fontFamily="'Space Grotesk', sans-serif" fontWeight="600" fill={isActive ? '#FE6D00' : 'rgba(255,255,255,0.35)'} style={{ letterSpacing: '0.14em', textTransform: 'uppercase', transition: 'fill 0.5s ease' }}>
+                <line x1={x1} y1={y1} x2={x2} y2={y2} stroke={isActive ? 'var(--color-brand)' : 'rgba(255,255,255,0.12)'} strokeWidth={isActive ? 2 : 1} style={{ transition: 'stroke 0.5s ease, stroke-width 0.5s ease, filter 0.5s ease', filter: isActive ? glow : 'none' }} />
+                <circle cx={dotX} cy={dotY} r={dotR} fill={isActive ? 'var(--color-brand)' : 'rgba(255,120,0,0.45)'} style={{ transition: 'fill 0.5s ease, filter 0.5s ease', filter: isActive ? glow : 'none' }} />
+                <text x={lx} y={ly} textAnchor={ta} dominantBaseline={db} fontSize="9.5" fontFamily="'Space Grotesk', sans-serif" fontWeight="600" fill={isActive ? 'var(--color-brand)' : 'rgba(255,255,255,0.35)'} style={{ letterSpacing: '0.14em', textTransform: 'uppercase', transition: 'fill 0.5s ease' }}>
                   {sec.label}
                 </text>
                 <circle cx={dotX} cy={dotY} r={24} fill="transparent" style={{ pointerEvents: 'all' }} />

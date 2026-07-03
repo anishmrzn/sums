@@ -41,8 +41,12 @@ export const OrbitRing: React.FC<OrbitRingProps> = ({ orbitPlane, smoothedTransi
     line.computeLineDistances();
     line.renderOrder = -1;
     return { lineObj: line, originPositions };
-  }, []);
+  }, [orbitPlane.radius, orbitPlane.u.x, orbitPlane.u.y, orbitPlane.u.z, orbitPlane.v.x, orbitPlane.v.y, orbitPlane.v.z]);
 
+  // react-three-fiber's per-frame imperative escape hatch: three.js objects
+  // (geometry buffers, materials) are inherently mutable and are meant to be
+  // updated in place here rather than through React state.
+  /* eslint-disable react-hooks/immutability */
   useFrame(() => {
     const t = smoothedTransitionT.current;
     const pos = lineObj.geometry.attributes.position.array as Float32Array;
@@ -59,6 +63,7 @@ export const OrbitRing: React.FC<OrbitRingProps> = ({ orbitPlane, smoothedTransi
     const targetOpacity = 0.22 * Math.max(0, 1 - Math.max(0, t - 0.8) / 0.2);
     mat.opacity = THREE.MathUtils.lerp(mat.opacity, targetOpacity, 0.12);
   });
+  /* eslint-enable react-hooks/immutability */
 
   return <primitive object={lineObj} />;
 };

@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useRef, useMemo } from 'react';
-import { useFrame, useThree, useLoader } from '@react-three/fiber';
+import { useFrame, useThree, useLoader, type ThreeEvent } from '@react-three/fiber';
 import * as THREE from 'three';
 
 interface PlanetLogoProps {
@@ -10,9 +9,9 @@ interface PlanetLogoProps {
   aspect?: number;
   opacity?: number;
   logoScale?: number;
-  onClick?: (e: any) => void;
-  onPointerOver?: (e: any) => void;
-  onPointerOut?: (e: any) => void;
+  onClick?: (e: ThreeEvent<MouseEvent>) => void;
+  onPointerOver?: (e: ThreeEvent<PointerEvent>) => void;
+  onPointerOut?: (e: ThreeEvent<PointerEvent>) => void;
 }
 
 export const PlanetLogo: React.FC<PlanetLogoProps> = ({

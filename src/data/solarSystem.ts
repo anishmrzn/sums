@@ -1,3 +1,4 @@
+import { BRAND_HEX } from '../constants/theme';
 import * as THREE from 'three';
 
 export interface PlanetData {
@@ -13,9 +14,9 @@ export interface PlanetData {
 }
 
 export const planets: PlanetData[] = [
-  { id: 'cogknit', name: 'Cogknit', tagline: 'Smart Learning Platform', position: new THREE.Vector3(5, 0.5, -2),  color: '#FE6D00', size: 0.65, logoAspect: 1.0,  glowSize: 0.65, logoScale: 1.0  },
-  { id: 'sip',     name: 'SIP',     tagline: 'Strategic Integrations',   position: new THREE.Vector3(-5, -0.8, -4), color: '#FE6D00', size: 0.70, logoAspect: 1.57, glowSize: 0.70, logoScale: 0.52 },
-  { id: 'aic',     name: 'AIC',     tagline: 'Youth Skill Incubation',   position: new THREE.Vector3(4, -4, -8),   color: '#FE6D00', size: 0.80, logoAspect: 1.81, glowSize: 0.80, logoScale: 0.44 },
+  { id: 'cogknit', name: 'Cogknit', tagline: 'Smart Learning Platform', position: new THREE.Vector3(5, 0.5, -2),  color: BRAND_HEX, size: 0.65, logoAspect: 1.0,  glowSize: 0.65, logoScale: 1.0  },
+  { id: 'sip',     name: 'SIP',     tagline: 'Strategic Integrations',   position: new THREE.Vector3(-5, -0.8, -4), color: BRAND_HEX, size: 0.70, logoAspect: 1.57, glowSize: 0.70, logoScale: 0.52 },
+  { id: 'aic',     name: 'AIC',     tagline: 'Youth Skill Incubation',   position: new THREE.Vector3(4, -4, -8),   color: BRAND_HEX, size: 0.80, logoAspect: 1.81, glowSize: 0.80, logoScale: 0.44 },
 ];
 
 export const orbitParams = {

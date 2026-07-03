@@ -4,6 +4,7 @@ import { useFrame, useThree } from '@react-three/fiber';
 import { Stars, Line, Html } from '@react-three/drei';
 import * as THREE from 'three';
 import { planets, orbitParams, linePositions } from '../../data/solarSystem';
+import { BRAND_HEX } from '../../constants/theme';
 import { PlanetLogo } from './PlanetLogo';
 import { SunCore } from './SunCore';
 import { OrbitRing } from './OrbitRing';
@@ -54,6 +55,9 @@ export const SceneContent: React.FC<SceneContentProps> = ({
     });
   }, []);
 
+  // Mutating `camera` (a three.js object) in place every frame is the
+  // standard react-three-fiber pattern for smooth per-frame camera easing.
+  // eslint-disable-next-line react-hooks/immutability
   useFrame((state, delta) => {
     const elapsedTime = state.clock.getElapsedTime();
     const targetPlatformId = zoomingPlatform || activePlatform;
@@ -142,6 +146,7 @@ export const SceneContent: React.FC<SceneContentProps> = ({
       targetFov = THREE.MathUtils.lerp(targetFov, lineFov, smoothedTransitionT.current);
     }
     if (camera instanceof THREE.PerspectiveCamera) {
+      // eslint-disable-next-line react-hooks/immutability -- see note above useFrame
       camera.fov = THREE.MathUtils.lerp(camera.fov, targetFov, 0.08);
       camera.updateProjectionMatrix();
     }
@@ -189,7 +194,7 @@ export const SceneContent: React.FC<SceneContentProps> = ({
       <Stars radius={280} depth={80} count={1200} factor={6} saturation={0.8} fade speed={0.4} />
 
       <ambientLight intensity={0.25} />
-      <pointLight position={[10, 10, 10]} intensity={1.8} color="#FD4400" />
+      <pointLight position={[10, 10, 10]} intensity={1.8} color={BRAND_HEX} />
       <pointLight position={[-10, -10, -10]} intensity={0.6} color="#ffffff" />
 
       <group ref={sumsGroupRef} position={[0, 0, 0]}>
@@ -237,7 +242,7 @@ export const SceneContent: React.FC<SceneContentProps> = ({
               >
                 <sphereGeometry args={[planet.size, 16, 16]} />
                 <meshBasicMaterial
-                  color="#FD4400"
+                  color={BRAND_HEX}
                   transparent
                   opacity={isFocussed ? 0.25 * Math.max(0, 1 - detailScrollY / 350) : 0.08}
                   side={THREE.BackSide}
@@ -261,7 +266,7 @@ export const SceneContent: React.FC<SceneContentProps> = ({
               {hoveredPlatform === planet.id && (
                 <Html position={[0, -(planet.size + 0.55), 0]} center zIndexRange={[100, 0]}>
                   <div style={{ pointerEvents: 'none', userSelect: 'none', textAlign: 'center', background: 'rgba(4,5,7,0.96)', border: '1.5px solid rgba(253,68,0,0.6)', borderRadius: '12px', padding: '10px 20px', minWidth: '200px', boxShadow: '0 0 24px rgba(253,68,0,0.4)', backdropFilter: 'blur(12px)' }}>
-                    <h4 style={{ fontSize: '16px', fontWeight: 700, letterSpacing: '0.15em', color: '#FD4400', textTransform: 'uppercase', fontFamily: 'Space Grotesk, sans-serif', margin: 0 }}>{planet.name}</h4>
+                    <h4 style={{ fontSize: '16px', fontWeight: 700, letterSpacing: '0.15em', color: 'var(--color-brand)', textTransform: 'uppercase', fontFamily: 'Space Grotesk, sans-serif', margin: 0 }}>{planet.name}</h4>
                     <p style={{ fontSize: '12px', color: 'rgba(255,255,255,0.65)', marginTop: '4px', whiteSpace: 'nowrap', fontFamily: 'Space Grotesk, sans-serif' }}>{planet.tagline}</p>
                   </div>
                 </Html>
@@ -271,10 +276,10 @@ export const SceneContent: React.FC<SceneContentProps> = ({
                 <Html position={[0, -(planet.size + 0.58), 0]} center zIndexRange={[50, 0]}>
                   <div style={{ pointerEvents: 'none', userSelect: 'none', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px', animation: 'explorePulse 2s ease-in-out infinite' }}>
                     <div style={{ background: 'rgba(253,68,0,0.18)', border: '1px solid rgba(253,68,0,0.55)', borderRadius: '999px', padding: '5px 14px', display: 'flex', alignItems: 'center', gap: '6px', backdropFilter: 'blur(8px)', boxShadow: '0 0 12px rgba(253,68,0,0.25)' }}>
-                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#FD4400" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--color-brand)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M5 12h14M12 5l7 7-7 7" />
                       </svg>
-                      <span style={{ fontSize: '10px', fontWeight: 800, color: '#FD4400', letterSpacing: '0.18em', fontFamily: 'Space Grotesk, sans-serif', textTransform: 'uppercase' }}>
+                      <span style={{ fontSize: '10px', fontWeight: 800, color: 'var(--color-brand)', letterSpacing: '0.18em', fontFamily: 'Space Grotesk, sans-serif', textTransform: 'uppercase' }}>
                         {planet.id === 'cogknit' ? 'Intelligence' : planet.id === 'sip' ? 'Innovation' : planet.id === 'aic' ? 'Employment' : 'Explore'}
                       </span>
                     </div>

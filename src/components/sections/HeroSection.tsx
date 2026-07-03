@@ -15,7 +15,7 @@ export const HeroSection: React.FC = () => {
           initial={{ opacity: 0, y: shouldReduceMotion ? 0 : -15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: 'easeOut' }}
-          className="text-[#FF5C00] text-[13px] font-extrabold tracking-[0.35em] uppercase mb-8"
+          className="text-brand text-[13px] font-extrabold tracking-[0.35em] uppercase mb-8"
         >
           THE PROBLEM WITH EDUCATION
         </motion.span>
@@ -46,7 +46,7 @@ export const HeroSection: React.FC = () => {
           </motion.span>
 
           <motion.span
-            className="text-[#FF5C00] text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl block mt-3 w-full pb-2"
+            className="text-brand text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl block mt-3 w-full pb-2"
             initial="hidden"
             animate="visible"
             variants={{
