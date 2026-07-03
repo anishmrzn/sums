@@ -104,6 +104,18 @@ export function useAppState() {
   };
 
   const handleNavigate = (target: string) => {
+    if (target === 'home') {
+      if (activePlatform) {
+        setActivePlatform(null);
+        setDetailScrollY(0);
+        window.location.hash = '#/';
+        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+      return;
+    }
+
     if (target === 'ecosystem') {
       if (activePlatform) {
         handleBackToEcosystem();

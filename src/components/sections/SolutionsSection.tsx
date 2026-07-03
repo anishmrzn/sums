@@ -67,7 +67,7 @@ export const SolutionsSection: React.FC = () => {
           <motion.div initial={{ opacity: 0, y: 15 }} animate={isInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }} className="absolute z-20 rounded-xl overflow-hidden" style={{ left: '3%', bottom: '223px', width: '26%', background: 'rgba(10,11,14,0.6)' }}>
             <img src="/tools-pile-orange-2.png" alt="Thousands of tools" className="w-full h-auto object-contain" style={{ maxHeight: 145 }} />
           </motion.div>
-          <motion.div initial={{ opacity: 0, y: 15 }} animate={isInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.8, delay: 0.4, ease: [0.16, 1, 0.3, 1] }} className="absolute z-20 rounded-xl overflow-hidden" style={{ right: '7%', bottom: '223px', width: '22%', background: 'rgba(10,11,14,0.6)' }}>
+          <motion.div initial={{ opacity: 0, y: 15 }} animate={isInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.8, delay: 0.4, ease: [0.16, 1, 0.3, 1] }} className="absolute z-20 rounded-xl overflow-hidden" style={{ right: '4.4%', bottom: '223px', width: '22%', background: 'rgba(10,11,14,0.6)' }}>
             <img src="/target-diagram-orange.png" alt="Fundamental Change in Outcomes" className="w-full h-auto object-contain" style={{ maxHeight: 145 }} />
           </motion.div>
 

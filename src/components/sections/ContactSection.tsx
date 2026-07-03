@@ -30,37 +30,37 @@ export const ContactSection: React.FC = () => (
       </div>
     </motion.div>
 
-    <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.3fr_2.7fr] gap-6 items-start">
+    <div className="grid grid-cols-1 lg:grid-cols-[max-content_1.4fr_1.9fr] gap-6 items-start">
 
-      <div className="rounded-2xl border border-white/8 bg-white/[0.03] p-9 flex flex-col gap-8">
+      <div className="rounded-2xl border border-white/8 bg-white/[0.03] p-5 sm:p-9 flex flex-col gap-8 min-w-0 lg:w-max">
         <h3 className="font-bold text-white text-2xl tracking-tight">Organizing Committee</h3>
-        <div className="flex flex-col gap-6">
-          <div className="flex items-start gap-4 text-white/70">
+        <div className="flex flex-col gap-6 min-w-0">
+          <div className="flex items-start gap-2.5 sm:gap-3 lg:gap-2.5 xl:gap-4 text-white/70">
             <MapPin size={20} className="text-[#FF5C00] flex-shrink-0 mt-0.5" />
-            <span className="text-base">Lalitpur, Nepal</span>
+            <span className="text-xs sm:text-base whitespace-nowrap">Lalitpur, Nepal</span>
           </div>
-          <div className="flex items-start gap-4 text-white/70">
+          <div className="flex items-start gap-2.5 sm:gap-3 lg:gap-2.5 xl:gap-4 text-white/70 min-w-0">
             <Mail size={20} className="text-[#FF5C00] flex-shrink-0 mt-0.5" />
-            <div className="flex flex-col gap-1">
-              <a href="mailto:abemaharjan@gmail.com" className="text-base hover:text-white transition-colors break-all">abemaharjan@gmail.com</a>
-              <a href="mailto:abinesh.maharjan@sumsnepal.com" className="text-base hover:text-white transition-colors break-all">abinesh.maharjan@sumsnepal.com</a>
+            <div className="flex flex-col gap-1 min-w-0">
+              <a href="mailto:abemaharjan@gmail.com" className="text-xs sm:text-base lg:text-sm xl:text-base hover:text-white transition-colors whitespace-nowrap">abemaharjan@gmail.com</a>
+              <a href="mailto:abinesh.maharjan@sumsnepal.com" className="text-xs sm:text-base lg:text-sm xl:text-base hover:text-white transition-colors whitespace-nowrap">abinesh.maharjan@sumsnepal.com</a>
             </div>
           </div>
-          <div className="flex items-start gap-4 text-white/70">
+          <div className="flex items-start gap-2.5 sm:gap-3 lg:gap-2.5 xl:gap-4 text-white/70">
             <Phone size={20} className="text-[#FF5C00] flex-shrink-0 mt-0.5" />
-            <a href="tel:+9779823299362" className="text-base hover:text-white transition-colors">+977 982-3299362</a>
+            <a href="tel:+9779823299362" className="text-xs sm:text-base lg:text-sm xl:text-base hover:text-white transition-colors whitespace-nowrap">+977 982-3299362</a>
           </div>
         </div>
       </div>
 
-      <div className="rounded-2xl border border-white/8 bg-white/[0.03] p-9 flex flex-col gap-8">
+      <div className="rounded-2xl border border-white/8 bg-white/[0.03] p-6 flex flex-col gap-6">
         <div>
           <h3 className="font-bold text-white text-2xl tracking-tight mb-3">Follow the Journey</h3>
           <p className="text-white/50 text-base leading-relaxed">
             Stay updated with real-time announcements on our social handles.
           </p>
         </div>
-        <div className="flex items-center gap-5 flex-wrap">
+        <div className="flex items-center gap-2.5 flex-wrap">
           {[
             { label: 'Instagram', href: 'https://www.instagram.com/sumsnepal/?hl=en', path: 'M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z' },
             { label: 'Facebook', href: '#', path: 'M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z' },
@@ -73,9 +73,9 @@ export const ContactSection: React.FC = () => (
               target={s.href.startsWith('http') ? '_blank' : undefined}
               rel={s.href.startsWith('http') ? 'noopener noreferrer' : undefined}
               aria-label={s.label}
-              className="w-16 h-16 rounded-full border border-white/15 hover:border-[#FF5C00]/60 flex items-center justify-center text-white/50 hover:text-[#FF5C00] transition-all duration-300"
+              className="w-11 h-11 rounded-full border border-white/15 hover:border-[#FF5C00]/60 flex items-center justify-center text-white/50 hover:text-[#FF5C00] transition-all duration-300 flex-shrink-0"
             >
-              <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
                 <path d={s.path} />
               </svg>
             </a>

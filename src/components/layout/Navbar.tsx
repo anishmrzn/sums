@@ -50,7 +50,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activePlatform, onBackToEcosyste
           }`}
       >
         <div
-          onClick={() => handleNav('ecosystem')}
+          onClick={() => handleNav('home')}
           className="cursor-pointer group flex items-center gap-2.5"
         >
           <div className="relative flex items-center justify-center">
