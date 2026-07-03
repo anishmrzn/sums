@@ -17,7 +17,7 @@ export const ImpactSection: React.FC<{ headingRef?: React.RefObject<HTMLHeadingE
       {[
         { number: '1,500+', label: 'Students' },
         { number: '15+',    label: 'Institutions' },
-        { number: '7',      label: 'Countries' },
+        { number: '10',     label: 'Countries' },
       ].map((stat) => (
         <div key={stat.label} className="text-center p-5 md:p-6 lg:p-8 rounded-2xl border border-white/5 bg-white/[0.02] backdrop-blur-sm">
           <div className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black text-[#FF5C00] mb-2">{stat.number}</div>

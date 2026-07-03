@@ -274,7 +274,9 @@ export const SceneContent: React.FC<SceneContentProps> = ({
                       <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#FD4400" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M5 12h14M12 5l7 7-7 7" />
                       </svg>
-                      <span style={{ fontSize: '10px', fontWeight: 800, color: '#FD4400', letterSpacing: '0.18em', fontFamily: 'Space Grotesk, sans-serif', textTransform: 'uppercase' }}>Explore</span>
+                      <span style={{ fontSize: '10px', fontWeight: 800, color: '#FD4400', letterSpacing: '0.18em', fontFamily: 'Space Grotesk, sans-serif', textTransform: 'uppercase' }}>
+                        {planet.id === 'cogknit' ? 'Intelligence' : planet.id === 'sip' ? 'Innovation' : planet.id === 'aic' ? 'Employment' : 'Explore'}
+                      </span>
                     </div>
                   </div>
                   <style>{`@keyframes explorePulse { 0%,100%{transform:translateY(0);opacity:0.65} 50%{transform:translateY(-5px);opacity:1} }`}</style>

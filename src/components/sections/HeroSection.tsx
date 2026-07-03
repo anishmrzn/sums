@@ -76,7 +76,7 @@ export const HeroSection: React.FC = () => {
           transition={{ delay: 0.9, duration: 0.7, ease: 'easeOut' }}
           className="text-white/60 text-base md:text-xl mt-10 max-w-3xl leading-relaxed"
         >
-          Colleges are producing degrees, not professionals. The gap between what's taught and what's needed has never been wider — and the system keeps rewarding the wrong things.
+          Colleges are great at handing out degrees, but bad at building actual professionals. What's being taught isn't matching up with what's actually required to do the job.
         </motion.p>
       </div>
 

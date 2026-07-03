@@ -107,24 +107,23 @@ export const DesktopCaseStudies: React.FC<{ onOpen: (cs: CaseStudy) => void }> =
           <AnimatePresence mode="wait">
             <motion.div key={activeIndex + '-right'} initial={{ opacity: 0, x: 24 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 24 }} transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }} className="flex flex-col gap-6">
               <div className="flex flex-col items-start gap-3">
-                <span className="text-white/30 text-[10px] font-bold tracking-[0.3em] uppercase">Scan for details</span>
+                <span className="text-white/30 text-[10px] font-bold tracking-[0.3em] uppercase">Scan to view full report</span>
                 <div className="w-28 h-28 rounded-xl overflow-hidden border border-white/10 bg-white p-1.5">
                   <img src={cs.qrUrl} alt="QR" className="w-full h-full object-contain" />
                 </div>
-                <p className="text-white/30 text-xs leading-relaxed max-w-[160px]">Scan with your camera to access the full report</p>
               </div>
 
               <div className="h-px w-8 bg-white/10" />
 
               <a href={cs.downloadUrl} download className="flex items-center gap-2.5 text-white/55 hover:text-white text-sm font-medium border border-white/10 rounded-full px-4 py-2.5 hover:bg-white/5 hover:border-white/25 transition-all duration-200 w-fit">
                 <Download size={13} strokeWidth={2} />
-                Download PDF
+                Download Full Report
               </a>
 
-              <button onClick={() => onOpen(cs)} className="flex items-center gap-2.5 text-white/55 hover:text-white text-sm font-medium transition-colors duration-200 group">
-                <span>View full report</span>
-                <span className="opacity-0 group-hover:opacity-60 transition-opacity text-xs">→</span>
-              </button>
+              <a href={cs.pdfUrl} download className="flex items-center gap-2.5 text-white/55 hover:text-white text-sm font-medium border border-white/10 rounded-full px-4 py-2.5 hover:bg-white/5 hover:border-white/25 transition-all duration-200 w-fit">
+                <Download size={13} strokeWidth={2} />
+                Download Onepager
+              </a>
             </motion.div>
           </AnimatePresence>
         </div>
