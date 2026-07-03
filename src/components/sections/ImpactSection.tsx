@@ -27,7 +27,7 @@ export const ImpactSection: React.FC<{ headingRef?: React.RefObject<HTMLHeadingE
     </div>
 
     <div className="border-t border-white/5 pt-10 mb-10">
-      <p className="text-center text-white/50 text-lg md:text-xl font-black tracking-[0.15em] uppercase mb-8">Countries We've Reached</p>
+      <p className="text-center text-white/90 text-sm md:text-base font-black tracking-[0.15em] uppercase mb-8">Countries We've Reached</p>
       <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-7">
         {[
           { img: '/pictures/countries/Nepal.jpg',            name: 'Nepal' },
@@ -53,7 +53,7 @@ export const ImpactSection: React.FC<{ headingRef?: React.RefObject<HTMLHeadingE
 
     <div className="border-t border-white/5 pt-10 grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-0 md:divide-x md:divide-white/5">
       <div className="flex flex-col items-center gap-6 md:pr-10">
-        <p className="text-white/50 text-lg md:text-xl font-black tracking-[0.15em] uppercase">National Partners</p>
+        <p className="text-white/90 text-sm md:text-base font-black tracking-[0.15em] uppercase">National Partners</p>
         <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-4">
           {NATIONAL_PARTNER_LOGOS.map((item, i) =>
             item.src ? (
@@ -66,7 +66,7 @@ export const ImpactSection: React.FC<{ headingRef?: React.RefObject<HTMLHeadingE
       </div>
 
       <div className="flex flex-col items-center gap-6 md:pl-10">
-        <p className="text-white/50 text-lg md:text-xl font-black tracking-[0.15em] uppercase">International Partners</p>
+        <p className="text-white/90 text-sm md:text-base font-black tracking-[0.15em] uppercase">International Partners</p>
         <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-4">
           {INTERNATIONAL_PARTNER_LOGOS.map((item, i) =>
             item.src ? (
