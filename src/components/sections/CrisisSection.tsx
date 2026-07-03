@@ -59,7 +59,7 @@ export const CrisisSection: React.FC = () => {
       <div className="max-w-[1400px] mx-auto w-full z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 xl:gap-16 items-center">
 
-          <div className="flex lg:col-span-7 flex-col items-center justify-center relative">
+          <div className="flex order-2 lg:order-1 lg:col-span-7 flex-col items-center justify-center relative">
             <div className="relative w-[220px] h-[220px] sm:w-[280px] sm:h-[280px] md:w-[380px] md:h-[380px] lg:w-[500px] lg:h-[500px] xl:w-[620px] xl:h-[620px] flex items-center justify-center">
               <motion.div
                 animate={isSpinning && !reduced ? { rotate: 360 } : { rotate: 0 }}
@@ -140,7 +140,7 @@ export const CrisisSection: React.FC = () => {
             </div>
           </div>
 
-          <div className="lg:col-span-5 flex flex-col space-y-4 justify-center col-span-1">
+          <div className="order-1 lg:order-2 lg:col-span-5 flex flex-col space-y-4 justify-center col-span-1">
             <motion.div initial={{ opacity: 0, x: 30 }} animate={isInView ? { opacity: 1, x: 0 } : {}} transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }} className="mb-4">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-8 h-[2px] bg-brand" />

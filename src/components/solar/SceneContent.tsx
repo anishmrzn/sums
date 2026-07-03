@@ -257,17 +257,14 @@ export const SceneContent: React.FC<SceneContentProps> = ({
                   aspect={planet.logoAspect ?? 1}
                   logoScale={planet.logoScale ?? 1}
                   opacity={activePlatform === planet.id ? Math.max(0, 1 - detailScrollY / 350) : 1.0}
-                  onClick={(e) => { e.stopPropagation(); if (!zoomingPlatform && !activePlatform) onSelectPlatform(planet.id); }}
-                  onPointerOver={(e) => { e.stopPropagation(); if (!zoomingPlatform && !activePlatform) { setHoveredPlatform(planet.id); document.body.style.cursor = 'pointer'; } }}
-                  onPointerOut={(e) => { e.stopPropagation(); setHoveredPlatform(null); document.body.style.cursor = 'default'; }}
                 />
               </React.Suspense>
 
               {hoveredPlatform === planet.id && (
                 <Html position={[0, -(planet.size + 0.55), 0]} center zIndexRange={[100, 0]}>
-                  <div style={{ pointerEvents: 'none', userSelect: 'none', textAlign: 'center', background: 'rgba(4,5,7,0.96)', border: '1.5px solid rgba(253,68,0,0.6)', borderRadius: '12px', padding: '10px 20px', minWidth: '200px', boxShadow: '0 0 24px rgba(253,68,0,0.4)', backdropFilter: 'blur(12px)' }}>
+                  <div style={{ pointerEvents: 'none', userSelect: 'none', textAlign: 'center', background: 'rgba(4,5,7,0.96)', border: '1.5px solid rgba(253,68,0,0.6)', borderRadius: '12px', padding: '10px 20px', width: '240px', boxShadow: '0 0 24px rgba(253,68,0,0.4)', backdropFilter: 'blur(12px)' }}>
                     <h4 style={{ fontSize: '16px', fontWeight: 700, letterSpacing: '0.15em', color: 'var(--color-brand)', textTransform: 'uppercase', fontFamily: 'Space Grotesk, sans-serif', margin: 0 }}>{planet.name}</h4>
-                    <p style={{ fontSize: '12px', color: 'rgba(255,255,255,0.65)', marginTop: '4px', whiteSpace: 'nowrap', fontFamily: 'Space Grotesk, sans-serif' }}>{planet.tagline}</p>
+                    <p style={{ fontSize: '12px', color: 'rgba(255,255,255,0.65)', marginTop: '4px', whiteSpace: 'normal', fontFamily: 'Space Grotesk, sans-serif' }}>{planet.tagline}</p>
                   </div>
                 </Html>
               )}
